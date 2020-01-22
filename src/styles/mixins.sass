@@ -1,0 +1,52 @@
+@import "styles/colors.sass"
+
+@mixin box-shadow($shadow)
+  -moz-box-shadow: $shadow
+  -webkit-box-shadow: $shadow
+  box-shadow: $shadow
+
+@mixin allow-text-lines($size, $font-size, $property: max-height)
+  position: relative
+  display: inline-block
+  overflow: hidden
+  line-height: $size
+  font-size: #{$font-size}rem
+  #{$property}: calc(#{$size * 3}rem - 2px)
+  &:after
+    content: ""
+    text-align: right
+    position: absolute
+    bottom: 0
+    right: 0
+    width: 27%
+    height: #{$size}rem
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%)
+
+@mixin blue-gradient($property: background, $from: $primary-blue, $to: $secondary-blue)
+  #{$property}: $primary-blue
+  #{$property}: -moz-linear-gradient(left, $from 0%, $to 100%)
+  #{$property}: -webkit-gradient(left top, right top, color-stop(0%, $primary-blue), color-stop(100%, $to))
+  #{$property}: -webkit-linear-gradient(left, $from 0%, $to 100%)
+  #{$property}: -o-linear-gradient(left, $from 0%, $to 100%)
+  #{$property}: -ms-linear-gradient(left, $from 0%, $to 100%)
+  #{$property}: linear-gradient(to right, $from 0%, $to 100%)
+
+
+@mixin keyframes($animation-name)
+  @-webkit-keyframes #{$animation-name}
+    @content
+  @-moz-keyframes #{$animation-name}
+    @content
+  @-ms-keyframes #{$animation-name}
+    @content
+  @-o-keyframes #{$animation-name}
+    @content
+  @keyframes #{$animation-name}
+    @content
+
+@mixin animation($str)
+  -webkit-animation: #{$str}
+  -moz-animation: #{$str}
+  -ms-animation: #{$str}
+  -o-animation: #{$str}
+  animation: #{$str}

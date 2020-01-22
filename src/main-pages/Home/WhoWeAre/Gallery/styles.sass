@@ -1,0 +1,22 @@
+@import "../../../../styles/variables"
+
+.who-we-are-gallery-wrapper
+  width: 90%
+  border-top-left-radius: $app-border-radius
+  border-bottom-left-radius: $app-border-radius
+
+  @media (max-width: $sm-starts)
+    width: 100%
+
+  .image-gallery-bullets
+    position: absolute
+    bottom: -1.875rem
+    display: flex
+    flex-direction: row
+    align-content: center
+    justify-content: flex-end
+    left: auto
+    z-index: 1
+
+    .image-gallery-bullet
+      margin-right: 1.563rem

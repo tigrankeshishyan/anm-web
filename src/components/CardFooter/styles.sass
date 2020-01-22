@@ -1,0 +1,21 @@
+@import "styles/colors.sass"
+@import "styles/variables.sass"
+@import "styles/mixins.sass"
+
+.card-footer
+  padding: 0.75rem
+  margin-top: 0.625rem
+  line-height: 1.563rem
+
+  &:hover
+    .card-title-text
+      color: $primary-blue-75
+
+  .card-title-text
+    @include allow-text-lines(1.2, 1, height)
+
+    @media (max-width: $xs-starts)
+      font-size: 1rem
+
+  .date-block
+    margin-top: 0.75rem

@@ -1,0 +1,23 @@
+@import "styles/colors.sass"
+
+.see-more-link
+  display: block
+  font-size: 1rem
+  color: $text-color
+  position: relative
+  margin-top: 0.9375rem
+  font-weight: 700
+
+  &:hover
+    .link-border
+      width: 70%
+
+.link-border
+  display: inline-block
+  width: 50%
+  background-color: $primary-blue-75
+  height: 1px
+  position: absolute
+  bottom: -5px
+  left: 0
+  transition: all .2s linear

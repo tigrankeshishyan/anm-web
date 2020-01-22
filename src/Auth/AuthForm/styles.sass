@@ -1,0 +1,32 @@
+@import "styles/variables.sass"
+@import "styles/colors.sass"
+
+.anm-auth-form
+  .forgot-password-link
+    color: $primary-blue
+    cursor: pointer
+    &:hover
+      color: darken($primary-blue, 5%)
+
+  .form-policy-wrapper
+    @media (max-width: $xs-starts)
+      flex-direction: column
+      align-items: flex-start
+
+  .auth-form-footer
+    padding: 1rem 0
+
+    @media (max-width: $sm-starts)
+      justify-content: center
+
+      button
+        height: 4rem
+
+    button.gradient
+      width: 100%
+      height: 2.5rem
+      flex-grow: 1
+
+html:lang(hy)
+  .terms-agree-checkbox-label-text
+    font-size: .9rem

@@ -1,0 +1,80 @@
+@import "./colors.sass"
+@import "./variables.sass"
+
+html
+  font-size: 16px
+
+  @media (max-width: $xs-starts)
+    font-size: 14px
+
+html:lang(en)
+  *
+    font-family: SourceSansPro, sans-serif
+
+html:lang(hy),
+html:not([lang]),
+  *
+    font-family: FedraSansArm, sans-serif
+
+body
+  width: 100vw
+  margin: 0
+  padding: 0
+  overflow-x: hidden
+  overflow-y: auto
+  background-color: #fff !important
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif
+
+code
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace
+
+
+p,
+a,
+b,
+pre,
+code,
+input
+  color: $text-color
+
+.horizontal-nav-menu
+  display: flex
+  flex-direction: row
+  align-items: center
+  list-style-type: none
+  padding: 0
+  margin: 0
+
+  &-item
+    padding: 35px 0.5rem
+    font-size: .9rem
+
+    @media (max-width: $sm-starts)
+      padding: 0.5rem
+      font-size: .8rem
+
+.anm-navigation-item
+  text-decoration: none
+  text-align: center
+  font-weight: 900
+  cursor: pointer
+
+  &:hover, &.active
+    color: rgba($text-color, .5)
+
+.remove-outline
+  &, &:hover, &:focus
+    outline: none
+
+.pointer
+  cursor: pointer
+
+.reset-list-styles
+  list-style-type: none
+  margin: 0
+  padding: 0
+
+.full-height
+  height: 100%

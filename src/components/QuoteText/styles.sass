@@ -1,0 +1,34 @@
+@import "styles/colors.sass"
+
+.quote-text
+  text-align: left
+  padding: 0.625rem
+
+  &-symbol
+    font-size: 1.063rem
+
+    &.color-initial
+      svg
+        path
+          fill: $primary-blue
+
+    &.color-white
+      svg
+        path
+          fill: white
+
+  &-text,
+  &-author
+    &.color-initial
+      color: $text-color
+
+    &.color-white
+      color: white
+
+    &.color-blue
+      color: $primary-blue
+
+  &-author
+    font-weight: 700
+    text-align: right
+

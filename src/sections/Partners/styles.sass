@@ -1,0 +1,26 @@
+@import "styles/variables.sass"
+
+.home-partners-section-wrapper
+  padding-top: 4.375rem
+
+  .partners-logo-wrapper
+    margin: 2.5rem 0
+
+    .partner-logo
+      width: 9.375rem
+      height: 9.375rem
+      padding: .5rem
+      display: inline-block
+      margin: 0.9375rem
+      transition: box-shadow .3s linear
+
+      &:hover
+        box-shadow: 0 0 10px rgba(0, 0, 0, .2)
+
+      @media (max-width: $xs-starts)
+        width: 13.75rem
+        height: 13.75rem
+
+  @media (max-width: $xs-starts)
+    padding-top: 1.875rem
+

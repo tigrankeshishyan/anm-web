@@ -1,0 +1,33 @@
+{
+  "projects": {
+    "gatsby": {
+      "name": "ANM Graphql Schema",
+      "schemaPath": "schema.graphql",
+      "extensions": {
+        "endpoints": {
+          "Default GraphQL Endpoint": {
+            "url": "https://stage.anmmedia.am/api/graphql",
+            "headers": {
+              "user-agent": "JS GraphQL"
+            },
+            "introspect": false
+          }
+        }
+      }
+    },
+    "remote": {
+      "schemaPath": "gatsbySchema.json",
+      "includes": [
+        "./gatsbySchema.json"
+      ],
+      "extensions": {
+        "endpoints": {
+          "Gatsby Schema": {
+            "url": "./gatsbySchema.json",
+            "introspect": false
+          }
+        }
+      }
+    }
+  }
+}

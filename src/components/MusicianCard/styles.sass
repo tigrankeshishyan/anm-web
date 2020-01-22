@@ -1,0 +1,36 @@
+@import "styles/colors.sass"
+@import "styles/mixins.sass"
+@import "styles/variables.sass"
+
+.anm-musician-card
+  width: 18rem
+  margin: 1.5rem
+  margin-bottom: 0
+  overflow: hidden
+  justify-content: flex-end
+  cursor: pointer
+  background-color: white
+  border-radius: $app-border-radius
+
+  @media (max-width: $xs-starts)
+    width: 15.63rem
+    margin: 0.625rem
+
+  &:hover
+    .musician-card-poster-image
+      transform: scale(1.1)
+
+  .musician-card-poster-image-wrapper
+    border-radius: $app-border-radius
+    overflow: hidden
+    height: 13rem
+
+    @media (max-width: $xs-starts)
+      height: 10rem
+
+    .musician-card-poster-image
+      width: 100%
+      height: 100%
+      transition: transform 5s linear
+      @include box-shadow($bottom-diffused-hover)
+

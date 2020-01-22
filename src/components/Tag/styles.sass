@@ -1,0 +1,24 @@
+@import "styles/colors.sass"
+
+.anm-tag
+  background: $light-grey
+  border-radius: 0.3125rem
+  font-size: 1rem
+  color: $text-color
+  letter-spacing: 0
+  display: inline-flex
+  flex-direction: row
+  align-items: center
+  padding: 0.4rem
+  margin-right: 0.5rem
+
+  .tag-remove-icon
+    width: 1rem
+    margin-left: .4rem
+
+  &.has-onClick
+    cursor: pointer
+    transition: background-color .2s linear
+
+    &:hover
+      background-color: darken($light-grey, 5)

@@ -1,0 +1,36 @@
+@import "styles/colors.sass"
+
+.anm-social-icon
+  width: 1.875rem
+  height: 1.875rem
+  cursor: pointer
+  display: inline-block
+
+  svg
+    width: 100%
+    height: 100%
+
+  circle, path
+    transition: all .1s linear
+
+  &.default
+    &:hover
+      circle
+        fill: $primary-blue
+
+      path
+        fill: white
+
+  &.primary
+    circle
+      fill: $primary-blue
+
+    path
+      fill: white
+
+    &:hover
+      circle
+        fill: rgba($primary-blue, .05)
+
+      path
+        fill: $primary-blue

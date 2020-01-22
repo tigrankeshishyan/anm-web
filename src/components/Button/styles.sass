@@ -1,0 +1,61 @@
+@import "~styles/colors.sass"
+@import "~styles/mixins.sass"
+@import "~styles/variables.sass"
+
+.anm-button
+  font-size: 1rem
+  padding: 0.5rem 0.9375rem
+  font-weight: 700
+  cursor: pointer
+  color: white
+  background-color: $primary-blue-25
+  border-radius: $app-button-radius
+  border: none
+  outline: none
+  transition: all .18s linear
+
+  &.primary
+    background-color: $primary-blue
+
+    &:not(:disabled):hover
+      background-color: lighten($primary-blue, 5)
+
+  &.secondary
+    background-color: $secondary-blue
+
+    &:not(:disabled):hover
+      background-color: darken($secondary-blue, 15)
+
+  &.white
+    background-color: white
+    color: $primary-blue-75
+
+    &:not(:disabled):hover
+      background-color: $secondary-blue
+
+  &.gradient
+    @include blue-gradient()
+
+    &:not(:disabled):hover
+      @include blue-gradient(background, $primary-blue, darken($secondary-blue, 10))
+
+  &.ghost-blue
+    background-color: white
+    color: $primary-blue-75
+    font-weight: 700
+
+    &:not(:disabled):hover
+      color: $primary-blue
+
+  &.success
+    background-color: $green
+    color: white
+    font-weight: 700
+
+    &:not(:disabled):hover
+      background-color: darken($green, 5%)
+
+  &:disabled
+    cursor: not-allowed !important
+    color: #dcdcdc !important
+    background-color: $border-color !important

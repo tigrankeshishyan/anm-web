@@ -1,0 +1,41 @@
+@import "../../../styles/mixins"
+@import "../../../styles/variables"
+
+$margin-bottom: 24px
+
+.anm-home-who-we-are
+  padding: 2.5rem 0
+  @media (max-width: $xs-starts)
+    padding: 0.625rem 0
+
+  .who-we-are-info-block
+    padding: 60px
+
+    @media (min-width: $md-starts)
+      padding-left: 150px
+
+    .who-we-are-info-block
+      padding: 1.875rem
+
+    .who-we-are-title,
+    .who-we-are-body
+      margin-bottom: $margin-bottom
+
+  .who-we-are-gallery
+    position: relative
+
+    .gallery-section
+      width: 100%
+
+    .block-background
+      height: 60px
+      width: 100%
+      @include blue-gradient()
+
+  @media (max-width: $sm-starts)
+    padding-top: 0
+
+    .who-we-are-info-block
+      padding: 1.25rem
+
+

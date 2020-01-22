@@ -1,0 +1,15 @@
+@import "../../../styles/colors"
+@import "../../../styles/variables"
+
+.latest-news
+  @media (max-width: $xs-starts)
+    padding-top: 0.625rem
+
+  .latest-news-cards-wrapper
+    margin-top: 2.5rem
+    padding: 1.875rem
+    background-size: cover
+    background: url(~static/images/sections/latest-news-bg.jpg) no-repeat fixed bottom right
+    @media (max-width: $xs-starts)
+      margin-top: 1.25rem
+      padding: 0.625rem

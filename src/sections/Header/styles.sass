@@ -1,0 +1,62 @@
+@import "styles/variables.sass"
+@import "styles/mixins.sass"
+
+header
+  position: sticky
+  top: 0
+  background-color: white
+  box-shadow: none
+  display: flex
+  flex-direction: row
+  align-items: center
+  flex-grow: 1
+  z-index: 101
+  transition: all .2s linear
+  transition-delay: .1s
+
+  &.scrolled
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 0.625rem 0px rgba(0, 0, 0, 0.12)
+
+  .app-bar
+    height: auto
+    position: relative
+    padding: 0 0.9375rem
+    display: flex
+    flex-direction: row
+    align-items: center
+    flex-grow: 1
+
+  .app-logo
+    width: 6.625rem
+    height: 5rem
+    display: inline-block
+
+    svg
+      width: 100%
+      height: 100%
+
+  @media (max-width: $sm-starts)
+    &, .app-bar
+      height: auto
+      flex-direction: column
+      flex-grow: 1
+      flex-shrink: 0
+      width: 100%
+
+      .logo-wrapper
+        display: flex
+        flex-direction: row
+        order: 0
+        align-self: baseline
+        margin-left: 0.9375rem
+
+      .app-bar
+        padding: 0
+    &
+      max-height: 5rem
+      overflow: hidden
+      transition: max-height .3s linear
+
+      &.open-header
+        max-height: 40rem
+

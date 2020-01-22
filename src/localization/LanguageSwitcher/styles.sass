@@ -1,0 +1,18 @@
+@import "styles/variables.sass"
+@import "styles/mixins.sass"
+
+.anm-language-menu
+
+  @media (max-width: $sm-starts)
+    order: 3
+    width: 100%
+    justify-content: center
+    justify-self: flex-end
+    margin-top: 0.625rem !important
+    @include blue-gradient()
+
+    li
+      color: white
+
+      &.active
+        color: rgba(255, 255, 255, .7)

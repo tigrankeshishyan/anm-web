@@ -1,0 +1,60 @@
+@import "styles/colors.sass"
+@import "styles/variables.sass"
+
+.anm-section-title
+  width: 100%
+
+  .title-text
+    color: $text-color
+    font-weight: 900 !important
+    position: relative
+    float: left
+
+  .section-block
+    background-color: rgba($section-bg-color, .15)
+    padding: 1.875rem 0
+
+  @media (max-width: $xs-starts)
+    margin-top: 1rem
+    .title-text
+      font-size: 1.2rem
+
+  &.short
+    .section-block
+      width: 100%
+      max-width: 500px
+
+  &.position-right
+    justify-content: flex-end
+
+    @media (max-width: $sm-starts)
+      margin-top: 1rem
+
+    .section-block
+      @media (max-width: $xs-starts)
+        max-width: 100%
+
+      .title-text
+        margin-right: 0
+        left: -50px
+
+        @media (max-width: $xs-starts)
+          left: 2rem
+
+  &.position-left
+    width: 100%
+    max-width: 250px
+    justify-content: flex-start
+
+    @media (max-width: $sm-starts)
+      width: 150px
+
+    .section-block
+      width: 100%
+
+      .title-text
+        left: 220px
+        @media (max-width: $sm-starts)
+          left: 80px
+
+

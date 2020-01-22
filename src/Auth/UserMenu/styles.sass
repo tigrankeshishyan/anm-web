@@ -1,0 +1,35 @@
+@import "styles/colors.sass"
+@import "styles/variables.sass"
+
+.logged-user-data-wrapper
+  padding: 0.625rem 1.25rem
+  border-left: 1px solid $border-color
+
+  @media (max-width: $sm-starts)
+    border-left: none
+    padding: 0
+    margin: 0
+    .user-name
+      font-size: .8rem
+
+  .user-name
+    font-size: .9rem
+
+.popover-user-menu
+  list-style-type: none
+  margin: 0
+  padding: 0.625rem 0.9375rem
+
+  li
+    padding: 0.625rem 1.563rem
+    color: $text-color
+    cursor: pointer
+    transition: color .2s linear
+
+    &:hover, &:hover > a
+      color: $primary-blue-75
+
+    &.user-logout-item
+      border-top: 1px solid $border-color
+
+

@@ -1,0 +1,38 @@
+@import "styles/colors.sass"
+@import "styles/variables.sass"
+@import "styles/mixins.sass"
+
+.news-card
+  width: 21.88rem
+  margin: 2.5rem
+  margin-bottom: 0
+  overflow: hidden
+  justify-content: flex-end
+  cursor: pointer
+  background-color: white
+  border-radius: $app-border-radius
+
+  @media (max-width: $xs-starts)
+    width: 15.63rem
+    margin: 0.625rem
+
+  &:hover
+    .news-card-poster-image
+      transform: scale(1.1)
+
+  .news-card-poster-image-wrapper
+    border-radius: $app-border-radius
+    overflow: hidden
+    height: 13rem
+
+    @media (max-width: $xs-starts)
+      height: 10rem
+
+    .news-card-poster-image
+      width: 100%
+      height: 100%
+      transition: transform 5s linear
+      @include box-shadow($bottom-diffused-hover)
+
+
+

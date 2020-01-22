@@ -1,0 +1,59 @@
+@import "styles/variables.sass"
+@import "styles/mixins.sass"
+
+.anm-about-us-section
+  .about-us-content
+    padding: 0
+
+  .goal-section
+
+    img
+      width: 25rem
+
+  .why-we-do-text
+    max-width: 37.5rem
+    @media (max-width: $sm-starts)
+      max-width: 100%
+      text-align: center
+
+  .about-us-text
+    padding-left: 8.75rem
+    align-self: baseline
+    margin-top: 1.875rem
+
+    @media (max-width: $sm-starts)
+      padding: 0.625rem
+      text-align: center
+
+  .about-us-quote-section
+    position: relative
+    height: 30rem
+
+    @media (max-width: $sm-starts)
+      height: 20rem
+
+    &::before
+      content: ""
+      position: absolute
+      width: 100%
+      height: 100%
+      background-image: url(https://anmmedia.am/api/images/b4d27342-2eb1-4343-9a6c-0d842ad4b707)
+      background-repeat: no-repeat
+      background-size: contain
+      background-attachment: fixed
+      z-index: -1
+
+      @media (max-width: $sm-starts)
+        background-image: none
+        @include blue-gradient()
+
+  .quote-text-wrapper
+    height: 100%
+
+    .quote-text
+      max-width: 21.88rem
+
+
+
+
+

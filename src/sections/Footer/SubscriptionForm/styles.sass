@@ -1,0 +1,47 @@
+@import "styles/colors.sass"
+@import "styles/variables.sass"
+
+.subscription-form-wrapper
+  .subscription-form
+    .subscribe-text
+      font-size: 1.063rem
+      text-align: right
+      color: white
+      margin-bottom: 1.25rem
+
+      @media (max-width: $sm-starts)
+        &
+          text-align: center
+
+  .input-wrapper
+    display: flex
+    justify-content: center
+    align-self: flex-end
+
+    @media (max-width: $sm-starts)
+      flex-direction: column
+      align-self: center
+
+    .subscription-input
+      font-size: 1rem
+      padding: 0.5rem
+      color: #747474
+      width: 250px
+      border: none
+      outline: none
+      border-radius: $app-border-radius 0 0 $app-border-radius
+
+      @media (max-width: $sm-starts)
+        width: 100%
+        border-radius: $app-border-radius
+
+    .subscription-button
+      border-top-left-radius: 0
+      border-bottom-left-radius: 0
+
+      @media (max-width: $sm-starts)
+        margin-top: 1rem
+        padding: 0.5rem
+        border-radius: $app-border-radius
+
+
