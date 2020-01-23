@@ -91,7 +91,7 @@ function News(props) {
     : null;
 
   const handleTagSearchRemove = useCallback(() => {
-    history.push(`/${history.location.pathname}`);
+    history.push(`${history.location.pathname}`);
   }, [history]);
 
   return (
