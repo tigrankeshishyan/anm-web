@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Document, Page } from 'react-pdf';
+import { pdfjs, Document, Page } from 'react-pdf';
 import {
   isMobile
 } from 'react-device-detect';
@@ -18,6 +18,10 @@ import {
 } from 'locales/constants';
 
 import './styles.sass';
+
+// FIX: temp but official fix of worker issue
+// https://github.com/wojtekmaj/react-pdf/issues/321#issuecomment-451291757
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const firstPage = 1;
 
@@ -38,7 +42,8 @@ const PDFViewer = (props) => {
     setNumPages(numPages);
   }, []);
 
-  const onLoadError = useCallback(() => {
+  const onLoadError = useCallback(error => {
+    console.error('PDF VIEWER ERROR :::', error);
     setHasErrorStatus(true);
     setLoadingStatus(false);
     setPageNumber(firstPage);
