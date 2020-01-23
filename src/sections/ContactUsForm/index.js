@@ -152,7 +152,7 @@ function ContactForm(props) {
           </DropZone>
         </div>
 
-        <div className="flex-row justify-between wrap">
+        <div className="flex-row justify-between align-center wrap">
           <ReCaptcha
             className="mrg-top-15"
             onChange={res => setReCaptchaStatus(!!res)}

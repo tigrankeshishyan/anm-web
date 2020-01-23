@@ -1,11 +1,19 @@
 .anm-image
-  filter: blur(3px)
+  filter: blur(1px)
+  animation: animateFilter 1s alternate infinite
 
 .anm-loaded-image
   filter: unset
+  animation: none
 
 .anm-default-image
   filter: blur(4px)
+
+@keyframes animateFilter
+  from
+    filter: blur(6px)
+  to
+    filter: blur(1px)
 
 .fit-parent
   width: 100%

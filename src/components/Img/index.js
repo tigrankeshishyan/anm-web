@@ -1,15 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { addImageProportions } from 'helpers/images';
+
+import { createEmptyImg, addImageProportions } from 'helpers/images';
+
+import DefaultImage from 'images/defaultImage.jpg';
 
 import './styles.sass';
+
+createEmptyImg(DefaultImage, 200);
 
 // Load placeholder
 const loadedImages = new Set();
 
 function Img(props) {
-  const [image, setImage] = useState({ src: props.src });
+  const [image, setImage] = useState({ src: null });
   const imgRef = useRef();
 
   const {
@@ -23,23 +28,19 @@ function Img(props) {
     ...imageProps
   } = props;
 
+  const imageSrc = addImageProportions(src, sizes.width, sizes.height, fitImage);
+
   // It will be run only once for the same src.
   useEffect((_) => {
-    !loadedImages.has(src) && setImage({ src });
-
-    const img = new Image();
-
-    img.onload = (_) => {
+    createEmptyImg(imageSrc, null, (_) => {
       // Preventing async image loading issues
       if (imgRef.current) {
-        loadedImages.add(src);
-        setImage({ src });
+        loadedImages.add(imageSrc);
+        setImage({ src: imageSrc });
         onLoad && onLoad();
       }
-    };
-
-    img.src = src;
-  }, [onLoad, src]);
+    });
+  }, [imageSrc, onLoad, sizes, fitImage]);
 
   const imageClasses = clsx(
     'anm-image',
@@ -56,7 +57,7 @@ function Img(props) {
       alt={alt}
       ref={imgRef}
       className={imageClasses}
-      src={addImageProportions(image.src, sizes.width, sizes.height, fitImage)}
+      src={image.src ? image.src : DefaultImage}
       {...imageProps}
     />
   );

@@ -125,7 +125,7 @@ function BuyScoreDialog(props) {
     setPurchaseLoadingStatus,
   ]);
 
-  const prices = JSON.parse(score.prices);
+  const prices = JSON.parse(score.prices || null);
   const scorePrice = ((prices || []).find(cur => currency === cur.currency) || {}).amount;
 
   const isLoading = isPurchaseLinkLoading || isPurchaseLoading;
