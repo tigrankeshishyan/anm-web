@@ -1,13 +1,13 @@
-import componentsLocales from 'components/locales';
-import sectionsLocales from 'sections/locales';
-import pagesLocales from 'pages/locales';
-import authLocales from 'Auth/locales';
-import globalLocales from './global';
+import componentsLocalesHy from 'components/locales/hy';
+import sectionsLocalesHy from 'sections/locales/hy';
+import pagesLocalesHy from 'pages/locales/hy';
+import authLocalesHy from 'Auth/locales/hy';
+import globalLocalesHy from './global/hy';
 
 export default {
-  ...authLocales.hy,
-  ...pagesLocales.hy,
-  ...globalLocales.hy,
-  ...sectionsLocales.hy,
-  ...componentsLocales.hy,
+  ...authLocalesHy,
+  ...pagesLocalesHy,
+  ...globalLocalesHy,
+  ...sectionsLocalesHy,
+  ...componentsLocalesHy,
 };

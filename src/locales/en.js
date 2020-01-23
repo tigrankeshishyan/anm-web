@@ -1,13 +1,13 @@
-import componentsLocales from 'components/locales';
-import sectionsLocales from 'sections/locales';
-import pagesLocales from 'pages/locales';
-import authLocales from 'Auth/locales';
-import globalLocales from './global';
+import componentsLocalesEn from 'components/locales/en';
+import sectionsLocalesEn from 'sections/locales/en';
+import pagesLocalesEn from 'pages/locales/en';
+import authLocalesEn from 'Auth/locales/en';
+import globalLocalesEn from './global/en';
 
 export default {
-  ...authLocales.en,
-  ...pagesLocales.en,
-  ...globalLocales.en,
-  ...sectionsLocales.en,
-  ...componentsLocales.en,
+  ...authLocalesEn,
+  ...pagesLocalesEn,
+  ...globalLocalesEn,
+  ...sectionsLocalesEn,
+  ...componentsLocalesEn,
 };
