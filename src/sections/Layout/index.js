@@ -9,6 +9,8 @@ import MaterialThemeProvider from 'theme/MaterialThemeProvider';
 
 import CookieBanner from 'components/CookieBanner';
 
+import RouteProvider from 'containers/RouteProvider';
+
 import Header from 'sections/Header';
 import Footer from 'sections/Footer';
 
@@ -23,28 +25,30 @@ import './index.sass';
 function Layout(props) {
   return (
     <BrowserRouter>
-      <IntlProvider {...props}>
-        <ApolloProvider client={client}>
-          <MaterialThemeProvider>
-            <ToastMessages>
-              <div className="flex-column anm-app-layout">
-                <div className="grow">
-                  <Header
-                    location={props.location}
-                  />
-                  <Switch>
-                    <main className="main-app">
-                      {renderRoutes(routes)}
-                    </main>
-                  </Switch>
+      <RouteProvider>
+        <IntlProvider {...props}>
+          <ApolloProvider client={client}>
+            <MaterialThemeProvider>
+              <ToastMessages>
+                <div className="flex-column anm-app-layout">
+                  <div className="grow">
+                    <Header
+                      location={props.location}
+                    />
+                    <Switch>
+                      <main className="main-app">
+                        {renderRoutes(routes)}
+                      </main>
+                    </Switch>
+                  </div>
+                  <Footer/>
+                  <CookieBanner/>
                 </div>
-                <Footer/>
-                <CookieBanner/>
-              </div>
-            </ToastMessages>
-          </MaterialThemeProvider>
-        </ApolloProvider>
-      </IntlProvider>
+              </ToastMessages>
+            </MaterialThemeProvider>
+          </ApolloProvider>
+        </IntlProvider>
+      </RouteProvider>
     </BrowserRouter>
   );
 }
