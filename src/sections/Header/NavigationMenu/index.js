@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 
 import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -35,7 +36,7 @@ function NavigationMenu(props) {
       <nav className="anm-navigation-menu">
         <ul className="reset-list-styles">
           {menuItems.map((menuItem) => {
-            const isActive = location && location.pathname.includes(menuItem.path);
+            const isActive = location && location.pathname.includes(menuItem.linkPath);
             return (
               <NavMenuItem
                 {...menuItem}
@@ -60,4 +61,4 @@ NavigationMenu.propTypes = {
   iseMenuOpen: PropTypes.bool,
 };
 
-export default NavigationMenu;
+export default withRouter(NavigationMenu);

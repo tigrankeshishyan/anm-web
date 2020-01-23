@@ -58,11 +58,6 @@ class Header extends React.PureComponent {
       isHeaderOpen,
     } = this.state;
 
-    const {
-      // Location provided by Layout component
-      location,
-    } = this.props;
-
     return (
       <ClickAwayListener
         touchEvent={isHeaderOpen ? 'onTouchEnd' : false}
@@ -91,7 +86,6 @@ class Header extends React.PureComponent {
             </div>
 
             <NavigationMenu
-              location={location}
               iseMenuOpen={isHeaderOpen}
               setMenuOpenStatus={this.setMenuOpenStatus}
             />
