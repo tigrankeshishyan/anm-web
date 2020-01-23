@@ -1,5 +1,4 @@
 import React from 'react';
-import { isWindowExists } from 'helpers';
 
 function MainApp(props) {
   const {

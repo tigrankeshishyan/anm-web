@@ -20,16 +20,16 @@ function ImagesCarousel(props) {
 
   const openModal = useCallback(() => {
     setModalOpenStatus(true);
-  }, []);
+  }, [setModalOpenStatus]);
 
   const closeModal = useCallback(() => {
     setModalOpenStatus(false);
-  }, []);
+  }, [setModalOpenStatus]);
 
   const handleImageSelect = useCallback(imageIndex => {
     setSelectedImageIndex(imageIndex);
     openModal();
-  }, []);
+  }, [openModal, setSelectedImageIndex]);
 
   const photos = images.map(image => ({
     photo: image.url,

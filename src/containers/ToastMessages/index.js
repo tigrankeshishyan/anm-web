@@ -1,12 +1,8 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import { SnackbarProvider, withSnackbar } from 'notistack';
 
 import colors from '_constants/colors';
-
-// import './styles.sass';
 
 /**
  * "notistick" requires to pass "classes" object to override the styles of messages

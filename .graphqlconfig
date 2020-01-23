@@ -1,6 +1,6 @@
 {
   "projects": {
-    "gatsby": {
+    "ANM": {
       "name": "ANM Graphql Schema",
       "schemaPath": "schema.graphql",
       "extensions": {
@@ -10,20 +10,6 @@
             "headers": {
               "user-agent": "JS GraphQL"
             },
-            "introspect": false
-          }
-        }
-      }
-    },
-    "remote": {
-      "schemaPath": "gatsbySchema.json",
-      "includes": [
-        "./gatsbySchema.json"
-      ],
-      "extensions": {
-        "endpoints": {
-          "Gatsby Schema": {
-            "url": "./gatsbySchema.json",
             "introspect": false
           }
         }

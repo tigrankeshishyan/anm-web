@@ -1,5 +1,5 @@
-import Grid from '@material-ui/core/Grid';
 import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 
 import { ApolloProvider } from '@apollo/react-hooks';
 import ToastMessages from 'containers/ToastMessages';
@@ -14,7 +14,7 @@ import Footer from 'sections/Footer';
 
 import IntlProvider from 'localization';
 
-import client from '../../gatsby-theme-apollo/client';
+import client from '_graphql';
 
 import './index.sass';
 
@@ -24,27 +24,28 @@ function Layout(props) {
   } = props;
 
   return (
-    <IntlProvider {...props}>
-      <ApolloProvider client={client}>
-        <MaterialThemeProvider>
-          <ToastMessages>
-            <div className="flex-column anm-app-layout">
-              <div className="grow">
-                <Header
-                  location={props.location}
-                  pageContext={props.pageContext}
-                />
-                <MainApp>
-                  {children}
-                </MainApp>
+    <BrowserRouter>
+      <IntlProvider {...props}>
+        <ApolloProvider client={client}>
+          <MaterialThemeProvider>
+            <ToastMessages>
+              <div className="flex-column anm-app-layout">
+                <div className="grow">
+                  <Header
+                    location={props.location}
+                  />
+                  <MainApp>
+                    {children}
+                  </MainApp>
+                </div>
+                <Footer/>
+                <CookieBanner/>
               </div>
-              <Footer />
-              <CookieBanner />
-            </div>
-          </ToastMessages>
-        </MaterialThemeProvider>
-      </ApolloProvider>
-    </IntlProvider>
+            </ToastMessages>
+          </MaterialThemeProvider>
+        </ApolloProvider>
+      </IntlProvider>
+    </BrowserRouter>
   );
 }
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Hidden from '@material-ui/core/Hidden';
 
 import LanguageSwitcher from 'localization/LanguageSwitcher';
 import { withI18n } from 'localization/helpers';
@@ -61,7 +60,6 @@ class Header extends React.PureComponent {
     const {
       // Location provided by Layout component
       location,
-      pageContext,
     } = this.props;
 
     return (
@@ -93,9 +91,8 @@ class Header extends React.PureComponent {
               iseMenuOpen={isHeaderOpen}
               setMenuOpenStatus={this.setMenuOpenStatus}
             />
-            <LanguageSwitcher
-              pageContext={pageContext}
-            />
+
+            <LanguageSwitcher />
 
             <Auth />
           </div>
@@ -104,9 +101,5 @@ class Header extends React.PureComponent {
     );
   }
 }
-
-Header.defaultProps = {
-  pageContext: {},
-};
 
 export default withI18n(Header);

@@ -1,9 +1,3 @@
-// TODO: Remove all catalogs from  HTML. Instead load catalog for current language dynamically
-// NOTE: It worked like that before. We removed because of gatsby static HTML.
-// Helmet was unable to add meta tags with async data loading.
-
-// TODO: Use react-intl's FormattedDateTime component instead of moment js.
-
 import React from 'react';
 import { useEffect } from 'react';
 
@@ -29,17 +23,14 @@ function AnmIntlProvider(props) {
     children,
   } = props;
 
-  const locale = getCurrentLang()
-  || props.pageContext && props.pageContext.locale
-    ? props.pageContext.locale
-    : defaultLang;
+  const locale = getCurrentLang() || defaultLang;
 
   useEffect(() => {
     if (isWindowExists() && locale && locale !== 'undefined') {
       // Application language will be set once the app started
       localStorage.setItem(langStorageKey, locale);
     }
-  }, []);
+  }, [locale]);
 
   // TODO: There is an issue in react-intl related with language data import
   // Check console error

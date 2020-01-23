@@ -62,8 +62,12 @@ function ContactForm(props) {
   const handleFormChange = useCallback(data => {
       setFormData({ ...formData, ...data });
     },
-    [formData],
+    [setFormData, formData],
   );
+
+  const showError = useCallback(() => {
+    addToastMessage.error(i18n('somethingWrong'));
+  }, [addToastMessage, i18n]);
 
   const handleFormSubmit = useCallback(async () => {
     if (isRecaptchaConfirmed && canSubmitForm(formData)) {
@@ -85,11 +89,18 @@ function ContactForm(props) {
         showError();
       }
     }
-  }, [formData, isRecaptchaConfirmed]);
-
-  const showError = useCallback(() => {
-    addToastMessage.error(i18n('somethingWrong'));
-  }, []);
+  }, [
+    i18n,
+    formData,
+    showError,
+    setFormKey,
+    canSubmitForm,
+    requestMessage,
+    addToastMessage,
+    setReCaptchaStatus,
+    isRecaptchaConfirmed,
+    transformDataBeforeSend,
+    ]);
 
   return (
     <Loading
@@ -130,7 +141,7 @@ function ContactForm(props) {
                 {
                   formData.file
                     ? formData.file.name
-                    : (
+                    :(
                       <span className="mrg-sides-15">
                         {i18n('attachFile')}
                       </span>

@@ -41,11 +41,11 @@ function SubscriptionForm(props) {
     } else {
       addToastMessage.error(i18n('somethingWrong'));
     }
-  }, [email]);
+  }, [i18n, addContact, addToastMessage, setEmail, email]);
 
   const handleInputChange = useCallback(event => {
     setEmail(event.target.value);
-  }, []);
+  }, [setEmail]);
 
   return (
     <Loading

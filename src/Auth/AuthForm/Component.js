@@ -37,19 +37,17 @@ function AuthForm(props) {
       ...formData,
       ...data,
     });
-  }, [formData]);
+  }, [handleFormChange, formData]);
 
-  const handleRecaptchaSet = useCallback((cKey) => {
+  const handleRecaptchaSet = useCallback(cKey => {
     if (cKey) {
       setRecaptcha(true);
     }
-  }, []);
+  }, [setRecaptcha]);
 
-  const onFormSubmit = useCallback((e) => {
+  const onFormSubmit = useCallback(e => {
     e.preventDefault();
-    if (isForgotPasswordMode) {
-
-    } else {
+    if (!isForgotPasswordMode) {
       // in case of sign up
       if (isSubmitDisabled) {
         handleFormSubmit(formData);
@@ -57,11 +55,11 @@ function AuthForm(props) {
         handleFormSubmit(formData);
       }
     }
-  }, [isSubmitDisabled, isForgotPasswordMode, formData]);
+  }, [handleFormSubmit, isSubmitDisabled, isForgotPasswordMode, formData]);
 
   const toggleTermsAgreed = useCallback(() => {
     setTermsAgreed((agreedWithTerms) => !agreedWithTerms);
-  }, []);
+  }, [setTermsAgreed]);
 
   return (
     <form
@@ -73,7 +71,7 @@ function AuthForm(props) {
         ? (
           <ForgetPassword/>
         )
-        : (
+        :(
           <>
             {!isSignInMode && (
               <>
@@ -125,7 +123,7 @@ function AuthForm(props) {
               value={formData.password}
               error={formErrors.password}
               label={i18n('form.password')}
-              helperText={!isSignInMode ? i18n('password.wrongPassword') : ''}
+              helperText={!isSignInMode ? i18n('password.wrongPassword'):''}
             />
 
             <div className="mrg-top-15">
@@ -152,8 +150,9 @@ function AuthForm(props) {
                     {' '}
                     <a
                       target="_blank"
-                      href={`/${getCurrentLang()}/terms`}
+                      rel="noopener noreferrer"
                       className="anm-link blue-on-hover"
+                      href={`/${getCurrentLang()}/terms`}
                     >
                       {i18n('termsAndPrivacyPolicyPlural')}
                     </a>
@@ -175,7 +174,7 @@ function AuthForm(props) {
               >
                 {isSignInMode
                   ? i18n('signIn')
-                  : i18n('signUp')}
+                  :i18n('signUp')}
               </Button>
             </div>
           </>

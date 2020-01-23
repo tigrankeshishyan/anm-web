@@ -1,5 +1,4 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import lodashGet from 'lodash.get';
 
 import { useLazyQuery } from '@apollo/react-hooks';
 
@@ -19,6 +18,7 @@ import Loading from 'components/Loading';
 import withUser from 'hoc/withUser';
 
 import { withI18n } from 'localization/helpers';
+import { getCurrentLang } from 'locales/helpers';
 import {
   FETCH_SCORE_PURCHASE_LINK,
 } from '_graphql/actions/scores';
@@ -35,18 +35,16 @@ import ScoreDetailsInfo from '../ScoreDetailsInfo';
 
 import './styles.sass';
 
-const getScoreIdVar = data => ({
-  scoreId: lodashGet(data, 'score.id', 0),
-});
-
 const countryOptions = countryList.map(country => ({
   label: country.name,
   value: country.code,
 }));
 
+const locale = getCurrentLang();
+
 function BuyScoreDialog(props) {
   const [isPurchaseLoading, setPurchaseLoadingStatus] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState(props.pageContext.locale === 'hy' ? 'AM' : null);
+  const [selectedCountry, setSelectedCountry] = useState(locale === 'hy' ? 'AM' : null);
   const [isDialogOpen, setDialogStatus] = useState(false);
   const [fetchScorePurchaseLink, { data, loading: isPurchaseLinkLoading }] = useLazyQuery(FETCH_SCORE_PURCHASE_LINK, {
     onError: () => {
@@ -61,10 +59,10 @@ function BuyScoreDialog(props) {
         window.location.href = data.scorePurchaseLink;
       } else {
         setPurchaseLoadingStatus(false);
-        addToastMessage.error(i18n('somethingWrong'));
+        props.addToastMessage.error(props.i18n('somethingWrong'));
       }
     }
-  }, [data]);
+  }, [props, setPurchaseLoadingStatus, data]);
 
   const {
     i18n,
@@ -91,11 +89,11 @@ function BuyScoreDialog(props) {
     } else {
       setDialogStatus(true);
     }
-  }, [score, isScorePurchased]);
+  }, [score, setDialogStatus, userShouldBeLoggedIn, isScorePurchased]);
 
   const closeDialog = useCallback(() => {
     setDialogStatus(false);
-  }, []);
+  }, [setDialogStatus]);
 
   const handleSubmit = useCallback(() => {
     if (!userShouldBeLoggedIn()) {
@@ -106,17 +104,26 @@ function BuyScoreDialog(props) {
     try {
       fetchScorePurchaseLink({
         variables: {
-          ...getScoreIdVar(props.pageContext),
-          redirect: lodashGet(props.pageContext, 'pageUrl', null),
-          country: selectedCountry,
           currency,
+          scoreId: score.id,
+          country: selectedCountry,
+          redirect: window.location.href,
         },
       });
     } catch {
       addToastMessage.error(i18n('somethingWrong'));
       setPurchaseLoadingStatus(false);
     }
-  }, [addToastMessage, selectedCountry, currency]);
+  }, [
+    i18n,
+    score.id,
+    currency,
+    addToastMessage,
+    selectedCountry,
+    userShouldBeLoggedIn,
+    fetchScorePurchaseLink,
+    setPurchaseLoadingStatus,
+  ]);
 
   const prices = JSON.parse(score.prices);
   const scorePrice = ((prices || []).find(cur => currency === cur.currency) || {}).amount;

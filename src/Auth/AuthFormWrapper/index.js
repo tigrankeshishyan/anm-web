@@ -1,6 +1,4 @@
-import SEO from 'components/SEO';
 import React, { useCallback, useState, useEffect } from 'react';
-import { navigate } from 'gatsby';
 
 import { useMutation } from '@apollo/react-hooks';
 
@@ -10,10 +8,13 @@ import { withToastActions } from 'containers/ToastMessages';
 
 import ContentSection from 'sections/ContentSection';
 
+import SEO from 'components/SEO';
 import SocialIcon from 'components/SocialIcon';
 
 import { validateForm } from 'Auth/helpers';
 import { withI18n } from 'localization/helpers';
+
+import { getCurrentLang } from 'locales/helpers';
 
 import {
   LOG_IN,
@@ -27,7 +28,7 @@ import AuthForm from 'Auth/AuthForm';
 import './styles.sass';
 
 const {
-  GATSBY_API_URL,
+  REACT_APP_API,
 } = process.env;
 
 const emptySignInForm = {
@@ -56,12 +57,15 @@ const requiredFields = [
 
 const getResponseStatusKey = code => {
   switch (code) {
-    case 1:
-      return 'wrongCredentials';
     case 2:
       return 'useFacebook';
+    case 1:
+    default:
+      return 'wrongCredentials';
   }
 };
+
+const locale = getCurrentLang();
 
 function AuthFormWrapper(props) {
   const [formKey, setFormKey] = useState('form');
@@ -77,32 +81,32 @@ function AuthFormWrapper(props) {
     const errors = {};
     if (userCreateError) {
       if (userCreateError.message && userCreateError.message.includes(DUPLICATE_EMAIL_ERROR)) {
-        errors.email = i18n('email.duplicateEmailError');
+        errors.email = props.i18n('email.duplicateEmailError');
         props.addToastMessage.error(errors.email);
         setErrors(errors);
       }
     }
-  }, [userCreateError]);
+  }, [props, setErrors, createUser, userCreateError]);
 
   useEffect(() => {
     const isSignInMode = props.location.pathname.includes('sign-in');
-    const formData = isSignInMode ? emptySignInForm : emptySignUpForm;
+    const formData = isSignInMode ? emptySignInForm:emptySignUpForm;
 
     setFormData(formData);
     setSignInMode(isSignInMode);
     setFormKey(formKey);
-  }, []);
+  }, [props, formKey, setFormKey, setSignInMode, setFormData]);
 
   const {
     i18n,
-    pageContext,
+    history,
     addToastMessage,
   } = props;
 
-  const handleFormSubmit = useCallback(async (data) => {
+  const handleFormSubmit = useCallback(async data => {
     const fields = isSignInMode
       ? loginRequiredFields
-      : [...loginRequiredFields, ...requiredFields];
+      :[...loginRequiredFields, ...requiredFields];
 
     const errors = validateForm(data, fields, i18n);
 
@@ -113,7 +117,7 @@ function AuthFormWrapper(props) {
           variables: data,
           refetchQueries: [{ query: AUTHENTICATE_USER }],
         })
-        : await createUser({ variables: data });
+        :await createUser({ variables: data });
 
       if (res && res.data) {
         const {
@@ -127,24 +131,31 @@ function AuthFormWrapper(props) {
         // if createUser exists that means that user just was created
         if (createUser) {
           addToastMessage.success(i18n('profileCreated'));
-          navigate(`${pageContext.locale}/auth/sign-in`);
+          history.push(`${locale}/auth/sign-in`);
         } else if (errorCode) {
           addToastMessage.error(i18n(getResponseStatusKey(errorCode)));
         } else {
           setFormData(emptySignUpForm);
-          navigate(`${pageContext.locale}/home`);
+          history.push(`${locale}/home`);
         }
       }
     }
     setErrors(errors);
-  }, [isSignInMode]);
+  }, [
+    i18n,
+    logIn,
+    history,
+    setErrors,
+    createUser,
+    setFormData,
+    isSignInMode,
+    addToastMessage,
+  ]);
 
   return (
     <>
       <SEO
-        url={pageContext.pageUrl}
-        locale={pageContext.locale}
-        title={i18n(isSignInMode ? 'signIn' : 'signUp')}
+        title={i18n(isSignInMode ? 'signIn':'signUp')}
       />
 
       <ContentSection>
@@ -164,7 +175,7 @@ function AuthFormWrapper(props) {
 
               <a
                 onClick={() => setPageLoading(true)}
-                href={`${GATSBY_API_URL}/auth/facebook`}
+                href={`${REACT_APP_API}/auth/facebook`}
               >
                 <SocialIcon iconName="Facebook"/>
               </a>

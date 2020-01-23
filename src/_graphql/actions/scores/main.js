@@ -62,3 +62,13 @@ export const SEARCH_SCORE = gql`
   
   ${scoreMain}
 `;
+
+export const FETCH_SINGLE_SCORE = gql`
+  query FetchScore($id: Int!) {
+    score(id: $id) {
+      ...scoreMain
+    }
+  }
+
+  ${scoreMain}
+`;

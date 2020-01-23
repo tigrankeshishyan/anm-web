@@ -1,19 +1,19 @@
 import React from 'react';
 import get from 'lodash.get';
+import { useQuery } from '@apollo/react-hooks';
 
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
 import { withI18n } from 'localization/helpers';
-import { isWindowExists } from 'helpers';
 
 import PosterWithSectionBlock from 'sections/PosterWithSectionBlock';
 
 import SocialShareIcons from 'components/SocialShareIcons';
 import PublishedText from 'components/PublishedText';
 import NewsGallery from 'components/NewsGallery';
-import SimilarNews from 'components/SimilarNews';
+import SimilarNews from 'sections/SimilarNews';
 import PageTitle from 'components/PageTitle';
 import NoData from 'components/NoData';
 import Link from 'components/Link';
@@ -22,15 +22,22 @@ import SEO from 'components/SEO';
 
 import { noop } from 'helpers';
 
+import {
+  FETCH_SINGLE_ARTICLE,
+} from '_graphql/actions/news';
+
 import './styles.sass';
 
 function NewsDetails(props) {
+  const { data: { article = {} } = {} } = useQuery(FETCH_SINGLE_ARTICLE, {
+    variables: {
+      id: Number(props.router.match.params.articleId),
+    },
+  });
+
   const {
     i18n,
-    pageContext,
   } = props;
-
-  const { article } = pageContext;
 
   const posterUrl = get(article, 'poster.url', '');
   const authorName = get(article, 'author.firstName', '');
@@ -46,8 +53,6 @@ function NewsDetails(props) {
           author={author}
           imageUrl={posterUrl}
           title={article.title}
-          url={pageContext.pageUrl}
-          locale={pageContext.locale}
           description={article.description}
         />
 
@@ -132,9 +137,5 @@ function NewsDetails(props) {
       </>
     ) : !article && <NoData translationId="article.notFound"/>;
 }
-
-NewsDetails.defaultProps = {};
-
-NewsDetails.propTypes = {};
 
 export default withI18n(NewsDetails);

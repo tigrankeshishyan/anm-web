@@ -13,8 +13,6 @@ import {
   FORGET_PASSWORD,
 } from '_graphql/actions/user';
 
-// import './styles.sass';
-
 function ForgetPassword(props) {
   const [state, setState] = useState({ email: '' });
   const [requestStatus, setRequestStatus] = useState(false);
@@ -22,7 +20,6 @@ function ForgetPassword(props) {
 
   const {
     i18n,
-    addToastMessage,
   } = props;
 
   const handleEmailChange = useCallback(data => {
@@ -41,7 +38,7 @@ function ForgetPassword(props) {
     if (res && res.data && res.data.forgetPassword) {
       setRequestStatus(res.data.forgetPassword.success);
     }
-  }, [addToastMessage, forgetPassword, state]);
+  }, [setRequestStatus, forgetPassword, state]);
 
   return (
     <Loading isLoading={loading}>

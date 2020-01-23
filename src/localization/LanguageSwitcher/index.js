@@ -1,18 +1,13 @@
 import React, { useCallback } from 'react';
 import clsx from 'clsx';
-// import PropTypes from 'prop-types';
-import {languages, langStorageKey } from 'locales';
+import { languages, langStorageKey } from 'locales';
 import { isWindowExists } from 'helpers';
 
-import { getCurrentLang } from '../../locales/helpers';
+import { getCurrentLang } from 'locales/helpers';
 
 import './styles.sass';
 
-function LanguageSwitcher(props) {
-  const {
-    pageContext,
-  } = props;
-
+function LanguageSwitcher() {
   const currentLang = getCurrentLang();
 
   const handleLanguageChange = useCallback(lang => {
@@ -20,7 +15,7 @@ function LanguageSwitcher(props) {
       localStorage.setItem(langStorageKey, lang);
       window.location.href = window.location.href.replace(currentLang, lang);
     }
-  }, []);
+  }, [currentLang]);
 
   return (
     <ul className="horizontal-nav-menu anm-language-menu">
@@ -35,7 +30,7 @@ function LanguageSwitcher(props) {
                 className={clsx(
                   'horizontal-nav-menu-item',
                   'anm-navigation-item',
-                  { active: pageContext.locale === path },
+                  { active: currentLang === path },
                 )}
                 onClick={() => handleLanguageChange(path)}
               >

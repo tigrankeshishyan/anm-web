@@ -1,5 +1,4 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 import {
   Cookies,
   CookiesProvider,
@@ -35,14 +34,18 @@ function CookieBanner(props) {
         className="anm-cookie-banner"
         buttonMessage={i18n('submit')}
         message={i18n('cookies.cookieText')}
-        link={<a href={`/${getCurrentLang()}/terms`} target="_blank">{i18n('termsAndPrivacyPolicy')}</a>}
+        link={(
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={`/${getCurrentLang()}/terms`}
+          >
+            {i18n('termsAndPrivacyPolicy')}
+          </a>
+        )}
       />
     </CookiesProvider>
   );
 }
-
-CookieBanner.defaultProps = {};
-
-CookieBanner.propTypes = {};
 
 export default withI18n(CookieBanner);

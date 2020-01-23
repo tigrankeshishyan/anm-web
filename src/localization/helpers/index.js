@@ -5,7 +5,7 @@ import { useIntl } from 'react-intl';
 export const withI18n = (Comp) => (props) => {
   const intl = useIntl();
 
-  const i18n = (key) => intl.messages && intl.messages[key] || ' ';
+  const i18n = (key) => (intl.messages && intl.messages[key]) || ' ';
 
   return (
     <Comp {...props} i18n={i18n}/>

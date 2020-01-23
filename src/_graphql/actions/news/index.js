@@ -1,4 +1,5 @@
 import { gql } from 'apollo-boost';
+import { newsAll } from '_graphql/fragments/news';
 
 export const FETCH_NEWS = gql`
   query NewsQuery($count: Int, $offset: Int, $filter: ArticleFilter) {
@@ -28,4 +29,15 @@ export const FETCH_NEWS = gql`
       totalCount
     }
   }
+`;
+
+export const FETCH_SINGLE_ARTICLE = gql`
+  query Article($id: Int!) {
+    article(
+      id: $id
+    ) {
+      ...newsAll
+    }
+  }
+  ${newsAll}
 `;

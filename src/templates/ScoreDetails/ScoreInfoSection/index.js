@@ -1,9 +1,5 @@
-import Tag from 'components/Tag';
-import { SCORE_DETAIL } from 'locales/constants';
 import React from 'react';
 import PropTypes from 'prop-types';
-
-// import './styles.sass';
 
 function ScoreInfoSection(props) {
   const {

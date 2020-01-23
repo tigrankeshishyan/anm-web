@@ -1,6 +1,6 @@
 import React from 'react';
 import get from 'lodash.get';
-import moment from 'helpers/date';
+import { useQuery } from '@apollo/react-hooks';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -11,16 +11,22 @@ import SocialShareIcons from 'components/SocialShareIcons';
 
 import PosterWithSectionBlock from 'sections/PosterWithSectionBlock';
 
+import moment from 'helpers/date';
+
+import {
+  FETCH_SINGLE_MUSICIAN,
+} from '_graphql/actions/musicians';
+
 import './styles.sass';
 
 const dateFormat = 'MMM DD YYYY';
 
 function MusicianDetails(props) {
-  const {
-    pageContext,
-  } = props;
-
-  const { musician } = pageContext;
+  const { data: { musician = {} } = {} } = useQuery(FETCH_SINGLE_MUSICIAN, {
+    variables: {
+      id: Number(props.match.params.id),
+    },
+  });
 
   const musicianPhoto = get(musician, 'photo.url', '');
   const firstName = get(musician, 'firstName', '');
@@ -34,8 +40,6 @@ function MusicianDetails(props) {
         imageUrl={musicianPhoto}
         title={musicianFullName}
         author={musicianFullName}
-        url={pageContext.pageUrl}
-        locale={pageContext.locale}
         description={musicianFullName}
       />
 

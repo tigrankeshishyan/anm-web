@@ -1,97 +1,127 @@
-import path from 'path';
+import News from 'pages/News';
+import Terms from 'pages/Terms';
+import HomePage from 'pages/Home';
+import AboutUs from 'pages/AboutUs';
+import NotFound from 'pages/NotFound';
+import Musicians from 'pages/Musicians';
+import ContactUs from 'pages/ContactUs';
+import UserProfile from 'pages/UserProfile';
+import MusicSheetScores from 'pages/Scores';
+
+import NewsDetails from 'templates/NewsDetails';
+import ScoreDetails from 'templates/ScoreDetails';
+import MusicianDetails from 'templates/MusicianDetails';
+
+import ResetPassword from 'Auth/ResetPassword/Component';
+import AuthFormWrapper from 'Auth/AuthFormWrapper';
 
 export default [
   {
     path: '/',
-    includeInGatsby: true,
-    title: 'home',
     key: 'home',
-    component: path.resolve('src/main-pages/Home/index.js'),
+    title: 'home',
+    component: HomePage,
   },
   {
-    path: '/home',
-    includeInGatsby: true,
-    title: 'home',
     key: 'home',
-    component: path.resolve('src/main-pages/Home/index.js'),
+    path: '/:locale/home',
+    title: 'home',
+    component: HomePage,
   },
   {
-    title: 'news',
-    isMain: true,
-    path: '/news',
     key: 'news',
-    component: path.resolve('src/main-pages/News/index.js'),
+    isMain: true,
+    path: '/:locale/news',
+    title: 'news',
+    component: News,
+    translationKey: 'news',
+  },
+  {
+    title: 'news/:path/:articleId',
+    isMain: true,
+    path: '/:locale/news',
+    key: 'news',
+    component: NewsDetails,
     translationKey: 'news',
   },
   {
     title: 'Music Sheet Scores',
     isMain: true,
     key: 'scores',
-    path: '/music-sheet-scores',
-    component: path.resolve('src/main-pages/Scores/index.js'),
+    path: '/:locale/music-sheet-scores',
+    component: MusicSheetScores,
     translationKey: 'scores.title',
     pageDescriptionTranslationKey: 'scores.description',
   },
   {
-    key: 'musicians',
-    title: 'musicians',
-    isMain: true,
-    path: '/musicians',
-    translationKey: 'musicians',
-    component: path.resolve('src/main-pages/Musicians/index.js'),
+    key: 'score-details',
+    title: 'Music Sheet Score Details',
+    path: '/:locale/music-sheet-scores/:path/:id',
+    component: ScoreDetails,
   },
   {
-    title: 'About Us',
-    path: '/about-us',
+    isMain: true,
+    key: 'musicians',
+    title: 'musicians',
+    component: Musicians,
+    path: ':locale/musicians',
+    translationKey: 'musicians',
+  },
+  {
+    key: 'musician-details',
+    title: 'Musician Details',
+    component: MusicianDetails,
+    path: ':locale/musicians/:path/:id',
+  },
+  {
     key: 'aboutUs',
-    includeInGatsby: true,
-    component: path.resolve('src/main-pages/AboutUs/index.js'),
+    title: 'About Us',
+    component: AboutUs,
+    path: '/:locale/about-us',
     translationKey: 'aboutUs',
     pageDescriptionTranslationKey: 'aboutUs.info',
   },
   {
-    title: 'Contact Us',
     isMain: true,
-    path: '/contact-us',
     key: 'contactUs',
-    component: path.resolve('src/main-pages/ContactUs/index.js'),
+    title: 'Contact Us',
+    component: ContactUs,
+    path: '/:locale/contact-us',
     translationKey: 'contactUs',
   },
   {
     key: 'terms',
-    includeInGatsby: true,
     title: 'terms',
-    path: '/terms',
+    component: Terms,
+    path: '/:locale/terms',
     translationKey: 'termsAndPrivacyPolicy',
-    component: path.resolve('src/main-pages/Terms/index.js'),
   },
   {
-    includeInGatsby: true,
     key: 'profile',
     title: 'User Profile',
-    path: '/user-profile',
+    component: UserProfile,
     translationKey: 'profile',
-    component: path.resolve('src/main-pages/UserProfile/index.js'),
+    path: '/:locale/user-profile',
   },
   {
-    includeInGatsby: true,
     key: 'signIn',
     title: 'Sign In',
-    path: '/auth/sign-in',
-    component: path.resolve('src/Auth/AuthFormWrapper/index.js'),
+    component: AuthFormWrapper,
+    path: '/:locale/auth/sign-in',
   },
   {
-    includeInGatsby: true,
     key: 'signUp',
     title: 'Sign Up',
-    path: '/auth/sign-up',
-    component: path.resolve('src/Auth/AuthFormWrapper/index.js'),
+    component: AuthFormWrapper,
+    path: '/:locale/auth/sign-up',
   },
   {
-    includeInGatsby: true,
     key: 'resetPassword',
     title: 'Reset Password',
-    path: '/reset-password/:token',
-    component: path.resolve('src/Auth/ResetPassword/index.js'),
+    component: ResetPassword,
+    path: '/:locale/reset-password/:token',
+  },
+  {
+    component: NotFound,
   },
 ];

@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
 import { useMutation } from '@apollo/react-hooks';
-import { navigate } from 'gatsby';
 
 import { TextField } from 'components/Form';
 import Loading from 'components/Loading';
@@ -9,6 +8,8 @@ import Button from 'components/Button';
 import { isCorrectPassword } from 'helpers';
 import { withI18n } from 'localization/helpers';
 import { withToastActions } from 'containers/ToastMessages';
+
+import { getCurrentLang } from 'locales/helpers';
 
 import {
   RESET_PASSWORD,
@@ -19,16 +20,19 @@ const defaultState = {
   newPassword: '',
 };
 
+const locale = getCurrentLang();
+
 function ResetPassword(props) {
   const [state, setState] = useState(defaultState);
   const [resetPassword, { loading }] = useMutation(RESET_PASSWORD);
 
   const {
-    addToastMessage,
-    pageContext,
-    token,
     i18n,
+    history,
+    addToastMessage,
   } = props;
+
+  const { token } = props.match.params;
 
   const handleInputChange = useCallback(data => {
     setState(state => ({ ...state, ...data }));
@@ -68,14 +72,14 @@ function ResetPassword(props) {
           } else if (res.data.resetPassword) {
             setState(defaultState);
             addToastMessage.success(i18n('passwordResetSuccess'));
-            await navigate(`${pageContext.locale}/auth/sign-in`);
+            await history.push(`${locale}/auth/sign-in`);
           }
         }
       } catch (error) {
         addToastMessage.error(i18n('somethingWrong'));
       }
     }
-  }, [navigate, pageContext, token, state, i18n, resetPassword]);
+  }, [history, token, state, i18n, resetPassword, setState, addToastMessage]);
 
   return (
     <Loading isLoading={loading}>
@@ -121,10 +125,6 @@ function ResetPassword(props) {
     </Loading>
   );
 }
-
-ResetPassword.defaultProps = {};
-
-ResetPassword.propTypes = {};
 
 export default withI18n(
   withToastActions(

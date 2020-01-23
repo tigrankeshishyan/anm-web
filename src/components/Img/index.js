@@ -39,7 +39,7 @@ function Img(props) {
     };
 
     img.src = src;
-  }, [src]);
+  }, [onLoad, src]);
 
   const imageClasses = clsx(
     'anm-image',

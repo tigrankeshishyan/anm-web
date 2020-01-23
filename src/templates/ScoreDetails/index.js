@@ -6,11 +6,15 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 import SEO from 'components/SEO';
+import Loading from 'components/Loading';
 import PDFViewer from 'components/PDFViewer';
 
 import { withI18n } from 'localization/helpers';
 
-import { CHECK_IF_SCORE_PURCHASED } from '_graphql/actions/scores';
+import {
+  FETCH_SINGLE_SCORE,
+  CHECK_IF_SCORE_PURCHASED,
+} from '_graphql/actions/scores';
 
 import withUser from 'hoc/withUser';
 
@@ -25,24 +29,30 @@ import ScoreDetailsInfo from './ScoreDetailsInfo';
 
 import './styles.sass';
 
+const getId = props => Number(props.match.params.scoreId);
+
 function ScoreDetails(props) {
+  const {
+    data: { score = {} } = {},
+    loading: isScoreLoading,
+  } = useQuery(FETCH_SINGLE_SCORE, {
+    variables: {
+      id: getId(props),
+    },
+  });
+
   const {
     data: { isScorePurchased } = {},
     loading: isScorePurchaseCheckLoading,
   } = useQuery(CHECK_IF_SCORE_PURCHASED, {
     variables: {
-      scoreId: props.pageContext.score.id,
+      scoreId: getId(props),
     },
   });
 
   const {
     i18n,
-    pageContext,
   } = props;
-
-  const {
-    score,
-  } = pageContext;
 
   const scoreUrl = lodashGet(score, 'url', '');
   const previewUrl = lodashGet(score, 'preview.url', '');
@@ -50,12 +60,10 @@ function ScoreDetails(props) {
   const pdfUrl = isScorePurchased ? scoreUrl : previewUrl;
 
   return (
-    <>
+    <Loading isLoading={isScoreLoading || isScorePurchaseCheckLoading}>
       <SEO
         title={score.title}
         imageUrl={previewUrl}
-        url={pageContext.pageUrl}
-        locale={pageContext.locale}
         description={score.description}
       />
 
@@ -122,7 +130,6 @@ function ScoreDetails(props) {
               {!isScorePurchaseCheckLoading && (
                 <BuyScoreDialog
                   score={score}
-                  pageContext={pageContext}
                   isScorePurchased={isScorePurchased}
                 />
               )}
@@ -130,7 +137,7 @@ function ScoreDetails(props) {
           </Grid>
         </Grid>
       </ContentSection>
-    </>
+    </Loading>
   );
 }
 

@@ -43,16 +43,16 @@ function UserMenu(props) {
 
   const openPopover = useCallback((e) => {
     setPopoverOpenStatus(true);
-  }, []);
+  }, [setPopoverOpenStatus]);
 
   const closePopover = useCallback(() => {
     setPopoverOpenStatus(false);
-  }, []);
+  }, [setPopoverOpenStatus]);
 
   const handleLogout = useCallback(() => {
     closePopover();
     return logOut();
-  }, []);
+  }, [logOut, closePopover]);
 
   return (
     <>
