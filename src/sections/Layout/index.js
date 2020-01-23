@@ -1,5 +1,6 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Switch } from 'react-router-dom';
+import { renderRoutes } from 'react-router-config';
 
 import { ApolloProvider } from '@apollo/react-hooks';
 import ToastMessages from 'containers/ToastMessages';
@@ -8,7 +9,6 @@ import MaterialThemeProvider from 'theme/MaterialThemeProvider';
 
 import CookieBanner from 'components/CookieBanner';
 
-import MainApp from 'sections/MainApp';
 import Header from 'sections/Header';
 import Footer from 'sections/Footer';
 
@@ -16,13 +16,11 @@ import IntlProvider from 'localization';
 
 import client from '_graphql';
 
+import routes from 'routes';
+
 import './index.sass';
 
 function Layout(props) {
-  const {
-    children,
-  } = props;
-
   return (
     <BrowserRouter>
       <IntlProvider {...props}>
@@ -34,9 +32,11 @@ function Layout(props) {
                   <Header
                     location={props.location}
                   />
-                  <MainApp>
-                    {children}
-                  </MainApp>
+                  <Switch>
+                    <main className="main-app">
+                      {renderRoutes(routes)}
+                    </main>
+                  </Switch>
                 </div>
                 <Footer/>
                 <CookieBanner/>

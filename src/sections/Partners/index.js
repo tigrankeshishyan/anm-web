@@ -5,15 +5,15 @@ import Img from 'components/Img';
 
 import { withI18n } from 'localization/helpers';
 
-import AgbuLogo from 'static/images/partners/agbu.png';
-import AvetisAssociationLogo from 'static/images/partners/avetisAssociation.png';
-import KomitasInstituteLogo from 'static/images/partners/komitasInstitute.png';
-import ConservatoryLogo from 'static/images/partners/conservatory.png';
-import AnpoLogo from 'static/images/partners/anpo.png';
-import HoverChoirLogo from 'static/images/partners/hoverChoir.png';
-import QuartertoneLogo from 'static/images/partners/quartertone.png';
-import AssonanceLogo from 'static/images/partners/assonance.jpg';
-import YerevanStringQuartetLogo from 'static/images/partners/yerevanStringQuartet.png';
+import AgbuLogo from 'images/partners/agbu.png';
+import AvetisAssociationLogo from 'images/partners/avetisAssociation.png';
+import KomitasInstituteLogo from 'images/partners/komitasInstitute.png';
+import ConservatoryLogo from 'images/partners/conservatory.png';
+import AnpoLogo from 'images/partners/anpo.png';
+import HoverChoirLogo from 'images/partners/hoverChoir.png';
+import QuartertoneLogo from 'images/partners/quartertone.png';
+import AssonanceLogo from 'images/partners/assonance.jpg';
+import YerevanStringQuartetLogo from 'images/partners/yerevanStringQuartet.png';
 
 import './styles.sass';
 

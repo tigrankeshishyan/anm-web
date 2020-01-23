@@ -1,5 +1,4 @@
 import componentsLocales from 'components/locales';
-import templatesLocales from 'templates/locales';
 import sectionsLocales from 'sections/locales';
 import pagesLocales from 'pages/locales';
 import authLocales from 'Auth/locales';
@@ -10,6 +9,5 @@ export default {
   ...pagesLocales.en,
   ...globalLocales.en,
   ...sectionsLocales.en,
-  ...templatesLocales.en,
   ...componentsLocales.en,
 };

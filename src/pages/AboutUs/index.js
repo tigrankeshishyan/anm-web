@@ -14,7 +14,7 @@ import PageTitle from 'components/PageTitle';
 import Img from 'components/Img';
 import SEO from 'components/SEO';
 
-import KhazGroupedIcon from 'static/images/icons/components/KhazGrouped';
+import { ReactComponent as KhazGroupedIcon } from 'images/icons/khaz-grouped.svg';
 
 import { FETCH_SINGLE_PAGE_SECTION } from '_graphql/actions/pageSections';
 
@@ -76,7 +76,7 @@ function AboutUs(props) {
               item
               md={3}
             >
-              <KhazGroupedIcon/>
+              <KhazGroupedIcon />
             </Grid>
           </Hidden>
         </Grid>

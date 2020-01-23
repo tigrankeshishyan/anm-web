@@ -39,8 +39,9 @@ function NavigationMenu(props) {
             return (
               <NavMenuItem
                 {...menuItem}
-                isActive={isActive}
                 key={menuItem.key}
+                isActive={isActive}
+                path={menuItem.linkPath}
                 onClick={() => setMenuOpenStatus(false)}
               />
             );

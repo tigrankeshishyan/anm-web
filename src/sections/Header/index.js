@@ -5,8 +5,9 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import LanguageSwitcher from 'localization/LanguageSwitcher';
 import { withI18n } from 'localization/helpers';
 
-import { LogoOriginalSVG } from 'static/images';
 import { isWindowExists } from 'helpers';
+
+import LogoOriginal from 'images/ANM-logo-small-original.png';
 
 import Link from 'components/Link';
 
@@ -82,7 +83,10 @@ class Header extends React.PureComponent {
                 className="app-logo"
                 onClick={() => this.setMenuOpenStatus(false)}
               >
-                <LogoOriginalSVG/>
+                <img
+                  src={LogoOriginal}
+                  alt="Armenian National Music's logo"
+                />
               </Link>
             </div>
 

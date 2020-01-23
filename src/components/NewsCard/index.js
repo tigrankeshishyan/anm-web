@@ -13,11 +13,12 @@ function NewsCard(props) {
     title,
     path,
     src,
+    id,
   } = props;
 
   return (
     <Link
-      to={`/news/${path}`}
+      to={`/news/${path}/${id}`}
       className="news-card flex-column"
     >
       <div className="news-card-poster-image-wrapper">

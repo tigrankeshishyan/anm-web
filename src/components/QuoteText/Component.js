@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import BlueNoteIcon from 'static/images/icons/note-blue.svg';
+import { ReactComponent as BlueNoteIcon } from 'images/icons/note-blue.svg';
 import { elementType } from 'types';
 
 import './styles.sass';

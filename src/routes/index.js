@@ -1,47 +1,40 @@
-import News from 'pages/News';
-import Terms from 'pages/Terms';
-import HomePage from 'pages/Home';
-import AboutUs from 'pages/AboutUs';
-import NotFound from 'pages/NotFound';
-import Musicians from 'pages/Musicians';
-import ContactUs from 'pages/ContactUs';
-import UserProfile from 'pages/UserProfile';
-import MusicSheetScores from 'pages/Scores';
-
-import NewsDetails from 'templates/NewsDetails';
-import ScoreDetails from 'templates/ScoreDetails';
-import MusicianDetails from 'templates/MusicianDetails';
-
-import ResetPassword from 'Auth/ResetPassword/Component';
-import AuthFormWrapper from 'Auth/AuthFormWrapper';
+import { lazy } from 'react';
+import AsyncComponentLoader from 'components/AsyncComponentLoader';
 
 export default [
   {
-    path: '/',
-    key: 'home',
-    title: 'home',
-    component: HomePage,
+    key: 'aboutUs',
+    title: 'About Us',
+    path: '/:locale/about-us',
+    translationKey: 'aboutUs',
+    pageDescriptionTranslationKey: 'aboutUs.info',
+    component: AsyncComponentLoader(lazy( () => import('pages/AboutUs/index.js'))),
   },
   {
-    key: 'home',
-    path: '/:locale/home',
-    title: 'home',
-    component: HomePage,
+    exact: true,
+    isMain: true,
+    key: 'contactUs',
+    title: 'Contact Us',
+    linkPath: '/contact-us',
+    path: '/:locale/contact-us',
+    translationKey: 'contactUs',
+    component: AsyncComponentLoader(lazy( () => import('pages/ContactUs/index.js'))),
+  },
+  {
+    key: 'news',
+    exact: true,
+    title: 'News Details',
+    path: '/:locale/news/:path/:articleId',
+    component: AsyncComponentLoader(lazy( () => import('pages/NewsDetails/index.js'))),
   },
   {
     key: 'news',
     isMain: true,
+    exact: true,
     path: '/:locale/news',
+    linkPath: '/news',
     title: 'news',
-    component: News,
-    translationKey: 'news',
-  },
-  {
-    title: 'news/:path/:articleId',
-    isMain: true,
-    path: '/:locale/news',
-    key: 'news',
-    component: NewsDetails,
+    component: AsyncComponentLoader(lazy( () => import('pages/News/index.js'))),
     translationKey: 'news',
   },
   {
@@ -49,79 +42,82 @@ export default [
     isMain: true,
     key: 'scores',
     path: '/:locale/music-sheet-scores',
-    component: MusicSheetScores,
+    linkPath: '/music-sheet-scores',
+    component: AsyncComponentLoader(lazy( () => import('pages/Scores/index.js'))),
     translationKey: 'scores.title',
     pageDescriptionTranslationKey: 'scores.description',
   },
   {
     key: 'score-details',
     title: 'Music Sheet Score Details',
-    path: '/:locale/music-sheet-scores/:path/:id',
-    component: ScoreDetails,
-  },
-  {
-    isMain: true,
-    key: 'musicians',
-    title: 'musicians',
-    component: Musicians,
-    path: ':locale/musicians',
-    translationKey: 'musicians',
+    path: '/:locale/music-sheet-score/:path/:scoreId',
+    component: AsyncComponentLoader(lazy( () => import('pages/ScoreDetails/index.js'))),
   },
   {
     key: 'musician-details',
     title: 'Musician Details',
-    component: MusicianDetails,
-    path: ':locale/musicians/:path/:id',
+    path: '/:locale/musician/:path/:musicianId',
+    component: AsyncComponentLoader(lazy( () => import('pages/MusicianDetails/index.js'))),
   },
   {
-    key: 'aboutUs',
-    title: 'About Us',
-    component: AboutUs,
-    path: '/:locale/about-us',
-    translationKey: 'aboutUs',
-    pageDescriptionTranslationKey: 'aboutUs.info',
-  },
-  {
+    exact: true,
     isMain: true,
-    key: 'contactUs',
-    title: 'Contact Us',
-    component: ContactUs,
-    path: '/:locale/contact-us',
-    translationKey: 'contactUs',
+    key: 'musicians',
+    title: 'musicians',
+    linkPath: '/musicians',
+    path: '/:locale/musicians',
+    translationKey: 'musicians',
+    component: AsyncComponentLoader(lazy( () => import('pages/Musicians/index.js'))),
   },
   {
+    exact: true,
     key: 'terms',
     title: 'terms',
-    component: Terms,
     path: '/:locale/terms',
     translationKey: 'termsAndPrivacyPolicy',
+    component: AsyncComponentLoader(lazy( () => import('pages/Terms/index.js'))),
   },
   {
+    exact: true,
     key: 'profile',
     title: 'User Profile',
-    component: UserProfile,
     translationKey: 'profile',
     path: '/:locale/user-profile',
+    component: AsyncComponentLoader(lazy( () => import('pages/UserProfile/index.js'))),
   },
   {
     key: 'signIn',
     title: 'Sign In',
-    component: AuthFormWrapper,
     path: '/:locale/auth/sign-in',
+    component: AsyncComponentLoader(lazy( () => import('Auth/AuthFormWrapper/index.js'))),
   },
   {
     key: 'signUp',
     title: 'Sign Up',
-    component: AuthFormWrapper,
     path: '/:locale/auth/sign-up',
+    component: AsyncComponentLoader(lazy( () => import('Auth/AuthFormWrapper/index.js'))),
   },
   {
     key: 'resetPassword',
     title: 'Reset Password',
-    component: ResetPassword,
+    component: AsyncComponentLoader(lazy( () => import('Auth/ResetPassword/index.js'))),
     path: '/:locale/reset-password/:token',
   },
   {
-    component: NotFound,
+    path: '/',
+    linkPath: '/',
+    key: 'home',
+    title: 'home',
+    component: AsyncComponentLoader(lazy( () => import('pages/Home/index.js'))),
+  },
+  {
+    key: 'home',
+    path: '/:locale/home',
+    linkPath: '/home',
+    title: 'home',
+    component: AsyncComponentLoader(lazy( () => import('pages/Home/index.js'))),
+  },
+  {
+    component: AsyncComponentLoader(lazy( () => import('pages/NotFound/index.js'))),
   },
 ];

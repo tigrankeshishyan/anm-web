@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { anmSocialIcons } from 'static/images/icons/components/social-icons';
+import { anmSocialIcons } from 'images/icons/social-icons';
 import SocialIcon from 'components/SocialIcon';
 
 import './styles.sass';

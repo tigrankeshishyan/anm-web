@@ -71,7 +71,7 @@ function MusicSheetScores(props) {
       <ContentSection>
         <Grid
           container
-          spacing={24}
+          spacing={10}
         >
           <Grid
             item

@@ -13,13 +13,14 @@ function MusicianCard(props) {
     lastName,
     src,
     path,
+    id,
   } = props;
 
   const musicianFullName = `${firstName || ''} ${lastName || ''}`;
 
   return (
     <Link
-      to={`/musician/${path}`}
+      to={`/musician/${path}/${id}`}
       className="flex-column anm-musician-card"
     >
       <div className="musician-card-poster-image-wrapper">

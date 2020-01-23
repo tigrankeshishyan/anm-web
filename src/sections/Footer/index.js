@@ -2,7 +2,7 @@ import React from 'react';
 import Typography from '@material-ui/core/Typography';
 
 import { withI18n } from 'localization/helpers';
-import { LogoWhiteSVG } from 'static/images';
+import { LogoWhiteSVG } from 'images';
 
 import SocialIcons from 'components/SocialIcons';
 import Link from 'components/Link';
@@ -23,7 +23,7 @@ function Footer(props) {
     >
       <div className="flex-row align-center wrap footer-logo-and-terms-wrapper">
         <div className="mobile-social-icons-wrapper justify-center">
-          <SocialIcons />
+          {/*<SocialIcons />*/}
         </div>
 
         <Link to="/home">
@@ -65,7 +65,7 @@ function Footer(props) {
 
         <div className="flex-column justify-end subscribe-wrapper">
           <div className="desktop-social-icons-wrapper pad-15">
-            <SocialIcons className="justify-end"/>
+            <SocialIcons className="justify-end" />
           </div>
 
           <SubscriptionForm />

@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { Document, Page } from 'react-pdf';
 import {
   isMobile
 } from 'react-device-detect';
 import clsx from 'clsx';
-import { Document, Page } from 'react-pdf';
 
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
