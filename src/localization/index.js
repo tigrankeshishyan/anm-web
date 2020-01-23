@@ -1,10 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useEffect } from 'react';
 
 import { IntlProvider } from 'react-intl';
-
-import enMessage from 'locales/en';
-import hyMessage from 'locales/hy';
 
 import {
   langStorageKey,
@@ -13,31 +10,41 @@ import {
 import { isWindowExists } from '../helpers';
 import { getCurrentLang } from '../locales/helpers';
 
-const messages = {
-  en: enMessage,
-  hy: hyMessage,
-};
-
 function AnmIntlProvider(props) {
+  const [messages, setMessages] = useState(undefined);
+
   const {
     children,
   } = props;
 
-  const locale = getCurrentLang() || defaultLang;
+  const locale = getCurrentLang();
 
   useEffect(() => {
-    if (isWindowExists() && locale && locale !== 'undefined') {
+    if (locale) {
+      import(`locales/${locale}`)
+        .then(res => {
+          setMessages(res.default);
+        });
+    }
+    
+    if (isWindowExists()
+      && locale
+      && (locale!=='undefined')
+      && !localStorage.getItem(langStorageKey)
+    ) {
       // Application language will be set once the app started
       localStorage.setItem(langStorageKey, locale);
     }
   }, [locale]);
 
-  // TODO: There is an issue in react-intl related with language data import
-  // Check console error
+  if (!messages) {
+    return null;
+  }
+
   return (
     <IntlProvider
       locale={locale}
-      messages={messages[locale]}
+      messages={messages}
       defaultLocale={defaultLang}
     >
       {children}
