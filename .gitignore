@@ -46,7 +46,6 @@ typings/
 .env.development
 
 .idea/
-public
 
 # Mac files
 .DS_Store
