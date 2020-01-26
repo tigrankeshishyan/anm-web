@@ -3,7 +3,7 @@ export default {
   price: 'Գին՝',
   dram: 'Դրամ',
   instruments: 'Գործիքներ՝',
-  composer: 'Ստեղծագործող՝',
+  composer: 'Կոմպոզիտոր',
   choseCountry: 'Ընտրեք ձեր երկիրը',
-  pagesAvailability: 'Բոլոր էջերը հասսանելի կլինեն նոտաները գնելուց հետո։',
+  pagesAvailability: 'Բոլոր էջերը հասանելի կլինեն նոտաները գնելուց հետո։',
 };
