@@ -46,7 +46,7 @@ typings/
 .env.development
 
 .idea/
-
+build
 # Mac files
 .DS_Store
 
