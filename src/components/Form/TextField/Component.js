@@ -52,6 +52,7 @@ function TextField(props) {
       }
       <MUITextField
         name={name}
+        error={!!error}
         {...inputProps}
         onChange={handleChange}
       />

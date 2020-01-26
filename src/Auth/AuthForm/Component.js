@@ -16,7 +16,7 @@ import ForgetPassword from './ForgetPassword';
 
 import './styles.sass';
 
-function AuthForm(props) {
+function AuthForm (props) {
   const [isForgotPasswordMode, setForGotPasswordMode] = useState(false);
   const [isRecaptchaSet, setRecaptcha] = useState(false);
   const [agreedWithTerms, setTermsAgreed] = useState(false);
@@ -30,7 +30,8 @@ function AuthForm(props) {
     handleFormChange,
   } = props;
 
-  const isSubmitDisabled = !isSignInMode && (!isRecaptchaSet || !agreedWithTerms);
+  const arePasswordMatch = formData.password === formData.confirmPassword;
+  const isSubmitDisabled = arePasswordMatch && (!isSignInMode && (!isRecaptchaSet || !agreedWithTerms));
 
   const onFormChange = useCallback(data => {
     handleFormChange({
@@ -71,7 +72,7 @@ function AuthForm(props) {
         ? (
           <ForgetPassword/>
         )
-        :(
+        : (
           <>
             {!isSignInMode && (
               <>
@@ -123,7 +124,20 @@ function AuthForm(props) {
               value={formData.password}
               error={formErrors.password}
               label={i18n('form.password')}
-              helperText={!isSignInMode ? i18n('password.wrongPassword'):''}
+              helperText={!isSignInMode ? i18n('password.wrongPassword') : ''}
+            />
+
+            <TextField
+              required
+              fullWidth
+              type="password"
+              margin="normal"
+              id="confirmPassword"
+              name="confirmPassword"
+              onChange={onFormChange}
+              value={formData.confirmPassword}
+              label={i18n('form.confirmPassword')}
+              error={!isSignInMode && !!(formData.password && !arePasswordMatch) ? i18n('password.notMatch') : ''}
             />
 
             <div className="mrg-top-15">
@@ -174,7 +188,7 @@ function AuthForm(props) {
               >
                 {isSignInMode
                   ? i18n('signIn')
-                  :i18n('signUp')}
+                  : i18n('signUp')}
               </Button>
             </div>
           </>

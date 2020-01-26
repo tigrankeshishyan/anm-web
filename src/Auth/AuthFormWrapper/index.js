@@ -41,6 +41,7 @@ const emptySignUpForm = {
   password: '',
   lastName: '',
   firstName: '',
+  confirmPassword: '',
 };
 
 const DUPLICATE_EMAIL_ERROR = 'duplicate key value';
