@@ -24,8 +24,8 @@ function HomePage() {
     },
   });
 
-  const pagePosterUrl = lodashGet(data.sectionData, 'attrs.pagePosterUrl', '');
-  const sliderImages = lodashGet(data.sectionData, 'attrs.slider', []);
+  const pagePosterUrl = lodashGet(data.pageSection, 'attrs.pagePosterUrl', '');
+  const sliderImages = lodashGet(data.pageSection, 'attrs.slider', []);
 
   return (
     <>
