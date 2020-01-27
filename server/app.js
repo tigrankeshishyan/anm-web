@@ -6,6 +6,7 @@ require('dotenv')
 const express = require('express');
 const hbs = require('express-handlebars');
 const reqMiddleware = require('./middlewares/index');
+const { dynamicRoutes } = require('./constants');
 
 const app = express();
 
@@ -17,9 +18,7 @@ app.engine('hbs', hbs({
   extname: 'hbs',
 }));
 
-app.use('/:locale/news/:path/:id', reqMiddleware);
-app.use('/:locale/musician/:path/:id', reqMiddleware);
-app.use('/:locale/music-sheet-score/:path/:id', reqMiddleware);
+app.use(dynamicRoutes, reqMiddleware);
 app.use('*', reqMiddleware);
 
 app.listen(PORT, _ => {
