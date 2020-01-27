@@ -24,6 +24,8 @@ jobs:
       id: extract_branch
 
     - uses: actions/checkout@v1
+      with:
+        ref: ${{steps.extract_branch.outputs.branch}}
     - name: Use Node.js 12.x
       uses: actions/setup-node@v1
       with:

@@ -37,8 +37,8 @@ function AboutUs(props) {
     i18n,
   } = props;
 
-  const pagePosterUrl = lodashGet(data.sectionData, 'attrs.pagePosterUrl', '');
-  const motivationImgUrl = lodashGet(data.sectionData, 'attrs.motivationImgUrl', '');
+  const pagePosterUrl = lodashGet(data.pageSection, 'attrs.pagePosterUrl', '');
+  const motivationImgUrl = lodashGet(data.pageSection, 'attrs.motivationImgUrl', '');
 
   return (
     <div className="anm-about-us-section">
