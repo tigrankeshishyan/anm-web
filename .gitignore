@@ -43,7 +43,7 @@ typings/
 *.tgz
 
 # dotenv environment variables file
-.env.development
+.env.stage
 
 .idea/
 build

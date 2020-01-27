@@ -50,7 +50,7 @@
     "nodemon": "^2.0.2"
   },
   "scripts": {
-    "serve:dev": "NODE_ENV=development npx nodemon server/app.js",
+    "serve:dev": "NODE_ENV=stage npx nodemon server/app.js",
     "serve:prod": "NODE_ENV=production npx nodemon server/app.js",
     "server:start": "node server/app.js",
     "start": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts start",
