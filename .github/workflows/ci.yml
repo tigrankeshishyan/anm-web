@@ -41,7 +41,7 @@ jobs:
     - name: deploy server
       run: >-
         ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER }}
-        'cd ~/anm/${{steps.extract_branch.outputs.branch}}/server/;
+        'cd ~/anm/${{steps.extract_branch.outputs.branch}}/web/;
         ANM_ENV=${{steps.extract_branch.outputs.branch}} yarn pull;
         pm2 restart ${{steps.extract_branch.outputs.branch}}-web'
         
