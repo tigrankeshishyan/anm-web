@@ -22,7 +22,10 @@ module.exports.getSingleScoreData = async (id, locale, url) => {
         title: score.title,
       };
     } else {
-      return {};
+      return {
+        title: 'Not Found',
+        content: 'No Score Found',
+      };
     }
   } catch (err) {
     console.log('Error fetching News --> : ', err);

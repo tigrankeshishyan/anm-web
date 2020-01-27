@@ -32,7 +32,10 @@ module.exports.getSingleMusicianData = async (id, locale, url) => {
         title: `${musician.firstName} ${musician.lastName}`,
       };
     } else {
-      return {};
+      return {
+        title: 'Not Found',
+        content: 'No Musician Found',
+      };
     }
   } catch (err) {
     console.log('Error fetching News --> : ', err);

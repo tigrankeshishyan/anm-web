@@ -34,7 +34,10 @@ module.exports.getSingleNewsData = async (id, locale, url) => {
         description: article.description,
       };
     } else {
-      return {};
+      return {
+        title: 'Not Found',
+        content: 'No Article Found',
+      };
     }
   } catch (err) {
     console.log('Error fetching News --> : ', err);
