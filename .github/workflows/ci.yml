@@ -34,7 +34,7 @@ jobs:
         ANM_ENV: ${{steps.extract_branch.outputs.branch}}
       run: |
         yarn install
-        yarn push-${{steps.extract_branch.outputs.branch}}
+        yarn push
 
     - name: deploy server
       run: >-
