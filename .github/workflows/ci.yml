@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: ['stage', 'prod']
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Create ssh keys from SECRETS
+      run: |
+        mkdir ~/.ssh
+        echo "${{ secrets.GITHUB_RSA }}" > ~/.ssh/id_rsa
+        echo "${{ secrets.GITHUB_RSA_PUBLIC }}" > ~/.ssh/id_rsa.pub
+        chmod 400 ~/.ssh/id_rsa
+        chmod 400 ~/.ssh/id_rsa.pub
+
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
+
+    - uses: actions/checkout@v1
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+
+    - name: deploy client
+      env:
+        ANM_ENV: ${{steps.extract_branch.outputs.branch}}
+      run: |
+        yarn install
+        yarn push-${{steps.extract_branch.outputs.branch}}
+
+    - name: deploy server
+      run: >-
+        ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER }}
+        'cd ~/anm/${{steps.extract_branch.outputs.branch}}/server/;yarn pull;
+        pm2 restart ${{steps.extract_branch.outputs.branch}}-web'
+        
+      
