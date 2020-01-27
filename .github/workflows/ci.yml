@@ -42,13 +42,17 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: '12.x'
+
     - run: ssh-keyscan ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+
+    - run: yarn install
+      
+    - run: yarn build
+      
     - name: deploy client
       env:
         ANM_ENV: ${{steps.extract_branch.outputs.branch}}
-      run: |
-        yarn install
-        yarn push
+      run: yarn sync
 
     - name: deploy server
       run: >-
