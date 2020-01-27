@@ -53,6 +53,7 @@
     "serve:dev": "NODE_ENV=stage npx nodemon server/app.js",
     "serve:prod": "NODE_ENV=production npx nodemon server/app.js",
     "server:start": "node server/app.js",
+    "server:debug": "node --inspect=$DEBUGGER_PORT server/app.js",
     "start": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
