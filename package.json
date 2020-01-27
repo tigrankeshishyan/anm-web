@@ -52,12 +52,14 @@
   "scripts": {
     "serve:dev": "NODE_ENV=development npx nodemon server/app.js",
     "serve:prod": "NODE_ENV=production npx nodemon server/app.js",
+    "server:start": "node server/app.js",
     "start": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "sync-stage": "rsync -avz ./build/ root@anmmedia.am:/var/www/anm/web-stage --delete",
-    "push-stage": "yarn build && yarn sync-stage"
+    "sync": "rsync -avzr build root@anmmedia.am:~/anm/${ANM_ENV:?}/web/ --delete",
+    "push": "yarn build && yarn sync",
+    "pull": "git fetch;git reset --hard origin/${ANM_ENV:?};git checkout ${ANM_ENV:?};git pull;yarn install;"
   },
   "eslintConfig": {
     "extends": "react-app"
