@@ -56,8 +56,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "sync-stage": "rsync -avz ./build/ root@anmmedia.am:/var/www/anm/web-stage --delete",
-    "push-stage": "yarn build && yarn sync-stage"
+    "sync": "rsync -avzr build root@anmmedia.am:~/anm/${ANM_ENV:?}/web/ --delete",
+    "push": "yarn build && yarn sync"
   },
   "eslintConfig": {
     "extends": "react-app"
