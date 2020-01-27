@@ -17,7 +17,7 @@ app.set('view engine', 'hbs');
 app.engine('hbs', hbs({
   extname: 'hbs',
 }));
-
+app.set('views', path.resolve(__dirname, './views'));
 app.use(dynamicRoutes, reqMiddleware);
 app.use('*', reqMiddleware);
 

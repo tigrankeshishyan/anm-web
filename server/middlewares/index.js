@@ -21,7 +21,7 @@ module.exports = (req, res) => {
             description,
           } = data;
 
-          res.render(path.resolve(__dirname, '../../views/layouts/main.hbs'), {
+          res.render('main', {
             ...appDefaultData,
             url,
             title,
@@ -31,7 +31,7 @@ module.exports = (req, res) => {
           });
         });
     } else {
-      res.render(path.resolve(__dirname, '../../views/layouts/main.hbs'), { ...appDefaultData, url });
+      res.render('main', { ...appDefaultData, url });
     }
   } else {
     res.sendFile(path.resolve(__dirname, '../../build/index.html'));

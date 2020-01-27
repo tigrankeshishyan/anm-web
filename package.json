@@ -55,7 +55,9 @@
     "start": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "sync-stage": "rsync -avz ./build/ root@anmmedia.am:/var/www/anm/web-stage --delete",
+    "push-stage": "yarn build && yarn sync-stage"
   },
   "eslintConfig": {
     "extends": "react-app"
