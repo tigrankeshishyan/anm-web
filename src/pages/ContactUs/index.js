@@ -119,7 +119,7 @@ function ContactUs(props) {
     ${i18n('phoneNumber')} - ${anmPhone}
   `;
 
-  const pagePosterUrl = lodashGet(data.sectionData, 'attrs.pagePosterUrl', '');
+  const pagePosterUrl = lodashGet(data.pageSection, 'attrs.pagePosterUrl', '');
 
   return (
     <>
