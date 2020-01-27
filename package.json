@@ -52,6 +52,7 @@
   "scripts": {
     "serve:dev": "NODE_ENV=development npx nodemon server/app.js",
     "serve:prod": "NODE_ENV=production npx nodemon server/app.js",
+    "server:start": "node server/app.js",
     "start": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
