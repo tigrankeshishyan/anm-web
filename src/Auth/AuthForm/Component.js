@@ -140,14 +140,16 @@ function AuthForm (props) {
               error={!isSignInMode && !!(formData.password && !arePasswordMatch) ? i18n('password.notMatch') : ''}
             />
 
-            <div className="mrg-top-15">
+            {isSignInMode && (
+              <div className="mrg-top-15">
               <span
                 className="forgot-password-link"
                 onClick={setForGotPasswordMode}
               >
                 {i18n('form.forgotPass')}
               </span>
-            </div>
+              </div>
+            )}
 
             {!isSignInMode && (
               <div className="flex-row align-center justify-between mrg-top-15 form-policy-wrapper">
