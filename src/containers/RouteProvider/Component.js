@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import ReactGA from 'react-ga';
+import ReactGoogleAnalytics from 'react-ga';
+import ReactFacebookPixel from 'react-facebook-pixel';
 
 import { isWindowExists } from 'helpers';
 
@@ -9,8 +10,10 @@ let lastLocation = '/';
 const transitionDelay = 300;
 
 const googleAnalyticsTrackId = 'UA-43195883-2';
+const fbPixelId = '557862558318761';
 
-ReactGA.initialize(googleAnalyticsTrackId);
+ReactGoogleAnalytics.initialize(googleAnalyticsTrackId);
+ReactFacebookPixel.init(fbPixelId);
 
 function RouteProvider(props) {
   const history = useHistory();
@@ -27,8 +30,9 @@ function RouteProvider(props) {
           behavior: 'smooth',
         }), transitionDelay);
 
-        ReactGA.set({ page: pathname }); // Update the user's current page
-        ReactGA.pageview(pathname); // Record a page view for the given page
+        ReactGoogleAnalytics.set({ page: pathname }); // Update the user's current page
+        ReactGoogleAnalytics.pageview(pathname); // Record a page view for the given page
+        ReactFacebookPixel.pageView();
       }
 
       return lastLocation;
