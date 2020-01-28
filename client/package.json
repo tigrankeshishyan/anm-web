@@ -48,6 +48,8 @@
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "test": "react-scripts test",
-    "start": "react-scripts start"
+    "start": "react-scripts start",
+    "build-prod": "NODE_ENV=production yarn build",
+    "build-stage": "NODE_ENV=development yarn build"
   }
 }
