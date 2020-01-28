@@ -1,4 +1,4 @@
-import { getOptions, fetchGraphData } from '../utils'
+import { getOptions, fetchGraphData } from '../utils/graphql.util'
 
 // Fetch query for news which are published
 const query = id => `
@@ -18,12 +18,12 @@ const query = id => `
       }
     }
   }
-`;
+`
 
 export const getSingleNewsData = async (id, locale, url) => {
   try {
-    const res = await fetchGraphData(getOptions(query(id), locale));
-    const { article } = (res.data || {});
+    const res = await fetchGraphData(getOptions(query(id), locale))
+    const { article } = res.data || {}
     if (article) {
       return {
         url,
@@ -31,15 +31,15 @@ export const getSingleNewsData = async (id, locale, url) => {
         title: article.title,
         content: article.content,
         imageUrl: article.poster.url,
-        description: article.description,
-      };
+        description: article.description
+      }
     } else {
       return {
         title: 'Not Found',
-        content: 'No Article Found',
-      };
+        content: 'No Article Found'
+      }
     }
   } catch (err) {
-    console.log('Error fetching News --> : ', err);
+    console.log('Error fetching News --> : ', err)
   }
-};
+}

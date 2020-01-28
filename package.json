@@ -24,8 +24,7 @@
     "server": "yarn workspace server",
     "client": "yarn workspace client",
     "sync": "rsync -avzr client/build root@anmmedia.am:~/anm/${ANM_ENV:?}/web/ --delete",
-    "push": "yarn client build && yarn sync",
-    "pull": "git fetch;git reset --hard origin/${ANM_ENV:?};git checkout ${ANM_ENV:?};git pull;yarn install;"
+    "push": "yarn client build && yarn sync"
   },
   "workspaces": [
     "server",
