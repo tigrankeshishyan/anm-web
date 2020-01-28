@@ -1,39 +1,35 @@
-const path = require('path');
-const { getFetchFn } = require('../utils');
-const { appDefaultData } = require('../constants');
-const isBot = require('isbot');
+import path from "path";
+import isBot from "isbot";
+import dirname from 'es-dirname';
 
-const getUrl = req => process.env.REACT_APP_URL + req.originalUrl;
+import { getFetchFn } from "../utils";
+import { appDefaultData } from "../constants";
 
-module.exports = (req, res) => {
+const getUrl = req => process.env.HOST + req.originalUrl;
+
+export default (req, res) => {
   // Detect if the request comes from browser or from crawler, spider, etc.
-  if (isBot(req.headers['user-agent'])) {
+  if (isBot(req.headers["user-agent"])) {
     const fetchDataFn = getFetchFn(req);
     const url = getUrl(req);
 
     if (fetchDataFn) {
-      fetchDataFn(req.params.id, req.params.locale, url)
-        .then(data => {
-          const {
-            title,
-            content,
-            imageUrl,
-            description,
-          } = data;
+      fetchDataFn(req.params.id, req.params.locale, url).then(data => {
+        const { title, content, imageUrl, description } = data;
 
-          res.render('main', {
-            ...appDefaultData,
-            url,
-            title,
-            content,
-            imageUrl,
-            description,
-          });
+        res.render("main", {
+          ...appDefaultData,
+          url,
+          title,
+          content,
+          imageUrl,
+          description
         });
+      });
     } else {
-      res.render('main', { ...appDefaultData, url });
+      res.render("main", { ...appDefaultData, url });
     }
   } else {
-    res.sendFile(path.resolve(__dirname, '../../build/index.html'));
+    res.sendFile(path.resolve(dirname(), "../../client/build/index.html"));
   }
 };

@@ -1,26 +1,29 @@
-const path = require('path');
-require('dotenv')
-  .config({
-    path: path.resolve(__dirname, `../.env.${process.env.NODE_ENV}`)
-  });
-const express = require('express');
-const hbs = require('express-handlebars');
-const reqMiddleware = require('./middlewares/index');
-const { dynamicRoutes } = require('./constants');
+import path from "path";
+
+import dirname from "es-dirname";
+import express from "express";
+import hbs from "express-handlebars";
+
+import reqMiddleware from "./middlewares";
+import { dynamicRoutes } from "./constants";
 
 const app = express();
 
 const PORT = process.env.PORT || 8000;
 
-app.use(express.static(path.resolve(__dirname, '../build')));
-app.set('view engine', 'hbs');
-app.engine('hbs', hbs({
-  extname: 'hbs',
-}));
-app.set('views', path.resolve(__dirname, './views'));
+const clientBuild = path.resolve(`${dirname()}/../client/build`);
+app.use(express.static(clientBuild));
+
+app.set("view engine", "hbs");
+
+app.engine("hbs", hbs({ extname: "hbs" }));
+
+app.set("views", path.resolve(dirname(), "./views"));
+
 app.use(dynamicRoutes, reqMiddleware);
-app.use('*', reqMiddleware);
+
+app.use("*", reqMiddleware);
 
 app.listen(PORT, _ => {
-  console.log('OK, port is ', PORT);
+  console.log("OK, port is ", PORT);
 });

@@ -1,10 +1,10 @@
-module.exports.dynamicRoutes = [
+export const dynamicRoutes = [
   '/:locale/news/:path/:id',
   '/:locale/musician/:path/:id',
   '/:locale/music-sheet-score/:path/:id',
 ];
 
-module.exports.appDefaultData = {
+export const appDefaultData = {
   title: 'Armenian National music',
   imageUrl: 'https://anmmedia.am/images/8d4f533b-e6b1-4e16-b6c0-4b849c817333',
   content: 'Online platform which gives our users the possibility to listen, share and get more insight in Armenian music is sorted by epoch and genre.',

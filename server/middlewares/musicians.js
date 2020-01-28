@@ -1,4 +1,4 @@
-const { getOptions, fetchGraphData } = require('../../gql/utils');
+import { getOptions, fetchGraphData } from '../utils'
 
 // Fetch query for news which are published
 const query = id => `
@@ -18,7 +18,7 @@ const query = id => `
   }
 `;
 
-module.exports.getSingleMusicianData = async (id, locale, url) => {
+export const getSingleMusicianData = async (id, locale, url) => {
   try {
     const res = await fetchGraphData(getOptions(query(id), locale));
     const { musician } = (res.data || {});
