@@ -4453,6 +4453,11 @@ es-abstract@^1.13.0, es-abstract@^1.17.0-next.1:
     string.prototype.trimleft "^2.1.1"
     string.prototype.trimright "^2.1.1"
 
+es-dirname@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/es-dirname/-/es-dirname-0.1.0.tgz#cfc5cd40ac9cca61c9f4c83d13123e1114762b00"
+  integrity sha512-tcTj4pVFXe5EdiHCybjynDTlvkwuNN6JCg9+5BVB+n9qQoMyWOtxpREoL7rGO3sCIAX55Y6CYZi4s1c30uxvPg==
+
 es-to-primitive@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/es-to-primitive/-/es-to-primitive-1.2.1.tgz#e55cd4c9cdc188bcefb03b366c736323fc5c898a"
