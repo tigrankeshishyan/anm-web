@@ -47,6 +47,7 @@ typings/
 
 .idea/
 build
+
 # Mac files
 .DS_Store
 
