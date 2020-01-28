@@ -45,9 +45,8 @@ jobs:
 
     - run: ssh-keyscan ${{ secrets.HOST }} >> ~/.ssh/known_hosts
 
-    - run: yarn install
-      
-    - run: yarn build
+    - run: yarn client install
+    - run: yarn client build
       
     - name: deploy client
       env:
