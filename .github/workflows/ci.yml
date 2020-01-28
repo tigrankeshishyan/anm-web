@@ -23,7 +23,7 @@ jobs:
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: extract_branch
     
-    - name: Set env to staging
+    - name: Set env to stage
       if: endsWith(github.ref, '/stage')
       run: |
         echo "::set-env name=NODE_ENV::stage"
