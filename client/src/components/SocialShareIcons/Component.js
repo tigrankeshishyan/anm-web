@@ -42,7 +42,7 @@ const icons = [
 function SocialShareIcons() {
   const url = isWindowExists()
     ? window.location.href
-    : process.env.REACT_APP_URL;
+    : process.env.HOST;
 
   return (
     <div className="flex-row wrap align-center">
