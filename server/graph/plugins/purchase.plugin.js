@@ -6,7 +6,6 @@ import uuid from 'uuid'
 import {
   database,
   anmHost,
-  apiPrefix,
   scoreDocumentName,
   scoreComingSoon
 } from '../../config'
@@ -128,7 +127,7 @@ const schema = makeExtendSchemaPlugin(build => {
           const docKey = score.url
             ? `${score.url}/${scoreDocumentName}`
             : `scores/${scoreComingSoon}`
-          const returnUrl = `${anmHost}${apiPrefix}/${docKey}`
+          const returnUrl = `${anmHost}/${docKey}`
 
           const purchase = await findOrCreatePurchase(
             pgClient,

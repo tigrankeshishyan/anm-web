@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import axios from 'axios'
 
-import { ameria, anmHost, apiPrefix } from '../config'
+import { ameria, anmHost } from '../config'
 import { validateCurrency } from './validate.util'
 
 const credentials = {
@@ -30,7 +30,7 @@ export async function initPayment ({
     Currency: currency,
     Amount: amount,
     Description: desc,
-    BackURL: `${anmHost}${apiPrefix}/scores/purchase/ameria`,
+    BackURL: `${anmHost}/scores/purchase/ameria`,
     CardHolderID: userId,
     Opaque: opaque
   }

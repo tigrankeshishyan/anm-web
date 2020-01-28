@@ -2,7 +2,6 @@ import GraphileUtils from 'graphile-utils'
 
 import {
   anmHost,
-  apiPrefix,
   scoreDocumentName,
   database,
   scorePreviewName
@@ -31,7 +30,7 @@ const plugin = makeWrapResolversPlugin({
     purchasesList: allowOnly(['admin'], []),
     async url (resolve) {
       const url = await resolve()
-      return url ? `${anmHost}${apiPrefix}/${url}/${scoreDocumentName}` : null
+      return url ? `${anmHost}/${url}/${scoreDocumentName}` : null
     },
     preview: {
       requires: {
@@ -43,7 +42,7 @@ const plugin = makeWrapResolversPlugin({
           const head = await headObject(key)
           const { opts } = head.Metadata
           return {
-            url: `${anmHost}${apiPrefix}/${key}`,
+            url: `${anmHost}/${key}`,
             options: JSON.parse(opts)
           }
         } catch (err) {

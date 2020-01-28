@@ -3,7 +3,7 @@ import postgraphile from 'postgraphile'
 
 import { models } from '../sequelize'
 
-import { database, apiPrefix } from '../config'
+import { database } from '../config'
 import * as Storage from '../utils/storage.util'
 
 import CustomPlugins, { SameGraphQLAndGraphiQLPathnameTweak } from './plugins'
@@ -25,7 +25,6 @@ export default () => postgraphile.postgraphql(
     enhanceGraphiql: true,
     dynamicJson: true,
     simpleCollections: 'both',
-    externalUrlBase: apiPrefix,
     bodySizeLimit: '50mb',
     additionalGraphQLContextFromRequest (request) {
       return buildContext({

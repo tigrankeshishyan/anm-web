@@ -1,7 +1,7 @@
 import axios from 'axios'
 import moment from 'moment'
 
-import { paddle, anmHost, apiPrefix } from '../config'
+import { paddle, anmHost } from '../config'
 
 const payLinkPath = '/api/2.0/product/generate_pay_link'
 const generatePayLink = `${paddle.apiHost}${payLinkPath}`
@@ -50,7 +50,7 @@ function makeBody ({
     vendor_auth_code: paddle.vendorCode,
     title,
     expires,
-    webhook_url: `${anmHost}${apiPrefix}/scores/purchase/paddle`,
+    webhook_url: `${anmHost}/scores/purchase/paddle`,
     quantity_variable: 0,
     quantity: 1,
     customer_email: email,

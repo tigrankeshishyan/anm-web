@@ -27,8 +27,6 @@ export const env = process.env.NODE_ENV || 'development'
 
 export const port = process.env.PORT || 3000
 
-export const apiPrefix = process.env.API_PREFIX || ''
-
 export const host = 'anmmedia.am'
 
 export const anmHost = process.env.HOST || `https://${host}`
@@ -47,7 +45,7 @@ export const sentryDSN = process.env.SENTRY_DSN
 export const facebook = {
   appId: process.env.FB_APP_ID,
   appSecret: process.env.FB_APP_SECRET,
-  callback: `${anmHost}${apiPrefix}/auth/facebook/callback`
+  callback: `${anmHost}/auth/facebook/callback`
 }
 
 export const database = {
