@@ -1,12 +1,20 @@
 import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-
+import { isMobile, isTablet } from 'react-device-detect';
 import Img from 'components/Img';
 
 import './styles.sass';
 
-function BlockWithImage(props) {
+const getImageWidth = () => {
+  return isMobile
+    ? window.innerWidth
+    : isTablet
+      ? 600
+      : 800
+};
+
+function BlockWithImage (props) {
   const {
     url,
     className,
@@ -20,11 +28,10 @@ function BlockWithImage(props) {
     <div
       className={clsx('block-with-image flex-row justify-center align-center', className)}
     >
-      <div>
-        <Img
-          src={url}
-        />
-      </div>
+      <Img
+        src={url}
+        sizes={{ width: getImageWidth() }}
+      />
     </div>
   );
 }

@@ -6,6 +6,10 @@ import ImageGallery from 'components/ImageGallery';
 
 import './styles.sass';
 
+const imageSizes = {
+  width: 500,
+};
+
 function WhoWeAreGallery(props) {
   const {
     images: propsImages,
@@ -20,7 +24,7 @@ function WhoWeAreGallery(props) {
       <ImageGallery
         {...props}
         items={sliderImages}
-        renderItem={args => <Img src={args.original} />}
+        renderItem={args => <Img sizes={imageSizes} src={args.original} />}
       />
     </div>
   );
