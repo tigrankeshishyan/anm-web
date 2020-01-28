@@ -23,15 +23,6 @@ jobs:
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: extract_branch
     
-    - name: Set env to stage
-      if: endsWith(github.ref, '/stage')
-      run: |
-        echo "::set-env name=NODE_ENV::development"
-    - name: Set env to production
-      if: endsWith(github.ref, '/prod')
-      run: |
-        echo "::set-env name=NODE_ENV::production"
-
     - uses: actions/checkout@v1
       with:
         ref: ${{steps.extract_branch.outputs.branch}}
@@ -56,7 +47,7 @@ jobs:
 
     - run: yarn client install
     - name: Build with 
-      run: yarn client build
+      run: yarn client build-${{ steps.extract_branch.outputs.branch }}
       
     - name: deploy client
       env:
