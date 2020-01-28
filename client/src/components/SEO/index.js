@@ -14,7 +14,7 @@ import {
 
 
 const {
-  HOST,
+  REACT_APP_HOST,
 } = process.env;
 
 const SEO = props => {
@@ -138,7 +138,7 @@ const SEO = props => {
         },
         {
           property: 'og:site_name',
-          content: HOST,
+          content: REACT_APP_HOST,
         },
       ]}
     >

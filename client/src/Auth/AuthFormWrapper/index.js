@@ -23,7 +23,7 @@ import AuthForm from "Auth/AuthForm";
 
 import "./styles.sass";
 
-const { HOST } = process.env;
+const { REACT_APP_HOST } = process.env;
 
 const emptySignInForm = {
   email: "",
@@ -159,7 +159,7 @@ function AuthFormWrapper(props) {
 
               <a
                 onClick={() => setPageLoading(true)}
-                href={`${HOST}/auth/facebook`}
+                href={`${REACT_APP_HOST}/auth/facebook`}
               >
                 <SocialIcon iconName="Facebook" />
               </a>

@@ -8,7 +8,7 @@ const keywords = 'Armenian Music,Հայ երաժշտություն,Armenia,Հա�
 
 const {
   NODE_ENV,
-  HOST,
+  REACT_APP_HOST,
 } = process.env;
 
 const defaultImg = NODE_ENV === 'production'
@@ -18,9 +18,9 @@ const defaultImg = NODE_ENV === 'production'
 export const siteMetadata = {
   keywords,
   image: defaultImg,
-  url: HOST,
+  url: REACT_APP_HOST,
   title: defaultTitle,
   author: 'ANM Media',
-  siteUrl: HOST,
+  siteUrl: REACT_APP_HOST,
   description: defaultDescription,
 };
