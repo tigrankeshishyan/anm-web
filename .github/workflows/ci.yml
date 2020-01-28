@@ -26,7 +26,7 @@ jobs:
     - name: Set env to stage
       if: endsWith(github.ref, '/stage')
       run: |
-        echo "::set-env name=NODE_ENV::stage"
+        echo "::set-env name=NODE_ENV::development"
     - name: Set env to production
       if: endsWith(github.ref, '/prod')
       run: |
@@ -55,7 +55,7 @@ jobs:
     - run: ssh-keyscan ${{ secrets.HOST }} >> ~/.ssh/known_hosts
 
     - run: yarn client install
-    - name: Build
+    - name: Build with 
       run: yarn client build
       
     - name: deploy client
