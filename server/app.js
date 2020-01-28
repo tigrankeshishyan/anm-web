@@ -37,6 +37,7 @@ const run = async () => {
         if (env === 'production') {
           if (!origin.endsWith(host)) {
             callback(new Error('Not allowed by CORS'))
+            return
           }
         }
 
