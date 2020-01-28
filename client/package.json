@@ -15,6 +15,7 @@
     "apollo-upload-client": "^12.1.0",
     "clsx": "^1.0.4",
     "dotenv": "^8.2.0",
+    "env-cmd": "^10.0.1",
     "graphql": "^14.5.8",
     "isomorphic-fetch": "^2.2.1",
     "lodash.clonedeep": "^4.5.0",
@@ -49,7 +50,7 @@
     "eject": "react-scripts eject",
     "test": "react-scripts test",
     "start": "react-scripts start",
-    "build-prod": "NODE_ENV=production yarn build",
-    "build-stage": "NODE_ENV=development yarn build"
+    "build-prod": "env-cmd -f .env.prod yarn build",
+    "build-stage": "env-cmd -f .env.stage yarn build"
   }
 }
