@@ -2,11 +2,11 @@ import os from 'os'
 import path from 'path'
 
 const requiredEnvVariables = [
-  'ANM_CONNECTION_STRING',
-  'ANM_FB_APP_ID',
-  'ANM_FB_APP_SECRET',
-  'ANM_S3_KEY',
-  'ANM_S3_SECRET'
+  'CONNECTION_STRING',
+  'FB_APP_ID',
+  'FB_APP_SECRET',
+  'S3_KEY',
+  'S3_SECRET'
 ]
 
 const warnOnMissing = ['SLACK_WEBHOOK_URL']
@@ -31,41 +31,41 @@ export const apiPrefix = process.env.API_PREFIX || ''
 
 export const host = 'anmmedia.am'
 
-export const anmHost = process.env.ANM_HOST || `https://${host}`
+export const anmHost = process.env.HOST || `https://${host}`
 
-export const anmUserWithHost = process.env.ANM_USER_HOST
+export const anmUserWithHost = process.env.USER_HOST
 
 export const adminHost =
-  process.env.ANM_ADMIN_HOST || `https://admin.${host}`
+  process.env.ADMIN_HOST || `https://admin.${host}`
 
-export const PDFService = process.env.ANM_PDF_SERVICE || `https://${host}`
+export const PDFService = process.env.PDF_SERVICE || `https://${host}`
 
 export const secret = process.env.APP_SECRET
 
-export const sentryDSN = process.env.ANM_SENTRY_DSN
+export const sentryDSN = process.env.SENTRY_DSN
 
 export const facebook = {
-  appId: process.env.ANM_FB_APP_ID,
-  appSecret: process.env.ANM_FB_APP_SECRET,
+  appId: process.env.FB_APP_ID,
+  appSecret: process.env.FB_APP_SECRET,
   callback: `${anmHost}${apiPrefix}/auth/facebook/callback`
 }
 
 export const database = {
-  connectionString: process.env.ANM_CONNECTION_STRING,
+  connectionString: process.env.CONNECTION_STRING,
   sessionTableName: 'sessions',
   schema: 'anm',
-  schemaLocale: 'anm_locale'
+  schemaLocale: 'locale'
 }
 
 export const languages = ['hy', 'en']
 
 export const s3 = {
-  accessKeyId: process.env.ANM_S3_KEY,
-  secretAccessKey: process.env.ANM_S3_SECRET,
+  accessKeyId: process.env.S3_KEY,
+  secretAccessKey: process.env.S3_SECRET,
   endpoint: 'fra1.digitaloceanspaces.com'
 }
 
-export const s3Bucket = process.env.ANM_BUCKET
+export const s3Bucket = process.env.BUCKET
 
 export const maxImageSize = 1024
 
@@ -78,8 +78,8 @@ export const sendinblue = {
 export const currencies = ['USD', 'AMD', 'EUR']
 
 export const paddle = {
-  vendorId: process.env.ANM_PADDLE_ID,
-  vendorCode: process.env.ANM_PADDLE_CODE,
+  vendorId: process.env.PADDLE_ID,
+  vendorCode: process.env.PADDLE_CODE,
   apiHost: 'https://vendors.paddle.com'
 }
 
@@ -91,8 +91,8 @@ export const ameria = {
 
 export const github = {
   api: 'api.github.com',
-  usernameToken: process.env.ANM_GH_UN_TOKEN,
-  repoURL: process.env.ANM_GH_REPO
+  usernameToken: process.env.GH_UN_TOKEN,
+  repoURL: process.env.GH_REPO
 }
 
 export const maxValidationAttempts = 3
