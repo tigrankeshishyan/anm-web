@@ -23,7 +23,7 @@
   "scripts": {
     "server": "yarn workspace server",
     "client": "yarn workspace client",
-    "sync": "rsync -avzr client/build root@anmmedia.am:~/anm/${ANM_ENV:?}/web/ --delete",
+    "sync": "rsync -avzr client/build root@anmmedia.am:~/anm/${ANM_ENV:?}/web/client --delete",
     "push": "yarn client build && yarn sync"
   },
   "workspaces": [
