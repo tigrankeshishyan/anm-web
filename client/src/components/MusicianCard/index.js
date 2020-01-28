@@ -7,6 +7,10 @@ import CardFooter from 'components/CardFooter';
 
 import './styles.sass';
 
+const imageSizes = {
+  width: 300,
+};
+
 function MusicianCard(props) {
   const {
     firstName,
@@ -26,6 +30,7 @@ function MusicianCard(props) {
       <div className="musician-card-poster-image-wrapper">
         <Img
           src={src}
+          sizes={imageSizes}
           className="musician-card-poster-image"
         />
       </div>

@@ -31,7 +31,7 @@ function AuthForm (props) {
   } = props;
 
   const arePasswordMatch = formData.password === formData.confirmPassword;
-  const isSubmitDisabled = arePasswordMatch && (!isSignInMode && (!isRecaptchaSet || !agreedWithTerms));
+  const isSubmitDisabled = !isSignInMode && arePasswordMatch && (!isRecaptchaSet || !agreedWithTerms);
 
   const onFormChange = useCallback(data => {
     handleFormChange({
@@ -127,18 +127,20 @@ function AuthForm (props) {
               helperText={!isSignInMode ? i18n('password.wrongPassword') : ''}
             />
 
-            <TextField
-              required
-              fullWidth
-              type="password"
-              margin="normal"
-              id="confirmPassword"
-              name="confirmPassword"
-              onChange={onFormChange}
-              value={formData.confirmPassword}
-              label={i18n('form.confirmPassword')}
-              error={!isSignInMode && !!(formData.password && !arePasswordMatch) ? i18n('password.notMatch') : ''}
-            />
+            {!isSignInMode && (
+              <TextField
+                required
+                fullWidth
+                type="password"
+                margin="normal"
+                id="confirmPassword"
+                name="confirmPassword"
+                onChange={onFormChange}
+                value={formData.confirmPassword}
+                label={i18n('form.confirmPassword')}
+                error={!isSignInMode && !!(formData.password && !arePasswordMatch) ? i18n('password.notMatch') : ''}
+              />
+            )}
 
             {isSignInMode && (
               <div className="mrg-top-15">

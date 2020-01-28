@@ -48,7 +48,7 @@ function Img(props) {
     {
       'anm-default-image': !src,
       'fit-parent': fitParent,
-      'anm-loaded-image': loadedImages.has(src),
+      'anm-loaded-image': loadedImages.has(imageSrc),
     },
   );
 
