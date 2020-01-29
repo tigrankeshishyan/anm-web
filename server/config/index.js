@@ -13,7 +13,7 @@ const warnOnMissing = ['SLACK_WEBHOOK_URL']
 
 requiredEnvVariables.forEach(variable => {
   if (typeof process.env[variable] !== 'string') {
-    throw Error(`'${variable}' is a required environment variable`)
+    console.warn(`'${variable}' is a required environment variable`)
   }
 })
 
@@ -52,7 +52,7 @@ export const database = {
   connectionString: process.env.CONNECTION_STRING,
   sessionTableName: 'sessions',
   schema: 'anm',
-  schemaLocale: 'locale'
+  schemaLocale: 'anm_locale'
 }
 
 export const languages = ['hy', 'en']
