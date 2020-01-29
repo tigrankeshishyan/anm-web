@@ -52,7 +52,7 @@ export const database = {
   connectionString: process.env.CONNECTION_STRING,
   sessionTableName: 'sessions',
   schema: 'anm',
-  schemaLocale: 'locale'
+  schemaLocale: 'anm_locale'
 }
 
 export const languages = ['hy', 'en']
