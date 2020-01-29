@@ -13,7 +13,7 @@ const warnOnMissing = ['SLACK_WEBHOOK_URL']
 
 requiredEnvVariables.forEach(variable => {
   if (typeof process.env[variable] !== 'string') {
-    throw Error(`'${variable}' is a required environment variable`)
+    console.warn(`'${variable}' is a required environment variable`)
   }
 })
 
