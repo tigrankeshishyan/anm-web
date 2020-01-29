@@ -42,7 +42,7 @@ const countryOptions = countryList.map(country => ({
 
 const locale = getCurrentLang();
 
-function BuyScoreDialog(props) {
+function BuyScoreDialog (props) {
   const [isPurchaseLoading, setPurchaseLoadingStatus] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(locale === 'hy' ? 'AM' : null);
   const [isDialogOpen, setDialogStatus] = useState(false);
@@ -181,16 +181,17 @@ function BuyScoreDialog(props) {
             <ScoreDetailsInfo
               score={score}
             />
-
-            <div className="flex-row justify-end grow mrg-top-15">
-              <Typography
-                variant="h6"
-                color="primary"
-                className="font-bold"
-              >
-                {i18n(`${SCORE_DETAIL}.price`)} - {isArm ? `${scorePrice} ${currencyName}` : `$${scorePrice}`}
-              </Typography>
-            </div>
+            {selectedCountry && (
+              <div className="flex-row justify-end grow mrg-top-15">
+                <Typography
+                  variant="h6"
+                  color="primary"
+                  className="font-bold"
+                >
+                  {i18n(`${SCORE_DETAIL}.price`)} - {isArm ? `${scorePrice} ${currencyName}` : `$${scorePrice}`}
+                </Typography>
+              </div>
+            )}
           </Loading>
         </DialogContent>
         <DialogActions className="pad-20">

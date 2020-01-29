@@ -159,6 +159,7 @@ function ScoresFilter(props) {
             type="submit"
             variant="gradient"
             onClick={handleFilterSubmit}
+            disabled={Object.values(state).every(val => !val)}
           >
             {i18n('search')}
           </Button>
