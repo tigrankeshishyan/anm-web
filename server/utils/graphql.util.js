@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-fetch'
 
-const apiUrl = process.env.HOST
+const apiUrl = `${process.env.HOST}/graphql`
 
 export const getOptions = (query, lang = 'hy') => ({
   method: 'POST',
@@ -11,8 +11,14 @@ export const getOptions = (query, lang = 'hy') => ({
   }
 })
 
-export const fetchGraphData = async (options, query) =>
-  fetch(apiUrl, options || getOptions(query)).then(async res => res.json())
+export const fetchGraphData = async (options, query) => {
+  const response = await fetch(apiUrl, options || getOptions(query))
+  if (response.status >= 200 && response.status < 300) {
+    return response.json()
+  } else {
+    throw await response.text()
+  }
+}
 
 export const checkForErrors = (res, path) =>
   res && res.errors && console.error(`Error on, ${path}`, res.errors)
