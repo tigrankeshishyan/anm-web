@@ -43,10 +43,12 @@ typings/
 *.tgz
 
 # dotenv environment variables file
-.env.development
+.env
+.env.local
 
 .idea/
 build
+
 # Mac files
 .DS_Store
 

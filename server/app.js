@@ -1,26 +1,86 @@
-const path = require('path');
-require('dotenv')
-  .config({
-    path: path.resolve(__dirname, `../.env.${process.env.NODE_ENV}`)
-  });
-const express = require('express');
-const hbs = require('express-handlebars');
-const reqMiddleware = require('./middlewares/index');
-const { dynamicRoutes } = require('./constants');
+import GraphileUpload from 'graphql-upload'
 
-const app = express();
+import bodyParser from 'body-parser'
+import cors from 'cors'
+import Express from 'express'
+import locale from 'locale'
+import passport from 'passport'
+import Sentry from '@sentry/node'
+import path from 'path'
+import dirname from 'es-dirname'
+import hbs from 'express-handlebars'
 
-const PORT = process.env.PORT|| 8000;
+import { configurePassport } from './utils/passport.util'
+import { errorHandler } from './utils/error.util'
+import { port, sentryDSN, env, host } from './config'
+import { sequelize, init } from './sequelize'
+import { sessionMiddleware, useRespond } from './utils/express.util'
+import GraphQL from './graph'
+import routes from './routes'
+import reqMiddleware from './middlewares'
+import { dynamicRoutes } from './constants'
 
-app.use(express.static(path.resolve(__dirname, '../build')));
-app.set('view engine', 'hbs');
-app.engine('hbs', hbs({
-  extname: 'hbs',
-}));
-app.set('views', path.resolve(__dirname, './views'));
-app.use(dynamicRoutes, reqMiddleware);
-app.use('*', reqMiddleware);
+const { graphqlUploadExpress } = GraphileUpload
 
-app.listen(PORT, _ => {
-  console.log('OK, port is ', PORT);
-});
+const run = async () => {
+  if (sentryDSN) {
+    Sentry.init({ dsn: sentryDSN })
+  }
+
+  await init()
+
+  const app = new Express()
+
+  app.use(
+    cors({
+      origin: (origin, callback) => {
+        if (env === 'production') {
+          if (!origin.endsWith(host)) {
+            callback(new Error('Not allowed by CORS'))
+            return
+          }
+        }
+
+        return callback(null, true)
+      },
+      credentials: true
+    })
+  )
+
+  app.engine('hbs', hbs({ extname: 'hbs' }))
+  app.set('view engine', 'hbs')
+  app.set('views', path.resolve(dirname(), './views'))
+
+  const clientBuild = path.resolve(`${dirname()}/../client/build`)
+  app.use(Express.static(clientBuild))
+  app.use(bodyParser.urlencoded({ extended: true }))
+  app.use(sessionMiddleware)
+  app.use(useRespond)
+  app.use(dynamicRoutes, reqMiddleware)
+
+  configurePassport(passport)
+
+  app.use(passport.initialize())
+  app.use(passport.session())
+
+  app.use(locale(new locale.Locales(['en', 'hy'], 'hy')))
+
+  app.use(graphqlUploadExpress())
+  app.use(GraphQL())
+
+  app.use(routes)
+  app.use('*', reqMiddleware)
+
+  app.use(errorHandler)
+
+  app.listen(port, () => {
+    const msg = `Listening on port '${port}' at ${new Date().toISOString()}`
+    console.log(msg)
+  })
+}
+
+const close = () => sequelize.close()
+
+run().catch(err => console.error(err) || process.emit(err))
+
+process.on('beforeExit', close)

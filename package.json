@@ -1,69 +1,6 @@
 {
-  "name": "empty-app",
+  "name": "anm",
   "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@apollo/react-hooks": "^3.1.3",
-    "@material-ui/core": "^4.8.3",
-    "@material-ui/icons": "^4.5.1",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
-    "@testing-library/user-event": "^7.1.2",
-    "apollo-boost": "^0.4.7",
-    "apollo-cache-inmemory": "^1.6.5",
-    "apollo-link": "^1.2.13",
-    "apollo-link-error": "^1.1.12",
-    "apollo-upload-client": "^12.1.0",
-    "clsx": "^1.0.4",
-    "graphql": "^14.5.8",
-    "isomorphic-fetch": "^2.2.1",
-    "lodash.clonedeep": "^4.5.0",
-    "lodash.get": "^4.4.2",
-    "lodash.uniqby": "^4.7.0",
-    "lodash.xor": "^4.5.0",
-    "moment": "^2.24.0",
-    "node-sass": "^4.13.1",
-    "notistack": "^0.9.7",
-    "react": "^16.12.0",
-    "react-bnb-gallery": "^1.1.9",
-    "react-cookie-banner": "^4.1.0",
-    "react-device-detect": "^1.11.14",
-    "react-dom": "^16.12.0",
-    "react-dropzone": "^10.2.1",
-    "react-google-recaptcha": "^2.0.1",
-    "react-helmet": "^5.2.1",
-    "react-image-gallery": "^1.0.5",
-    "react-infinite-scroller": "^1.2.4",
-    "react-intl": "^3.11.0",
-    "react-pdf": "^4.1.0",
-    "react-router-config": "^5.1.1",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "3.3.0",
-    "react-select": "^3.0.8",
-    "react-share": "^4.0.1"
-  },
-  "devDependencies": {
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "express-handlebars": "^3.1.0",
-    "isbot": "^2.5.4",
-    "nodemon": "^2.0.2"
-  },
-  "scripts": {
-    "serve:dev": "NODE_ENV=development npx nodemon server/app.js",
-    "serve:prod": "NODE_ENV=production npx nodemon server/app.js",
-    "server:start": "node server/app.js",
-    "start": "NODE_OPTIONS=--max_old_space_size=8192 react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "sync": "rsync -avzr build root@anmmedia.am:~/anm/${ANM_ENV:?}/web/ --delete",
-    "push": "yarn build && yarn sync",
-    "pull": "git fetch;git reset --hard origin/${ANM_ENV:?};git checkout ${ANM_ENV:?};git pull;yarn install;"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -75,5 +12,22 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "private": true,
+  "scripts": {
+    "server": "yarn workspace server",
+    "client": "yarn workspace client",
+    "sync": "rsync -avzr client/build root@anmmedia.am:~/anm/${ANM_ENV:?}/web/client --delete",
+    "push": "yarn client build && yarn sync"
+  },
+  "workspaces": [
+    "server",
+    "client"
+  ]
 }
