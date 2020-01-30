@@ -6,20 +6,13 @@ const requiredEnvVariables = [
   'FB_APP_ID',
   'FB_APP_SECRET',
   'S3_KEY',
-  'S3_SECRET'
+  'S3_SECRET',
+  'SLACK_WEBHOOK_URL'
 ]
-
-const warnOnMissing = ['SLACK_WEBHOOK_URL']
 
 requiredEnvVariables.forEach(variable => {
   if (typeof process.env[variable] !== 'string') {
     console.warn(`'${variable}' is a required environment variable`)
-  }
-})
-
-warnOnMissing.forEach(variable => {
-  if (typeof process.env[variable] !== 'string') {
-    console.warn(`'${variable}' is missing environment variable`)
   }
 })
 
