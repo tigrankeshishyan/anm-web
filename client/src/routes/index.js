@@ -4,8 +4,9 @@ import AsyncComponentLoader from 'components/AsyncComponentLoader';
 export default [
   {
     key: 'news',
-    isMain: true,
     exact: true,
+    isMain: true,
+    isStatic: true,
     path: '/:locale/news',
     linkPath: '/news',
     title: 'news',
@@ -22,6 +23,7 @@ export default [
   {
     exact: true,
     isMain: true,
+    isStatic: true,
     key: 'musicians',
     title: 'musicians',
     linkPath: '/musicians',
@@ -36,9 +38,10 @@ export default [
     component: AsyncComponentLoader(lazy( () => import('pages/MusicianDetails/index.js'))),
   },
   {
-    title: 'Music Sheet Scores',
     isMain: true,
     key: 'scores',
+    isStatic: true,
+    title: 'Music Sheet Scores',
     path: '/:locale/music-sheet-scores',
     linkPath: '/music-sheet-scores',
     component: AsyncComponentLoader(lazy( () => import('pages/Scores/index.js'))),
@@ -52,6 +55,7 @@ export default [
     component: AsyncComponentLoader(lazy( () => import('pages/ScoreDetails/index.js'))),
   },
   {
+    isStatic: true,
     key: 'aboutUs',
     title: 'About Us',
     path: '/:locale/about-us',
@@ -62,6 +66,7 @@ export default [
   {
     exact: true,
     isMain: true,
+    isStatic: true,
     key: 'contactUs',
     title: 'Contact Us',
     linkPath: '/contact-us',
@@ -72,6 +77,7 @@ export default [
   {
     exact: true,
     key: 'terms',
+    isStatic: true,
     title: 'terms',
     path: '/:locale/terms',
     translationKey: 'termsAndPrivacyPolicy',
@@ -79,6 +85,7 @@ export default [
   },
   {
     exact: true,
+    isStatic: true,
     key: 'profile',
     title: 'User Profile',
     translationKey: 'profile',
@@ -86,12 +93,14 @@ export default [
     component: AsyncComponentLoader(lazy( () => import('pages/UserProfile/index.js'))),
   },
   {
+    isStatic: true,
     key: 'signIn',
     title: 'Sign In',
     path: '/:locale/auth/sign-in',
     component: AsyncComponentLoader(lazy( () => import('Auth/AuthFormWrapper/index.js'))),
   },
   {
+    isStatic: true,
     key: 'signUp',
     title: 'Sign Up',
     path: '/:locale/auth/sign-up',
@@ -112,9 +121,10 @@ export default [
   },
   {
     key: 'home',
-    path: '/:locale/home',
-    linkPath: '/home',
     title: 'home',
+    isStatic: true,
+    linkPath: '/home',
+    path: '/:locale/home',
     component: AsyncComponentLoader(lazy( () => import('pages/Home/index.js'))),
   },
   {
