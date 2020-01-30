@@ -1,9 +1,10 @@
 import GraphqlPassport from 'graphql-passport'
 import postgraphile from 'postgraphile'
+import dirname from 'es-dirname'
 
 import { models } from '../sequelize'
 
-import { database } from '../config'
+import { database, isDev } from '../config'
 import * as Storage from '../utils/storage.util'
 
 import CustomPlugins, { SameGraphQLAndGraphiQLPathnameTweak } from './plugins'
@@ -26,6 +27,10 @@ export default () => postgraphile.postgraphql(
     dynamicJson: true,
     simpleCollections: 'both',
     bodySizeLimit: '50mb',
+    sortExport: true,
+    exportGqlSchemaPath: isDev
+      ? `${dirname()}/../../schema.graphql`
+      : undefined,
     additionalGraphQLContextFromRequest (request) {
       return buildContext({
         // for graphql-passport use name 'req'
