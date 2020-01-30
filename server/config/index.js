@@ -2,6 +2,7 @@ import os from 'os'
 import path from 'path'
 
 const requiredEnvVariables = [
+  'APP_SECRET',
   'CONNECTION_STRING',
   'FB_APP_ID',
   'FB_APP_SECRET',
@@ -17,6 +18,10 @@ requiredEnvVariables.forEach(variable => {
 })
 
 export const env = process.env.NODE_ENV || 'development'
+
+export const isProd = process.env.NODE_ENV === 'production'
+
+export const isDev = process.env.NODE_ENV !== 'production'
 
 export const port = process.env.PORT || 3000
 

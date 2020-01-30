@@ -1,4 +1,5 @@
 import { getOptions, fetchGraphData } from '../utils/graphql.util'
+import { ExpressError } from '../utils/error.util'
 
 // Fetch query for news which are published
 const query = id => `
@@ -21,25 +22,19 @@ const query = id => `
 `
 
 export const getSingleNewsData = async (id, locale, url) => {
-  try {
-    const res = await fetchGraphData(getOptions(query(id), locale))
-    const { article } = res.data || {}
-    if (article) {
-      return {
-        url,
-        locale,
-        title: article.title,
-        content: article.content,
-        imageUrl: article.poster.url,
-        description: article.description
-      }
-    } else {
-      return {
-        title: 'Not Found',
-        content: 'No Article Found'
-      }
-    }
-  } catch (err) {
-    console.log('Error fetching News --> : ', err)
+  const res = await fetchGraphData(getOptions(query(id), locale))
+  const { article } = res.data || {}
+
+  if (!article) {
+    throw new ExpressError('not found', 404)
+  }
+
+  return {
+    url,
+    locale,
+    title: article.title,
+    content: article.content,
+    imageUrl: article.poster.url,
+    description: article.description
   }
 }
