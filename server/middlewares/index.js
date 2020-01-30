@@ -10,61 +10,37 @@ import { getSingleScoreData } from './scores'
 const getUrl = req => process.env.HOST + req.originalUrl
 const defaultLocale = 'hy'
 
-export const getFetchFn = req => {
-  const { originalUrl } = req
+export const fetchData = async req => {
   const { id, locale = defaultLocale } = req.params
+  const url = getUrl(req)
 
-  if (!id) {
-    return undefined
-  }
+  if (url.includes('about-us')) return appAboutUsData[locale]
+  if (url.includes('contact-us')) return appContactUsData[locale]
+  if (url.includes('/news/')) return getSingleNewsData(id, locale, url)
+  if (url.includes('/musician/')) return getSingleMusicianData(id, locale, url)
+  if (url.includes('/score/')) return getSingleScoreData(id, locale, url)
 
-  if (originalUrl.includes('about-us')) {
-    return new Promise(resolve => resolve(appAboutUsData[locale]))
-  }
-
-  if (originalUrl.includes('contact-us')) {
-    return new Promise(resolve => resolve(appContactUsData[locale]))
-  }
-
-  if (originalUrl.includes('news')) {
-    return getSingleNewsData
-  }
-
-  if (originalUrl.includes('musician')) {
-    return getSingleMusicianData
-  }
-
-  if (originalUrl.includes('score')) {
-    return getSingleScoreData
-  }
+  return { url }
 }
 
-export default (req, res) => {
-  // Detect if the request comes from browser or from crawler, spider, etc.
-  if (!isBot(req.headers['user-agent'])) {
-    res.sendFile(path.resolve(dirname(), '../../client/build/index.html'))
-    return
-  }
+export default async (req, res, next) => {
+  try {
+    // Detect if the request comes from browser or from crawler, spider, etc.
+    if (!isBot(req.headers['user-agent'])) {
+      res.sendFile(path.resolve(dirname(), '../../client/build/index.html'))
+      return
+    }
 
-  const { locale = defaultLocale } = req.params
-
-  const fetchDataFn = getFetchFn(req)
-  const url = getUrl(req)
-  if (!fetchDataFn) {
-    res.render('main', { ...appDefaultData[locale], url })
-    return
-  }
-
-  fetchDataFn(req.params.id, req.params.locale, url).then(data => {
-    const { title, content, imageUrl, description } = data
-
-    res.render('main', {
+    const { locale = defaultLocale } = req.params
+    const data = await fetchData(req)
+    const params = {
       ...appDefaultData[locale],
-      url,
-      title,
-      imageUrl,
-      description,
-      content: content || description
-    })
-  })
+      ...data,
+      content: data.content || data.description
+    }
+
+    res.render('main', params)
+  } catch (err) {
+    next(err)
+  }
 }
