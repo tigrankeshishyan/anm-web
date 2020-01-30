@@ -31,7 +31,7 @@ import 'pages/NewsDetails/styles.sass';
 function NewsDetails(props) {
   const { data: { article = {} } = {} } = useQuery(FETCH_SINGLE_ARTICLE, {
     variables: {
-      id: Number(props.match.params.articleId),
+      id: Number(props.match.params.path),
     },
   });
 

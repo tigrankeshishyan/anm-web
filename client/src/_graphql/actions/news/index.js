@@ -32,9 +32,9 @@ export const FETCH_NEWS = gql`
 `;
 
 export const FETCH_SINGLE_ARTICLE = gql`
-  query Article($id: Int!) {
-    article(
-      id: $id
+  query Article($path: String!) {
+    articleByPath(
+        path: $path
     ) {
       ...newsAll
     }
