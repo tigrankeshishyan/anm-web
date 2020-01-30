@@ -2,17 +2,13 @@ import path from 'path'
 import isBot from 'isbot'
 import dirname from 'es-dirname'
 
-import {
-  appDefaultData,
-  appAboutUsData,
-  appContactUsData,
-} from '../constants'
+import { appDefaultData, appAboutUsData, appContactUsData } from '../constants'
 import { getSingleNewsData } from './news'
 import { getSingleMusicianData } from './musicians'
 import { getSingleScoreData } from './scores'
 
 const getUrl = req => process.env.HOST + req.originalUrl
-const defaultLocale = 'hy';
+const defaultLocale = 'hy'
 
 export const getFetchFn = req => {
   const { originalUrl } = req
@@ -68,7 +64,7 @@ export default (req, res) => {
       title,
       imageUrl,
       description,
-      content: content || description,
+      content: content || description
     })
   })
 }
