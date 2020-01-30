@@ -29,9 +29,9 @@ import {
 import 'pages/NewsDetails/styles.sass';
 
 function NewsDetails(props) {
-  const { data: { article = {} } = {} } = useQuery(FETCH_SINGLE_ARTICLE, {
+  const { data: { articleByPath: article = {} } = {} } = useQuery(FETCH_SINGLE_ARTICLE, {
     variables: {
-      path: Number(props.match.params.path),
+      path: props.match.params.path,
     },
   });
 
@@ -48,7 +48,7 @@ function NewsDetails(props) {
 
   return article.id
     ? (
-      <>
+      <div key={article.id}>
         <SEO
           author={author}
           imageUrl={posterUrl}
@@ -134,7 +134,7 @@ function NewsDetails(props) {
             images={article.gallery ? article.gallery.images : []}
           />
         </Grid>
-      </>
+      </div>
     ) : !article && <NoData translationId="article.notFound"/>;
 }
 
