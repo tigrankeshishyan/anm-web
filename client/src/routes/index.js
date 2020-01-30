@@ -17,7 +17,7 @@ export default [
     key: 'news',
     exact: true,
     title: 'News Details',
-    path: '/:locale/news/:path/:articleId',
+    path: '/:locale/news/:path/:articleId?',
     component: AsyncComponentLoader(lazy( () => import('pages/NewsDetails/index.js'))),
   },
   {
