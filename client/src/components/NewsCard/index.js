@@ -27,6 +27,7 @@ function NewsCard(props) {
     >
       <div className="news-card-poster-image-wrapper">
         <Img
+          fitImage
           src={src}
           sizes={imageSizes}
           className="news-card-poster-image"
