@@ -31,8 +31,6 @@ export const host = 'anmmedia.am'
 
 export const anmHost = process.env.HOST || `https://${host}`
 
-export const anmUserWithHost = process.env.USER_HOST
-
 export const adminHost =
   process.env.ADMIN_HOST || `https://admin.${host}`
 
@@ -85,12 +83,6 @@ export const ameria = {
   clientId: process.env.AMERIA_CLIENT_ID,
   username: process.env.AMERIA_UN,
   password: process.env.AMERIA_PW
-}
-
-export const github = {
-  api: 'api.github.com',
-  usernameToken: process.env.GH_UN_TOKEN,
-  repoURL: process.env.GH_REPO
 }
 
 export const maxValidationAttempts = 3
