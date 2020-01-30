@@ -2,19 +2,32 @@ import path from 'path'
 import isBot from 'isbot'
 import dirname from 'es-dirname'
 
-import { appDefaultData } from '../constants'
+import {
+  appDefaultData,
+  appAboutUsData,
+  appContactUsData,
+} from '../constants'
 import { getSingleNewsData } from './news'
 import { getSingleMusicianData } from './musicians'
 import { getSingleScoreData } from './scores'
 
 const getUrl = req => process.env.HOST + req.originalUrl
+const defaultLocale = 'hy';
 
 export const getFetchFn = req => {
   const { originalUrl } = req
-  const { id } = req.params
+  const { id, locale = defaultLocale } = req.params
 
   if (!id) {
     return undefined
+  }
+
+  if (originalUrl.includes('about-us')) {
+    return new Promise(resolve => resolve(appAboutUsData[locale]))
+  }
+
+  if (originalUrl.includes('contact-us')) {
+    return new Promise(resolve => resolve(appContactUsData[locale]))
   }
 
   if (originalUrl.includes('news')) {
@@ -37,10 +50,12 @@ export default (req, res) => {
     return
   }
 
+  const { locale = defaultLocale } = req.params
+
   const fetchDataFn = getFetchFn(req)
   const url = getUrl(req)
   if (!fetchDataFn) {
-    res.render('main', { ...appDefaultData, url })
+    res.render('main', { ...appDefaultData[locale], url })
     return
   }
 
@@ -48,12 +63,12 @@ export default (req, res) => {
     const { title, content, imageUrl, description } = data
 
     res.render('main', {
-      ...appDefaultData,
+      ...appDefaultData[locale],
       url,
       title,
-      content,
       imageUrl,
-      description
+      description,
+      content: content || description,
     })
   })
 }
