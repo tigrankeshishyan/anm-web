@@ -1,0 +1,13 @@
+{
+  "name": "worker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "graphile-worker": "^0.2.0"
+  },
+  "scripts": {
+    "esnode": "node --experimental-modules --es-module-specifier-resolution=node -r ../config/env.cjs",
+    "gw": "yarn esnode node_modules/.bin/graphile-worker --schema-only"
+  },
+  "type": "module"
+}

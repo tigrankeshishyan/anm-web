@@ -21,13 +21,17 @@
   },
   "private": true,
   "scripts": {
-    "server": "yarn workspace server",
     "client": "yarn workspace client",
+    "db": "yarn workspace db",
+    "server": "yarn workspace server",
+    "worker": "yarn workspace worker",
     "sync": "rsync -avzr client/build root@anmmedia.am:~/anm/${ANM_ENV:?}/web/client --delete",
     "push": "yarn client build && yarn sync"
   },
   "workspaces": [
+    "client",
+    "db",
     "server",
-    "client"
+    "worker"
   ]
 }
