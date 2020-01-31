@@ -45,7 +45,7 @@
     "prettier-eslint": "^9.0.1"
   },
   "scripts": {
-    "esnode": "node --experimental-modules --es-module-specifier-resolution=node -r dotenv/config",
+    "esnode": "node --experimental-modules --es-module-specifier-resolution=node -r ../config/env.cjs",
     "debug": "yarn esnode --inspect=$DEBUGGER_PORT app.js",
     "nmon": "npx nodemon --experimental-modules --es-module-specifier-resolution=node --exec 'node -r dotenv/config'",
     "nodemon": "yarn nmon app.js",
