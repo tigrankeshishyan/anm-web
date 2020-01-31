@@ -49,6 +49,7 @@ function AboutUs(props) {
       />
 
       <PosterWithSectionBlock
+        hideBlockOnMobile
         url={pagePosterUrl}
       />
 
