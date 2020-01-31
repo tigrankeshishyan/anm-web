@@ -14,7 +14,7 @@ createEmptyImg(DefaultImage, 200);
 const loadedImages = new Set();
 
 function Img(props) {
-  const [image, setImage] = useState({ src: null });
+  const [isImageLoaded, setImageLoadedStatus] = useState(false);
   const imgRef = useRef();
 
   const {
@@ -31,12 +31,17 @@ function Img(props) {
   const imageSrc = addImageProportions(src, sizes.width, sizes.height, fitImage);
 
   // It will be run only once for the same src.
-  useEffect((_) => {
-    createEmptyImg(imageSrc, null, (_) => {
+  useEffect(() => {
+    if (loadedImages.has(imageSrc)) {
+      setImageLoadedStatus(true);
+      return;
+    }
+
+    createEmptyImg(imageSrc, null, () => {
       // Preventing async image loading issues
       if (imgRef.current) {
         loadedImages.add(imageSrc);
-        setImage({ src: imageSrc });
+        setImageLoadedStatus(true);
         onLoad && onLoad();
       }
     });
@@ -46,9 +51,8 @@ function Img(props) {
     'anm-image',
     className,
     {
-      'anm-default-image': !src,
       'fit-parent': fitParent,
-      'anm-loaded-image': loadedImages.has(imageSrc),
+      'anm-loaded-image': isImageLoaded,
     },
   );
 
@@ -57,7 +61,7 @@ function Img(props) {
       alt={alt}
       ref={imgRef}
       className={imageClasses}
-      src={image.src ? image.src : DefaultImage}
+      src={imageSrc || DefaultImage}
       {...imageProps}
     />
   );
