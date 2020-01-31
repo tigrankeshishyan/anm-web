@@ -17,7 +17,7 @@ ImageGallery.defaultProps = {
   showNav: false,
   showBullets: true,
   showThumbnails: false,
-  showPlayButton: false,
+  showPlayButton: true,
   showFullscreenButton: false,
   useBrowserFullscreen: false,
 };
