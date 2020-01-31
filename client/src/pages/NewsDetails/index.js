@@ -58,6 +58,7 @@ function NewsDetails(props) {
 
         <PosterWithSectionBlock
           url={posterUrl}
+          hideBlockOnMobile
         />
 
         <Grid
