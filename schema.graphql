@@ -8073,53 +8073,6 @@ input DocumentToManyDocumentLocaleFilter {
   some: DocumentLocaleFilter
 }
 
-enum EnumMediaMediaType {
-  AUDIO
-  VIDEO
-}
-
-"""
-A filter to be used against EnumMediaMediaType fields. All fields are combined with a logical ‘and.’
-"""
-input EnumMediaMediaTypeFilter {
-  """
-  Not equal to the specified value, treating null like an ordinary value.
-  """
-  distinctFrom: EnumMediaMediaType
-
-  """Equal to the specified value."""
-  equalTo: EnumMediaMediaType
-
-  """Greater than the specified value."""
-  greaterThan: EnumMediaMediaType
-
-  """Greater than or equal to the specified value."""
-  greaterThanOrEqualTo: EnumMediaMediaType
-
-  """Included in the specified list."""
-  in: [EnumMediaMediaType!]
-
-  """
-  Is null (if `true` is specified) or is not null (if `false` is specified).
-  """
-  isNull: Boolean
-
-  """Less than the specified value."""
-  lessThan: EnumMediaMediaType
-
-  """Less than or equal to the specified value."""
-  lessThanOrEqualTo: EnumMediaMediaType
-
-  """Equal to the specified value, treating null like an ordinary value."""
-  notDistinctFrom: EnumMediaMediaType
-
-  """Not equal to the specified value."""
-  notEqualTo: EnumMediaMediaType
-
-  """Not included in the specified list."""
-  notIn: [EnumMediaMediaType!]
-}
-
 type ForgetPasswordPayload {
   """false if not user with email"""
   success: Boolean!
@@ -14058,7 +14011,7 @@ type Media implements Node {
     """The method to use when ordering `MediaLocale`."""
     orderBy: [MediaLocalesOrderBy!]
   ): [MediaLocale!]!
-  mediaType: EnumMediaMediaType
+  mediaType: MediaType
 
   """
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
@@ -14194,7 +14147,7 @@ input MediaCondition {
   id: Int
 
   """Checks for equality with the object’s `mediaType` field."""
-  mediaType: EnumMediaMediaType
+  mediaType: MediaType
 
   """Checks for equality with the object’s `title` field."""
   title: String
@@ -14252,7 +14205,7 @@ input MediaFilter {
   mediaLocalesBySourceIdExist: Boolean
 
   """Filter by the object’s `mediaType` field."""
-  mediaType: EnumMediaMediaTypeFilter
+  mediaType: MediaTypeFilter
 
   """Negates the expression."""
   not: MediaFilter
@@ -14280,7 +14233,7 @@ input MediaFilter {
 input MediaInput {
   """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
-  mediaType: EnumMediaMediaType
+  mediaType: MediaType
   title: String
 
   """This field is controlled under the hood, don't use it."""
@@ -14460,7 +14413,7 @@ Represents an update to a `Media`. Fields that are set will be updated.
 input MediaPatch {
   """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
-  mediaType: EnumMediaMediaType
+  mediaType: MediaType
   title: String
 
   """This field is controlled under the hood, don't use it."""
@@ -14506,6 +14459,53 @@ input MediaToManyPlaylistMediaFilter {
   Some related `PlaylistMedia` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   some: PlaylistMediaFilter
+}
+
+enum MediaType {
+  AUDIO
+  VIDEO
+}
+
+"""
+A filter to be used against MediaType fields. All fields are combined with a logical ‘and.’
+"""
+input MediaTypeFilter {
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: MediaType
+
+  """Equal to the specified value."""
+  equalTo: MediaType
+
+  """Greater than the specified value."""
+  greaterThan: MediaType
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: MediaType
+
+  """Included in the specified list."""
+  in: [MediaType!]
+
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Less than the specified value."""
+  lessThan: MediaType
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: MediaType
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: MediaType
+
+  """Not equal to the specified value."""
+  notEqualTo: MediaType
+
+  """Not included in the specified list."""
+  notIn: [MediaType!]
 }
 
 type Musician implements Node {
