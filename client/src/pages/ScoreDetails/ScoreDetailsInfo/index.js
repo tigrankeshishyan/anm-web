@@ -1,5 +1,4 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 import lodashGet from 'lodash.get';
 
 import Tag from 'components/Tag';
@@ -9,7 +8,7 @@ import { SCORE_DETAIL } from 'localization/constants';
 import { withI18n } from 'localization/helpers';
 import ScoreInfoSection from 'pages/ScoreDetails/ScoreInfoSection';
 
-// import './styles.sass';
+import './styles.sass';
 
 function ScoreDetailsInfo(props) {
   const {
@@ -28,6 +27,7 @@ function ScoreDetailsInfo(props) {
         dataRenderer={({ nodeId, firstName, lastName }) => (
           <Tag
             key={nodeId}
+            className="score-info-tag"
             text={`${firstName} ${lastName}`}
           />
         )}
@@ -35,7 +35,7 @@ function ScoreDetailsInfo(props) {
       <ScoreInfoSection
         data={instruments}
         title={i18n(`${SCORE_DETAIL}.instruments`)}
-        dataRenderer={({ name }) => <Tag key={name} text={name}/>}
+        dataRenderer={({ name }) => <Tag key={name} className="score-info-tag" text={name} />}
       />
     </>
   );
