@@ -1,10 +1,10 @@
-import { addLocaleKey } from 'locales/helpers';
+import { addLocaleKey } from 'localization/helpers';
 import {
   SCORES,
   CONTACT_US,
   USER_PROFILE,
   SCORE_DETAIL,
-} from 'locales/constants';
+} from 'localization/constants';
 
 import newsLocalesHy from '../News/locales/hy';
 import contactUsLocalesHy from '../ContactUs/locales/hy';

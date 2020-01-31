@@ -4,7 +4,7 @@ import lodashGet from 'lodash.get';
 
 import Tag from 'components/Tag';
 
-import { SCORE_DETAIL } from 'locales/constants';
+import { SCORE_DETAIL } from 'localization/constants';
 
 import { withI18n } from 'localization/helpers';
 import ScoreInfoSection from 'pages/ScoreDetails/ScoreInfoSection';

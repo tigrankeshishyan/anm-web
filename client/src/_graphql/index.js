@@ -3,7 +3,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-boost';
 import { onError } from 'apollo-link-error';
 import { ApolloLink } from 'apollo-link';
-import { getCurrentLang } from 'locales/helpers';
+import { getCurrentLang } from 'localization/helpers';
 import fetch from 'isomorphic-fetch';
 
 export default new ApolloClient({

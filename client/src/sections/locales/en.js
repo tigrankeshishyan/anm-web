@@ -1,4 +1,4 @@
-import { addLocaleKey } from 'locales/helpers';
+import { addLocaleKey } from 'localization/helpers';
 
 import footerLocalesEn from '../Footer/locales/en';
 

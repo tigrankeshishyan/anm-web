@@ -17,7 +17,7 @@ import {
 
 import {
   SCORES,
-} from 'locales/constants';
+} from 'localization/constants';
 
 import './styles.sass';
 

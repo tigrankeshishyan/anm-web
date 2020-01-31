@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { googleRecaptchaKeyV2 } from '_constants';
-import { getCurrentLang } from 'locales/helpers';
+import { getCurrentLang } from 'localization/helpers';
 
 import './styles.sass';
 

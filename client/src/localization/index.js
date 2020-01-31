@@ -6,9 +6,8 @@ import { IntlProvider } from 'react-intl';
 import {
   langStorageKey,
   defaultLang,
-} from 'locales';
-import { isWindowExists } from '../helpers';
-import { getCurrentLang } from '../locales/helpers';
+} from 'localization/constants';
+import { getCurrentLang } from 'localization/helpers';
 
 function AnmIntlProvider(props) {
   const [messages, setMessages] = useState(undefined);
@@ -21,14 +20,13 @@ function AnmIntlProvider(props) {
 
   useEffect(() => {
     if (locale) {
-      import(`locales/${locale}`)
+      import(`localization/translations/${locale}`)
         .then(res => {
           setMessages(res.default);
         });
     }
     
-    if (isWindowExists()
-      && locale
+    if (locale
       && (locale!=='undefined')
       && !localStorage.getItem(langStorageKey)
     ) {

@@ -20,7 +20,7 @@ import withUser from 'hoc/withUser';
 
 import {
   SCORE_DETAIL,
-} from 'locales/constants';
+} from 'localization/constants';
 
 import ContentSection from 'sections/ContentSection';
 

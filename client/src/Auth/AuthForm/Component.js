@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Checkbox from '@material-ui/core/Checkbox';
 
 import { withI18n } from 'localization/helpers';
-import { getCurrentLang } from 'locales/helpers';
+import { getCurrentLang } from 'localization/helpers';
 
 import Button from 'components/Button';
 import ReCaptcha from 'components/ReCaptcha';

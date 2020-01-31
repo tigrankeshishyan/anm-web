@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { getCurrentLang } from 'locales/helpers';
+import { getCurrentLang } from 'localization/helpers';
 
 const locale = getCurrentLang();
 

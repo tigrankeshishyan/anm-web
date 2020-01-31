@@ -1,17 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-import { languages} from 'locales';
+import { languages} from 'localization/constants';
 import lodashXor from 'lodash.xor';
 import { siteMetadata } from '_constants';
-import { isWindowExists } from 'helpers';
 import {
   getCurrentLang,
-} from 'locales/helpers';
+} from 'localization/helpers';
 import {
   withI18n,
 } from 'localization/helpers';
-
 
 const {
   REACT_APP_HOST,
@@ -31,7 +29,7 @@ const SEO = props => {
     descriptionTranslationId,
   } = props;
 
-  const url = isWindowExists() ? window.location.href : '';
+  const url = window.location.href;
   const locale = getCurrentLang();
 
   const generatedTitle = titleTranslationId

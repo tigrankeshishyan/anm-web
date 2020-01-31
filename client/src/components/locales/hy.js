@@ -1,5 +1,5 @@
-import { addLocaleKey } from 'locales/helpers';
-import { PDF_VIEWER } from 'locales/constants';
+import { addLocaleKey } from 'localization/helpers';
+import { PDF_VIEWER } from 'localization/constants';
 
 import pdfViewerLocalesHy from 'components/PDFViewer/locales/hy';
 import cookieLocalesHy from 'components/CookieBanner/locales/hy';

@@ -1,5 +1,5 @@
 import routes from 'routes';
-import { languages } from 'locales';
+import { languages } from 'localization/constants';
 import fetch from 'isomorphic-fetch';
 
 const host = process.env.REACT_APP_HOST;
