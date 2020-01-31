@@ -16,7 +16,6 @@ import PgManyToManyInflector from './plugins/inflectors.plugin'
 import PromoPlugin from './plugins/promo.plugin'
 import PurchasePlugin from './plugins/purchase.plugin'
 import ScorePlugin from './plugins/score.plugin'
-import TimestampsPlugin from './plugins/timestamps.plugin'
 import UserPlugin from './plugins/user.plugin'
 import VerificationPlugin from './plugins/verification.plugin'
 
@@ -34,7 +33,6 @@ export default makePluginByCombiningPlugins(
   AutoUpdatePlugin,
   VerificationPlugin,
   PromoPlugin,
-  TimestampsPlugin,
   AuthPlugin,
   ConnectionFilterPlugin,
   PostGraphileUploadFieldPlugin,
