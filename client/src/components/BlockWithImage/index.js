@@ -17,6 +17,7 @@ const getImageWidth = () => {
 function BlockWithImage (props) {
   const {
     url,
+    imgAlt,
     className,
   } = props;
 
@@ -30,6 +31,7 @@ function BlockWithImage (props) {
     >
       <Img
         src={url}
+        alt={imgAlt}
         sizes={{ width: getImageWidth() }}
       />
     </div>
@@ -39,10 +41,12 @@ function BlockWithImage (props) {
 BlockWithImage.defaultProps = {
   url: '',
   className: '',
+  imgAlt: undefined,
 };
 
 BlockWithImage.propTypes = {
   url: PropTypes.string,
+  imgAlt: PropTypes.string,
   className: PropTypes.string,
 };
 

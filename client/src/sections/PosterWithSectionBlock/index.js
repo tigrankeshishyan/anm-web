@@ -13,6 +13,7 @@ const blockHiddenPoints = ['xs', 'sm'];
 function PosterWithSectionBlock (props) {
   const {
     url,
+    imgAlt,
     hideBlockOnMobile,
   } = props;
 
@@ -33,29 +34,34 @@ function PosterWithSectionBlock (props) {
         </Grid>
       </Hidden>
 
-      <Grid
-        item
-        md={7}
-        sm={12}
-        xs={12}
-      >
-        <div className="poster-image-wrapper">
-          <BlockWithImage
-            url={url}
-          />
-        </div>
-      </Grid>
+      {url && (
+        <Grid
+          item
+          md={7}
+          sm={12}
+          xs={12}
+        >
+          <div className="poster-image-wrapper">
+            <BlockWithImage
+              url={url}
+              imgAlt={imgAlt}
+            />
+          </div>
+        </Grid>
+      )}
     </Grid>
   );
 }
 
 PosterWithSectionBlock.defaultProps = {
   url: '',
+  imgAlt: undefined,
   hideBlockOnMobile: false,
 };
 
 PosterWithSectionBlock.propTypes = {
   url: PropTypes.string,
+  imgAlt: PropTypes.string,
   hideBlockOnMobile: PropTypes.bool,
 };
 

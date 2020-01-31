@@ -31,6 +31,7 @@ function MusicianCard(props) {
         <Img
           src={src}
           sizes={imageSizes}
+          alt={musicianFullName}
           className="musician-card-poster-image"
         />
       </div>
