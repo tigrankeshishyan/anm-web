@@ -42,7 +42,7 @@ ScoreRow.defaultProps = {
 };
 
 ScoreRow.propTypes = {
-  onDownload: PropTypes.func.isRequired,
+  musiciansList: PropTypes.arrayOf(PropTypes.shape({}))
 };
 
 export default ScoreRow;
