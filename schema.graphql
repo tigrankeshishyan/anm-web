@@ -227,8 +227,6 @@ type Article implements Node {
   author: User
   authorId: Int
   content: String
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   description: String
 
@@ -479,8 +477,6 @@ type Article implements Node {
     orderBy: [TagsOrderBy!]
   ): [Tag!]!
   title: String
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 
   """Reads a single `User` that is related to this `Article`."""
@@ -784,8 +780,6 @@ type ArticleGallery implements Node {
     """The method to use when ordering `Article`."""
     orderBy: [ArticlesOrderBy!]
   ): [Article!]!
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   id: Int!
 
@@ -849,8 +843,6 @@ type ArticleGallery implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 
   """Reads and enables pagination through a set of `User`."""
@@ -961,7 +953,6 @@ input ArticleGalleryFilter {
 }
 
 type ArticleGalleryImage implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """
@@ -978,8 +969,6 @@ type ArticleGalleryImage implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -1035,26 +1024,16 @@ input ArticleGalleryImageFilter {
 
 """An input for mutations affecting `ArticleGalleryImage`"""
 input ArticleGalleryImageInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   galleryId: Int!
   imageId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `ArticleGalleryImage`. Fields that are set will be updated.
 """
 input ArticleGalleryImagePatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   galleryId: Int
   imageId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `ArticleGalleryImage` values."""
@@ -1098,26 +1077,6 @@ enum ArticleGalleryImagesOrderBy {
   PRIMARY_KEY_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
-}
-
-"""An input for mutations affecting `ArticleGallery`"""
-input ArticleGalleryInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
-}
-
-"""
-Represents an update to a `ArticleGallery`. Fields that are set will be updated.
-"""
-input ArticleGalleryPatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
@@ -1164,8 +1123,6 @@ type ArticleGenre implements Node {
   """Reads a single `Article` that is related to this `ArticleGenre`."""
   article: Article
   articleId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """Reads a single `Genre` that is related to this `ArticleGenre`."""
@@ -1176,8 +1133,6 @@ type ArticleGenre implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -1234,13 +1189,7 @@ input ArticleGenreFilter {
 """An input for mutations affecting `ArticleGenre`"""
 input ArticleGenreInput {
   articleId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   genreId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
@@ -1248,13 +1197,7 @@ Represents an update to a `ArticleGenre`. Fields that are set will be updated.
 """
 input ArticleGenrePatch {
   articleId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   genreId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `ArticleGenre` values."""
@@ -1302,8 +1245,6 @@ type ArticleImage implements Node {
   """Reads a single `Article` that is related to this `ArticleImage`."""
   article: Article
   articleId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """Reads a single `Image` that is related to this `ArticleImage`."""
@@ -1314,8 +1255,6 @@ type ArticleImage implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -1372,13 +1311,7 @@ input ArticleImageFilter {
 """An input for mutations affecting `ArticleImage`"""
 input ArticleImageInput {
   articleId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   imageId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
@@ -1386,13 +1319,7 @@ Represents an update to a `ArticleImage`. Fields that are set will be updated.
 """
 input ArticleImagePatch {
   articleId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   imageId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `ArticleImage` values."""
@@ -1440,9 +1367,6 @@ enum ArticleImagesOrderBy {
 input ArticleInput {
   authorId: Int
   content: String
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
   galleryId: Int
 
@@ -1451,16 +1375,11 @@ input ArticleInput {
   posterId: Int
   published: Boolean
   title: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
   updaterId: Int
 }
 
 type ArticleLocale implements Node {
   content: String
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   description: String
   lang: String!
@@ -1477,8 +1396,6 @@ type ArticleLocale implements Node {
   source: Article
   sourceId: Int!
   title: String
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -1553,16 +1470,10 @@ input ArticleLocaleFilter {
 """An input for mutations affecting `ArticleLocale`"""
 input ArticleLocaleInput {
   content: String
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
   lang: String!
   sourceId: Int!
   title: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
@@ -1570,16 +1481,10 @@ Represents an update to a `ArticleLocale`. Fields that are set will be updated.
 """
 input ArticleLocalePatch {
   content: String
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
   lang: String
   sourceId: Int
   title: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `ArticleLocale` values."""
@@ -1635,9 +1540,6 @@ Represents an update to a `Article`. Fields that are set will be updated.
 input ArticlePatch {
   authorId: Int
   content: String
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
   galleryId: Int
 
@@ -1651,9 +1553,6 @@ input ArticlePatch {
   """
   publishedAt: Datetime
   title: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
   updaterId: Int
 }
 
@@ -1720,8 +1619,6 @@ type ArticleTag implements Node {
   """Reads a single `Article` that is related to this `ArticleTag`."""
   article: Article
   articleId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """
@@ -1732,8 +1629,6 @@ type ArticleTag implements Node {
   """Reads a single `Tag` that is related to this `ArticleTag`."""
   tag: Tag
   tagId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -1790,13 +1685,7 @@ input ArticleTagFilter {
 """An input for mutations affecting `ArticleTag`"""
 input ArticleTagInput {
   articleId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   tagId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
@@ -1804,13 +1693,7 @@ Represents an update to a `ArticleTag`. Fields that are set will be updated.
 """
 input ArticleTagPatch {
   articleId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   tagId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `ArticleTag` values."""
@@ -2141,8 +2024,6 @@ type Composition implements Node {
     """The method to use when ordering `CompositionLocale`."""
     orderBy: [CompositionLocalesOrderBy!]
   ): [CompositionLocale!]!
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   description: String
   id: Int!
@@ -2385,8 +2266,6 @@ type Composition implements Node {
     orderBy: [ScoresOrderBy!]
   ): [Score!]!
   title: String
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -2492,22 +2371,15 @@ input CompositionFilter {
 input CompositionInput {
   composingEnd: Datetime
   composingStart: Datetime
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
 
   """SEO friendly name to use in url"""
   path: String
   published: Boolean
   title: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 type CompositionLocale implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   description: String
   lang: String!
@@ -2526,8 +2398,6 @@ type CompositionLocale implements Node {
   source: Composition
   sourceId: Int!
   title: String
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -2595,30 +2465,20 @@ input CompositionLocaleFilter {
 
 """An input for mutations affecting `CompositionLocale`"""
 input CompositionLocaleInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
   lang: String!
   sourceId: Int!
   title: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `CompositionLocale`. Fields that are set will be updated.
 """
 input CompositionLocalePatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
   lang: String
   sourceId: Int
   title: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `CompositionLocale` values."""
@@ -2674,9 +2534,6 @@ Represents an update to a `Composition`. Fields that are set will be updated.
 input CompositionPatch {
   composingEnd: Datetime
   composingStart: Datetime
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
 
   """SEO friendly name to use in url"""
@@ -2688,9 +2545,6 @@ input CompositionPatch {
   """
   publishedAt: Datetime
   title: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `Composition` values."""
@@ -2815,8 +2669,6 @@ input ContactInput {
 type ContactMessage implements Node {
   """optional file attached by user"""
   attachedFile: String
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   email: String!
   id: Int!
@@ -2827,8 +2679,6 @@ type ContactMessage implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -2898,15 +2748,9 @@ input ContactMessageFilter {
 input ContactMessageInput {
   """optional file attached by user"""
   attachedFile: Upload
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   email: String!
   message: String!
   name: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
@@ -2915,15 +2759,9 @@ Represents an update to a `ContactMessage`. Fields that are set will be updated.
 input ContactMessagePatch {
   """optional file attached by user"""
   attachedFile: Upload
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   email: String
   message: String
   name: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `ContactMessage` values."""
@@ -3018,8 +2856,6 @@ type CreateArticleGalleryImagePayload {
 
 """All input for the create `ArticleGallery` mutation."""
 input CreateArticleGalleryInput {
-  """The `ArticleGallery` to be created by this mutation."""
-  articleGallery: ArticleGalleryInput!
   articleId: Int
 
   """
@@ -7651,8 +7487,6 @@ type DeleteUserPayload {
 
 type Document implements Node {
   content: String
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """Reads and enables pagination through a set of `DocumentLocale`."""
@@ -7773,8 +7607,6 @@ type Document implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -7837,19 +7669,11 @@ input DocumentFilter {
 """An input for mutations affecting `Document`"""
 input DocumentInput {
   content: String
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   name: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 type DocumentLocale implements Node {
   content: String
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   lang: String!
 
@@ -7864,8 +7688,6 @@ type DocumentLocale implements Node {
   """Reads a single `Document` that is related to this `DocumentLocale`."""
   source: Document
   sourceId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -7928,14 +7750,8 @@ input DocumentLocaleFilter {
 """An input for mutations affecting `DocumentLocale`"""
 input DocumentLocaleInput {
   content: String
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   lang: String!
   sourceId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
@@ -7943,14 +7759,8 @@ Represents an update to a `DocumentLocale`. Fields that are set will be updated.
 """
 input DocumentLocalePatch {
   content: String
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   lang: String
   sourceId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `DocumentLocale` values."""
@@ -8001,13 +7811,7 @@ Represents an update to a `Document`. Fields that are set will be updated.
 """
 input DocumentPatch {
   content: String
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   name: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `Document` values."""
@@ -8194,8 +7998,6 @@ type Genre implements Node {
     """The method to use when ordering `Article`."""
     orderBy: [ArticlesOrderBy!]
   ): [Article!]!
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """Reads and enables pagination through a set of `GenreLocale`."""
@@ -8428,8 +8230,6 @@ type Genre implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -8496,16 +8296,10 @@ input GenreFilter {
 
 """An input for mutations affecting `Genre`"""
 input GenreInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   name: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 type GenreLocale implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   lang: String!
 
@@ -8521,8 +8315,6 @@ type GenreLocale implements Node {
   """Reads a single `Genre` that is related to this `GenreLocale`."""
   source: Genre
   sourceId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -8584,28 +8376,18 @@ input GenreLocaleFilter {
 
 """An input for mutations affecting `GenreLocale`"""
 input GenreLocaleInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   lang: String!
   name: String
   sourceId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `GenreLocale`. Fields that are set will be updated.
 """
 input GenreLocalePatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   lang: String
   name: String
   sourceId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `GenreLocale` values."""
@@ -8655,12 +8437,7 @@ enum GenreLocalesOrderBy {
 Represents an update to a `Genre`. Fields that are set will be updated.
 """
 input GenrePatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   name: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `Genre` values."""
@@ -8766,8 +8543,6 @@ input GenreToManyMusicianGenreFilter {
 
 type Group implements Node {
   biography: String
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   founded: Datetime
 
@@ -9229,8 +9004,6 @@ type Group implements Node {
     """The method to use when ordering `Playlist`."""
     orderBy: [PlaylistsOrderBy!]
   ): [Playlist!]!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -9326,7 +9099,6 @@ input GroupFilter {
 }
 
 type GroupImage implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """Reads a single `Group` that is related to this `GroupImage`."""
@@ -9341,8 +9113,6 @@ type GroupImage implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -9398,26 +9168,16 @@ input GroupImageFilter {
 
 """An input for mutations affecting `GroupImage`"""
 input GroupImageInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   groupId: Int!
   imageId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `GroupImage`. Fields that are set will be updated.
 """
 input GroupImagePatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   groupId: Int
   imageId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `GroupImage` values."""
@@ -9464,21 +9224,13 @@ enum GroupImagesOrderBy {
 """An input for mutations affecting `Group`"""
 input GroupInput {
   biography: String
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   founded: Datetime
   name: String
   photoId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 type GroupLocale implements Node {
   biography: String
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   lang: String!
 
@@ -9494,8 +9246,6 @@ type GroupLocale implements Node {
   """Reads a single `Group` that is related to this `GroupLocale`."""
   source: Group
   sourceId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -9564,15 +9314,9 @@ input GroupLocaleFilter {
 """An input for mutations affecting `GroupLocale`"""
 input GroupLocaleInput {
   biography: String
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   lang: String!
   name: String
   sourceId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
@@ -9580,15 +9324,9 @@ Represents an update to a `GroupLocale`. Fields that are set will be updated.
 """
 input GroupLocalePatch {
   biography: String
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   lang: String
   name: String
   sourceId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `GroupLocale` values."""
@@ -9637,7 +9375,6 @@ enum GroupLocalesOrderBy {
 }
 
 type GroupMusician implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """Reads a single `Group` that is related to this `GroupMusician`."""
@@ -9652,8 +9389,6 @@ type GroupMusician implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -9709,26 +9444,16 @@ input GroupMusicianFilter {
 
 """An input for mutations affecting `GroupMusician`"""
 input GroupMusicianInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   groupId: Int!
   musicianId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `GroupMusician`. Fields that are set will be updated.
 """
 input GroupMusicianPatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   groupId: Int
   musicianId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `GroupMusician` values."""
@@ -9777,19 +9502,12 @@ Represents an update to a `Group`. Fields that are set will be updated.
 """
 input GroupPatch {
   biography: String
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   founded: Datetime
   name: String
   photoId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 type GroupPlaylist implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """Reads a single `Group` that is related to this `GroupPlaylist`."""
@@ -9804,8 +9522,6 @@ type GroupPlaylist implements Node {
   """Reads a single `Playlist` that is related to this `GroupPlaylist`."""
   playlist: Playlist
   playlistId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -9861,26 +9577,16 @@ input GroupPlaylistFilter {
 
 """An input for mutations affecting `GroupPlaylist`"""
 input GroupPlaylistInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   groupId: Int!
   playlistId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `GroupPlaylist`. Fields that are set will be updated.
 """
 input GroupPlaylistPatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   groupId: Int
   playlistId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `GroupPlaylist` values."""
@@ -10332,8 +10038,6 @@ type Image implements Node {
     orderBy: [ArticlesOrderBy!]
   ): [Article!]!
   caption: String
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   description: String
 
@@ -10790,8 +10494,6 @@ type Image implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
   url: String!
 
@@ -10958,20 +10660,12 @@ input ImageFilter {
 """An input for mutations affecting `Image`"""
 input ImageInput {
   caption: String
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
   url: Upload
 }
 
 type ImageLocale implements Node {
   caption: String
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   description: String
   lang: String!
@@ -10987,8 +10681,6 @@ type ImageLocale implements Node {
   """Reads a single `Image` that is related to this `ImageLocale`."""
   source: Image
   sourceId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -11057,15 +10749,9 @@ input ImageLocaleFilter {
 """An input for mutations affecting `ImageLocale`"""
 input ImageLocaleInput {
   caption: String
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
   lang: String!
   sourceId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
@@ -11073,15 +10759,9 @@ Represents an update to a `ImageLocale`. Fields that are set will be updated.
 """
 input ImageLocalePatch {
   caption: String
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
   lang: String
   sourceId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `ImageLocale` values."""
@@ -11134,13 +10814,7 @@ Represents an update to a `Image`. Fields that are set will be updated.
 """
 input ImagePatch {
   caption: String
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
   url: Upload
 }
 
@@ -11350,7 +11024,6 @@ input ImageToManyMusicianImageFilter {
 }
 
 type Instrument implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   description: String
   id: Int!
@@ -11584,8 +11257,6 @@ type Instrument implements Node {
     """The method to use when ordering `Score`."""
     orderBy: [ScoresOrderBy!]
   ): [Score!]!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -11653,17 +11324,11 @@ input InstrumentFilter {
 
 """An input for mutations affecting `Instrument`"""
 input InstrumentInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
   name: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 type InstrumentLocale implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   lang: String!
 
@@ -11681,8 +11346,6 @@ type InstrumentLocale implements Node {
   """
   source: Instrument
   sourceId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -11744,28 +11407,18 @@ input InstrumentLocaleFilter {
 
 """An input for mutations affecting `InstrumentLocale`"""
 input InstrumentLocaleInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   lang: String!
   name: String
   sourceId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `InstrumentLocale`. Fields that are set will be updated.
 """
 input InstrumentLocalePatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   lang: String
   name: String
   sourceId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `InstrumentLocale` values."""
@@ -11817,13 +11470,8 @@ enum InstrumentLocalesOrderBy {
 Represents an update to a `Instrument`. Fields that are set will be updated.
 """
 input InstrumentPatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
   name: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `Instrument` values."""
@@ -13896,7 +13544,6 @@ type LoginPayload {
 }
 
 type Media implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   id: Int!
 
@@ -14130,8 +13777,6 @@ type Media implements Node {
     orderBy: [PlaylistsOrderBy!]
   ): [Playlist!]!
   title: String
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
   url: String!
 }
@@ -14231,18 +13876,12 @@ input MediaFilter {
 
 """An input for mutations affecting `Media`"""
 input MediaInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   mediaType: MediaType
   title: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
   url: Upload
 }
 
 type MediaLocale implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   lang: String!
 
@@ -14258,8 +13897,6 @@ type MediaLocale implements Node {
   source: Media
   sourceId: Int!
   title: String
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -14321,28 +13958,18 @@ input MediaLocaleFilter {
 
 """An input for mutations affecting `MediaLocale`"""
 input MediaLocaleInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   lang: String!
   sourceId: Int!
   title: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `MediaLocale`. Fields that are set will be updated.
 """
 input MediaLocalePatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   lang: String
   sourceId: Int
   title: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `MediaLocale` values."""
@@ -14411,13 +14038,8 @@ enum MediaOrderBy {
 Represents an update to a `Media`. Fields that are set will be updated.
 """
 input MediaPatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   mediaType: MediaType
   title: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
   url: Upload
 }
 
@@ -14567,8 +14189,6 @@ type Musician implements Node {
     """The method to use when ordering `Composition`."""
     orderBy: [CompositionsOrderBy!]
   ): [Composition!]!
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   deathday: Date
   description: String
@@ -15434,8 +15054,6 @@ type Musician implements Node {
     orderBy: [TagsOrderBy!]
   ): [Tag!]!
   type: String!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -15445,8 +15063,6 @@ type MusicianComposition implements Node {
   """
   composition: Composition
   compositionId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """
@@ -15459,8 +15075,6 @@ type MusicianComposition implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -15517,13 +15131,7 @@ input MusicianCompositionFilter {
 """An input for mutations affecting `MusicianComposition`"""
 input MusicianCompositionInput {
   compositionId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   musicianId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
@@ -15531,13 +15139,7 @@ Represents an update to a `MusicianComposition`. Fields that are set will be upd
 """
 input MusicianCompositionPatch {
   compositionId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   musicianId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `MusicianComposition` values."""
@@ -15742,7 +15344,6 @@ input MusicianFilter {
 }
 
 type MusicianGenre implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """Reads a single `Genre` that is related to this `MusicianGenre`."""
@@ -15757,8 +15358,6 @@ type MusicianGenre implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -15814,26 +15413,16 @@ input MusicianGenreFilter {
 
 """An input for mutations affecting `MusicianGenre`"""
 input MusicianGenreInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   genreId: Int!
   musicianId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `MusicianGenre`. Fields that are set will be updated.
 """
 input MusicianGenrePatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   genreId: Int
   musicianId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `MusicianGenre` values."""
@@ -15878,7 +15467,6 @@ enum MusicianGenresOrderBy {
 }
 
 type MusicianImage implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """Reads a single `Image` that is related to this `MusicianImage`."""
@@ -15893,8 +15481,6 @@ type MusicianImage implements Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -15950,26 +15536,16 @@ input MusicianImageFilter {
 
 """An input for mutations affecting `MusicianImage`"""
 input MusicianImageInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   imageId: Int!
   musicianId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `MusicianImage`. Fields that are set will be updated.
 """
 input MusicianImagePatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   imageId: Int
   musicianId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `MusicianImage` values."""
@@ -16017,9 +15593,6 @@ enum MusicianImagesOrderBy {
 input MusicianInput {
   biography: String
   birthday: Date
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   deathday: Date
   description: String
   firstName: String
@@ -16030,15 +15603,10 @@ input MusicianInput {
   photoId: Int
   published: Boolean
   type: String!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 type MusicianLocale implements Node {
   biography: String
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   description: String
   firstName: String
@@ -16056,8 +15624,6 @@ type MusicianLocale implements Node {
   """Reads a single `Musician` that is related to this `MusicianLocale`."""
   source: Musician
   sourceId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -16138,17 +15704,11 @@ input MusicianLocaleFilter {
 """An input for mutations affecting `MusicianLocale`"""
 input MusicianLocaleInput {
   biography: String
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
   firstName: String
   lang: String!
   lastName: String
   sourceId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
@@ -16156,17 +15716,11 @@ Represents an update to a `MusicianLocale`. Fields that are set will be updated.
 """
 input MusicianLocalePatch {
   biography: String
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
   firstName: String
   lang: String
   lastName: String
   sourceId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `MusicianLocale` values."""
@@ -16224,9 +15778,6 @@ Represents an update to a `Musician`. Fields that are set will be updated.
 input MusicianPatch {
   biography: String
   birthday: Date
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   deathday: Date
   description: String
   firstName: String
@@ -16242,13 +15793,9 @@ input MusicianPatch {
   """
   publishedAt: Datetime
   type: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 type MusicianPlaylist implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """Reads a single `Musician` that is related to this `MusicianPlaylist`."""
@@ -16263,8 +15810,6 @@ type MusicianPlaylist implements Node {
   """Reads a single `Playlist` that is related to this `MusicianPlaylist`."""
   playlist: Playlist
   playlistId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -16320,26 +15865,16 @@ input MusicianPlaylistFilter {
 
 """An input for mutations affecting `MusicianPlaylist`"""
 input MusicianPlaylistInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   musicianId: Int!
   playlistId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `MusicianPlaylist`. Fields that are set will be updated.
 """
 input MusicianPlaylistPatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   musicianId: Int
   playlistId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `MusicianPlaylist` values."""
@@ -16386,7 +15921,6 @@ enum MusicianPlaylistsOrderBy {
 }
 
 type MusicianProfession implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """
@@ -16405,8 +15939,6 @@ type MusicianProfession implements Node {
   """
   profession: Profession
   professionId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -16462,26 +15994,16 @@ input MusicianProfessionFilter {
 
 """An input for mutations affecting `MusicianProfession`"""
 input MusicianProfessionInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   musicianId: Int!
   professionId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `MusicianProfession`. Fields that are set will be updated.
 """
 input MusicianProfessionPatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   musicianId: Int
   professionId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `MusicianProfession` values."""
@@ -16589,7 +16111,6 @@ enum MusiciansOrderBy {
 }
 
 type MusicianTag implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """Reads a single `Musician` that is related to this `MusicianTag`."""
@@ -16604,8 +16125,6 @@ type MusicianTag implements Node {
   """Reads a single `Tag` that is related to this `MusicianTag`."""
   tag: Tag
   tagId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -16661,26 +16180,16 @@ input MusicianTagFilter {
 
 """An input for mutations affecting `MusicianTag`"""
 input MusicianTagInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   musicianId: Int!
   tagId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `MusicianTag`. Fields that are set will be updated.
 """
 input MusicianTagPatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   musicianId: Int
   tagId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `MusicianTag` values."""
@@ -18184,24 +17693,6 @@ type Mutation {
     input: UpdateArticleByPathInput!
   ): UpdateArticlePayload
 
-  """Updates a single `ArticleGallery` using a unique key and a patch."""
-  updateArticleGallery(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateArticleGalleryInput!
-  ): UpdateArticleGalleryPayload
-
-  """
-  Updates a single `ArticleGallery` using its globally unique id and a patch.
-  """
-  updateArticleGalleryByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateArticleGalleryByNodeIdInput!
-  ): UpdateArticleGalleryPayload
-
   """Updates a single `ArticleGalleryImage` using a unique key and a patch."""
   updateArticleGalleryImage(
     """
@@ -19115,8 +18606,6 @@ type PageInfo {
 
 type PageSection implements Node {
   attrs: JSON!
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   name: String!
 
@@ -19125,8 +18614,6 @@ type PageSection implements Node {
   """
   nodeId: ID!
   page: String!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -19183,14 +18670,8 @@ input PageSectionFilter {
 """An input for mutations affecting `PageSection`"""
 input PageSectionInput {
   attrs: JSON
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   name: String!
   page: String!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
@@ -19198,14 +18679,8 @@ Represents an update to a `PageSection`. Fields that are set will be updated.
 """
 input PageSectionPatch {
   attrs: JSON
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   name: String
   page: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `PageSection` values."""
@@ -19257,7 +18732,6 @@ input PasswordPatch {
 }
 
 type Playlist implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """Reads and enables pagination through a set of `GroupPlaylist`."""
@@ -19719,8 +19193,6 @@ type Playlist implements Node {
     """The method to use when ordering `PlaylistMedia`."""
     orderBy: [PlaylistMediasOrderBy!]
   ): [PlaylistMedia!]!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -19812,18 +19284,12 @@ input PlaylistFilter {
 
 """An input for mutations affecting `Playlist`"""
 input PlaylistInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   isPublic: Boolean
   name: String
   ownerId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 type PlaylistLocale implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   lang: String!
 
@@ -19839,8 +19305,6 @@ type PlaylistLocale implements Node {
   """Reads a single `Playlist` that is related to this `PlaylistLocale`."""
   source: Playlist
   sourceId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -19902,28 +19366,18 @@ input PlaylistLocaleFilter {
 
 """An input for mutations affecting `PlaylistLocale`"""
 input PlaylistLocaleInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   lang: String!
   name: String
   sourceId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `PlaylistLocale`. Fields that are set will be updated.
 """
 input PlaylistLocalePatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   lang: String
   name: String
   sourceId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `PlaylistLocale` values."""
@@ -19970,7 +19424,6 @@ enum PlaylistLocalesOrderBy {
 }
 
 type PlaylistMedia implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """Order in playlist"""
@@ -19988,8 +19441,6 @@ type PlaylistMedia implements Node {
   """Reads a single `Playlist` that is related to this `PlaylistMedia`."""
   playlist: Playlist
   playlistId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -20051,32 +19502,20 @@ input PlaylistMediaFilter {
 
 """An input for mutations affecting `PlaylistMedia`"""
 input PlaylistMediaInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
-
   """Order in playlist"""
   index: Int
   mediaId: Int!
   playlistId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `PlaylistMedia`. Fields that are set will be updated.
 """
 input PlaylistMediaPatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
-
   """Order in playlist"""
   index: Int
   mediaId: Int
   playlistId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `PlaylistMedia` values."""
@@ -20126,14 +19565,9 @@ enum PlaylistMediasOrderBy {
 Represents an update to a `Playlist`. Fields that are set will be updated.
 """
 input PlaylistPatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   isPublic: Boolean
   name: String
   ownerId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `Playlist` values."""
@@ -20281,7 +19715,6 @@ input Price {
 }
 
 type Profession implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   id: Int!
 
@@ -20514,8 +19947,6 @@ type Profession implements Node {
     """The method to use when ordering `ProfessionLocale`."""
     orderBy: [ProfessionLocalesOrderBy!]
   ): [ProfessionLocale!]!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -20577,16 +20008,10 @@ input ProfessionFilter {
 
 """An input for mutations affecting `Profession`"""
 input ProfessionInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   name: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 type ProfessionLocale implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   lang: String!
 
@@ -20604,8 +20029,6 @@ type ProfessionLocale implements Node {
   """
   source: Profession
   sourceId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -20667,28 +20090,18 @@ input ProfessionLocaleFilter {
 
 """An input for mutations affecting `ProfessionLocale`"""
 input ProfessionLocaleInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   lang: String!
   name: String
   sourceId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `ProfessionLocale`. Fields that are set will be updated.
 """
 input ProfessionLocalePatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   lang: String
   name: String
   sourceId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `ProfessionLocale` values."""
@@ -20740,12 +20153,7 @@ enum ProfessionLocalesOrderBy {
 Represents an update to a `Profession`. Fields that are set will be updated.
 """
 input ProfessionPatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   name: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `Profession` values."""
@@ -20832,8 +20240,6 @@ input ProfessionToManyProfessionLocaleFilter {
 type PromoCode implements Node {
   """this also will be used as id"""
   code: String!
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   expiresAt: Datetime
 
@@ -20847,8 +20253,6 @@ type PromoCode implements Node {
 
   """can be active, used, canceled"""
   status: String
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -20910,8 +20314,6 @@ input PromoCodeFilter {
 
 """An input for mutations affecting `PromoCode`"""
 input PromoCodeInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   expiresAt: Datetime
 
   """discount percent, default is 0"""
@@ -20919,17 +20321,12 @@ input PromoCodeInput {
 
   """can be active, used, canceled"""
   status: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `PromoCode`. Fields that are set will be updated.
 """
 input PromoCodePatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   expiresAt: Datetime
 
   """discount percent, default is 0"""
@@ -20937,9 +20334,6 @@ input PromoCodePatch {
 
   """can be active, used, canceled"""
   status: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `PromoCode` values."""
@@ -24384,8 +23778,6 @@ type Score implements Node {
   """Reads a single `Composition` that is related to this `Score`."""
   composition: Composition
   compositionId: Int
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   description: String
   id: Int!
@@ -24698,8 +24090,6 @@ type Score implements Node {
   """
   stampRight: String
   title: String
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
   url: String
 
@@ -24884,9 +24274,6 @@ input ScoreFilter {
 """An input for mutations affecting `Score`"""
 input ScoreInput {
   compositionId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
 
   """SEO friendly name to use in url"""
@@ -24906,14 +24293,10 @@ input ScoreInput {
   """
   stampRight: String
   title: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
   url: Upload
 }
 
 type ScoreInstrument implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """Reads a single `Instrument` that is related to this `ScoreInstrument`."""
@@ -24928,8 +24311,6 @@ type ScoreInstrument implements Node {
   """Reads a single `Score` that is related to this `ScoreInstrument`."""
   score: Score
   scoreId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -24985,26 +24366,16 @@ input ScoreInstrumentFilter {
 
 """An input for mutations affecting `ScoreInstrument`"""
 input ScoreInstrumentInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   instrumentId: Int!
   scoreId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `ScoreInstrument`. Fields that are set will be updated.
 """
 input ScoreInstrumentPatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   instrumentId: Int
   scoreId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `ScoreInstrument` values."""
@@ -25051,7 +24422,6 @@ enum ScoreInstrumentsOrderBy {
 }
 
 type ScoreLocale implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   description: String
   lang: String!
@@ -25068,8 +24438,6 @@ type ScoreLocale implements Node {
   source: Score
   sourceId: Int!
   title: String
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -25137,30 +24505,20 @@ input ScoreLocaleFilter {
 
 """An input for mutations affecting `ScoreLocale`"""
 input ScoreLocaleInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
   lang: String!
   sourceId: Int!
   title: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `ScoreLocale`. Fields that are set will be updated.
 """
 input ScoreLocalePatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
   lang: String
   sourceId: Int
   title: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `ScoreLocale` values."""
@@ -25213,9 +24571,6 @@ Represents an update to a `Score`. Fields that are set will be updated.
 """
 input ScorePatch {
   compositionId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   description: String
 
   """SEO friendly name to use in url"""
@@ -25240,9 +24595,6 @@ input ScorePatch {
   """
   stampRight: String
   title: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
   url: Upload
 }
 
@@ -25591,8 +24943,6 @@ type Tag implements Node {
     """The method to use when ordering `ArticleTag`."""
     orderBy: [ArticleTagsOrderBy!]
   ): [ArticleTag!]!
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   id: Int!
 
@@ -25825,8 +25175,6 @@ type Tag implements Node {
     """The method to use when ordering `TagLocale`."""
     orderBy: [TagLocalesOrderBy!]
   ): [TagLocale!]!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -25893,16 +25241,10 @@ input TagFilter {
 
 """An input for mutations affecting `Tag`"""
 input TagInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   name: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 type TagLocale implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   lang: String!
 
@@ -25918,8 +25260,6 @@ type TagLocale implements Node {
   """Reads a single `Tag` that is related to this `TagLocale`."""
   source: Tag
   sourceId: Int!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 }
 
@@ -25981,28 +25321,18 @@ input TagLocaleFilter {
 
 """An input for mutations affecting `TagLocale`"""
 input TagLocaleInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   lang: String!
   name: String
   sourceId: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """
 Represents an update to a `TagLocale`. Fields that are set will be updated.
 """
 input TagLocalePatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   lang: String
   name: String
   sourceId: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `TagLocale` values."""
@@ -26050,12 +25380,7 @@ enum TagLocalesOrderBy {
 
 """Represents an update to a `Tag`. Fields that are set will be updated."""
 input TagPatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   name: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `Tag` values."""
@@ -26195,25 +25520,6 @@ input UpdateArticleByPathInput {
   path: String!
 }
 
-"""All input for the `updateArticleGalleryByNodeId` mutation."""
-input UpdateArticleGalleryByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `ArticleGallery` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `ArticleGallery` being updated.
-  """
-  patch: ArticleGalleryPatch!
-}
-
 """All input for the `updateArticleGalleryImageByNodeId` mutation."""
 input UpdateArticleGalleryImageByNodeIdInput {
   """
@@ -26273,44 +25579,6 @@ type UpdateArticleGalleryImagePayload {
 
   """Reads a single `Image` that is related to this `ArticleGalleryImage`."""
   image: Image
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the `updateArticleGallery` mutation."""
-input UpdateArticleGalleryInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: Int!
-
-  """
-  An object where the defined keys will be set on the `ArticleGallery` being updated.
-  """
-  patch: ArticleGalleryPatch!
-}
-
-"""The output of our update `ArticleGallery` mutation."""
-type UpdateArticleGalleryPayload {
-  """The `ArticleGallery` that was updated by this mutation."""
-  articleGallery: ArticleGallery
-
-  """An edge for our `ArticleGallery`. May be used by Relay 1."""
-  articleGalleryEdge(
-    """The method to use when ordering `ArticleGallery`."""
-    orderBy: [ArticleGalleriesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ArticleGalleriesEdge
-
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -29468,8 +28736,6 @@ type User implements Node {
     orderBy: [ImagesOrderBy!]
   ): [Image!]!
   avatar: String
-
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
   email: String
 
@@ -29657,8 +28923,6 @@ type User implements Node {
     """The method to use when ordering `Score`."""
     orderBy: [ScoresOrderBy!]
   ): [Score!]!
-
-  """This field is controlled under the hood, don't use it."""
   updatedAt: Datetime
 
   """Reads and enables pagination through a set of `Image`."""
@@ -29824,32 +29088,20 @@ input UserFilter {
 """An input for mutations affecting `User`"""
 input UserInput {
   avatar: Upload
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   email: String
   facebookId: BigInt
   firstName: String
   lastName: String
   password: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """Represents an update to a `User`. Fields that are set will be updated."""
 input UserPatch {
   avatar: Upload
-
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   email: String
   facebookId: BigInt
   firstName: String
   lastName: String
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
 }
 
 """A connection to a list of `User` values."""

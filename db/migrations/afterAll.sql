@@ -23,9 +23,9 @@ $ts_triggers$
                         ' before insert or update on ' || ts_table.table_name ||
                         ' for each row execute procedure set_timestamps();';
                 execute 'comment on column ' || quote_ident(ts_table.table_schema) || '.' ||
-                        quote_ident(ts_table.table_name) || '.created_at is ' || quote_literal('This field is controlled under the hood, don''t use it.');
+                        quote_ident(ts_table.table_name) || '.created_at is ' || quote_literal('@omit create,update');
                 execute 'comment on column ' || quote_ident(ts_table.table_schema) || '.' ||
-                        quote_ident(ts_table.table_name) || '.updated_at is ' || quote_literal('This field is controlled under the hood, don''t use it.');
+                        quote_ident(ts_table.table_name) || '.updated_at is ' || quote_literal('@omit create,update');
             end loop;
     end;
 $ts_triggers$;
