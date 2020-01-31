@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-
-import { createEmptyImg, addImageProportions } from 'helpers/images';
+import {
+  createEmptyImg,
+  addImageProportions,
+} from 'helpers/images';
 
 import DefaultImage from 'images/defaultImage.jpg';
 
@@ -22,6 +24,7 @@ function Img(props) {
     src,
     sizes,
     onLoad,
+    onClick,
     fitImage,
     fitParent,
     className,
@@ -51,6 +54,7 @@ function Img(props) {
     'anm-image',
     className,
     {
+      'with-cursor': !!onClick,
       'fit-parent': fitParent,
       'anm-loaded-image': isImageLoaded,
     },
@@ -59,7 +63,9 @@ function Img(props) {
   return (
     <img
       alt={alt}
+      title={alt}
       ref={imgRef}
+      onClick={onClick}
       className={imageClasses}
       src={imageSrc || DefaultImage}
       {...imageProps}
@@ -78,6 +84,7 @@ Img.defaultProps = {
 Img.propTypes = {
   src: PropTypes.string,
   onLoad: PropTypes.func,
+  onClick: PropTypes.func,
   fitImage: PropTypes.bool,
   fitParent: PropTypes.bool,
   className: PropTypes.string,
