@@ -1,0 +1,17 @@
+{
+  "name": "db",
+  "version": "1.0.0",
+  "dependencies": {
+    "graphile-migrate": "^0.0.18"
+  },
+  "scripts": {
+    "esnode": "node --experimental-modules --es-module-specifier-resolution=node -r ../config/env.cjs",
+    "gm": "yarn esnode ../node_modules/.bin/graphile-migrate",
+    "watch": "yarn gm watch",
+    "reset": "yarn gm reset",
+    "commit": "yarn gm commit",
+    "uncommit": "yarn gm uncommit",
+    "migrate": "yarn gm migrate",
+    "dump": "yarn gm dump"
+  }
+}

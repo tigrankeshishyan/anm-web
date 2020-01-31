@@ -1,0 +1,26 @@
+{
+  "pgSettings": {
+    "search_path": "app_public,app_private,app_hidden,public"
+  },
+  "placeholders": {
+    ":DATABASE_AUTHENTICATOR": "!ENV",
+    ":DATABASE_VISITOR": "!ENV"
+  },
+  "afterReset": [
+    "afterReset.sql",
+    {
+      "_": "command",
+      "command": "yarn workspace worker gw"
+    }
+  ],
+  "afterAllMigrations": [
+    {
+      "_": "command",
+      "command": "pg_dump --schema-only --no-owner --exclude-schema=graphile_migrate --file=schema.sql \"$GM_DBURL\""
+    },
+    "afterAll.sql"
+  ],
+  "afterCurrent": [
+    "afterAll.sql"
+  ]
+}
