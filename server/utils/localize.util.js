@@ -1,6 +1,6 @@
 import Sequelize from 'sequelize'
 
-import * as config from '../config'
+import * as config from '../../config'
 
 const isLocalized = attr => attr.comment && attr.comment.includes('@localize')
 

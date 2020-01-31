@@ -1,7 +1,7 @@
 import axios from 'axios'
 import moment from 'moment'
 
-import { paddle, anmHost } from '../config'
+import { paddle, anmHost } from '../../config'
 
 const payLinkPath = '/api/2.0/product/generate_pay_link'
 const generatePayLink = `${paddle.apiHost}${payLinkPath}`

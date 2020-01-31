@@ -1,6 +1,6 @@
 import GraphileUtils from 'graphile-utils'
 
-import { anmHost } from '../../config'
+import { anmHost } from '../../../config'
 
 const { makeWrapResolversPlugin } = GraphileUtils
 

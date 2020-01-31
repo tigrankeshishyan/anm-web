@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { PDFService, s3Bucket } from '../config'
+import { PDFService, s3Bucket } from '../../config'
 
 function watermarkOpts (waterPath, waterOpts) {
   if (!waterPath) {

@@ -5,11 +5,11 @@ import session from 'express-session'
 import uuid from 'uuid'
 
 import { ExpressError } from './error.util'
-import * as config from '../config'
+import * as config from '../../config'
 import * as Storage from '../utils/storage.util'
 
 const sessionStore = new (ConnectPg(session))({
-  conString: config.database.connectionString,
+  conString: config.database.url,
   tableName: config.database.sessionTableName,
   schemaName: config.database.schema
 })

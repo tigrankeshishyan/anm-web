@@ -8,9 +8,9 @@ import {
   sendWelcome,
   sendResetLink
 } from '../../utils/sendinblue.util'
-import { database, anmHost } from '../../config'
+import { database, anmHost } from '../../../config'
 import { passwordMaker } from '../../utils/hash.util'
-import { ROLE, ResetPassword, User } from '../../sequelize/models/user.model'
+import { ROLE, ResetPassword, User } from '../../_sequelize/models/user.model'
 import * as Storage from '../../utils/storage.util'
 import { Slack } from '../../utils/slack.util'
 

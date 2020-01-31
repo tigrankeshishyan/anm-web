@@ -5,7 +5,7 @@ import {
   scoreDocumentName,
   database,
   scorePreviewName
-} from '../../config'
+} from '../../../config'
 import {
   deleteObject,
   headObject,

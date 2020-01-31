@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import moment from 'moment'
 
-import { anmHost, currencies } from '../config'
+import { anmHost, currencies } from '../../config'
 
 export function isUploadPDF (upload) {
   if (upload.mimetype !== 'application/pdf') {

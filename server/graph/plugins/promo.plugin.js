@@ -5,14 +5,14 @@ import GraphileUtil from 'graphile-utils'
 import { byTableNameAndId } from '../../utils/graphile.util'
 import { discountPrice } from '../../utils/generate.util'
 import { isValidPromoCode } from '../../utils/validate.util'
-import { PromoCode } from '../../sequelize/models/promo-code.model'
+import { PromoCode } from '../../_sequelize/models/promo-code.model'
 import {
   selectById,
   getPromoByCode,
   insertInto,
   paramKeys
 } from '../../utils/query.util'
-import { database } from '../../config'
+import { database } from '../../../config'
 
 const {
   gql,

@@ -1,5 +1,5 @@
-import { database } from '../config'
-import { Purchase } from '../sequelize/models/purchase.model'
+import { database } from '../../config'
+import { Purchase } from '../_sequelize/models/purchase.model'
 
 /**
  * @param {Object} pgClient
@@ -10,7 +10,7 @@ import { Purchase } from '../sequelize/models/purchase.model'
 export async function selectById (pgClient, id, table, locale) {
   const query = locale
     ? `SELECT a.*, l.* FROM ${database.schema}.${table} AS a
-    LEFT OUTER JOIN ${database.schemaLocale}.${locale.table} AS l
+    LEFT OUTER JOIN ${database.schema}.${locale.table} AS l
         ON a.id=l.source_id AND l.lang='${locale.lang}'
   WHERE id=$1`
     : `SELECT * FROM ${database.schema}.${table} WHERE id=$1`

@@ -2,9 +2,9 @@ import GraphqlPassport from 'graphql-passport'
 import postgraphile from 'postgraphile'
 import dirname from 'es-dirname'
 
-import { models } from '../sequelize'
+import { models } from '../_sequelize'
 
-import { database, isDev } from '../config'
+import { database, isDev } from '../../config'
 import * as Storage from '../utils/storage.util'
 
 import CustomPlugins, { SameGraphQLAndGraphiQLPathnameTweak } from './plugins'
@@ -14,11 +14,9 @@ const { makePluginHook } = postgraphile
 
 const pluginHook = makePluginHook([SameGraphQLAndGraphiQLPathnameTweak])
 
-export default () => postgraphile.postgraphql(
-  database.connectionString,
-  [database.schema, database.schemaLocale],
-  {
-    ownerConnectionString: database.connectionString,
+export default () =>
+  postgraphile.postgraphql(database.authUrl, [database.schema], {
+    ownerConnectionString: database.url,
     appendPlugins: [CustomPlugins],
     pluginHook,
     watchPg: true,
@@ -42,7 +40,7 @@ export default () => postgraphile.postgraphql(
       pgOmitListSuffix: false,
       nestedMutationsSimpleFieldNames: true,
       connectionFilterRelations: true,
-      localesSchema: database.schemaLocale,
+      localesSchema: database.schema,
       uploadFieldDefinitions: [
         {
           match: all => all.column === 'avatar' && all.table === 'users',
@@ -66,5 +64,4 @@ export default () => postgraphile.postgraphql(
         }
       ]
     }
-  }
-)
+  })

@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import axios from 'axios'
 
-import { ameria, anmHost } from '../config'
+import { ameria, anmHost } from '../../config'
 import { validateCurrency } from './validate.util'
 
 const credentials = {

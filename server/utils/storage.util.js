@@ -9,7 +9,7 @@ import {
   s3Bucket,
   scoreDocumentName,
   scorePreviewName
-} from '../config'
+} from '../../config'
 import { makePreview, addStamp } from './score.util'
 
 const { S3 } = aws

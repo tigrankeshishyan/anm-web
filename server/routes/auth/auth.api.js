@@ -1,7 +1,7 @@
 import express from 'express'
 import passport from 'passport'
 
-import { anmHost } from '../../config'
+import { anmHost } from '../../../config'
 
 const router = express.Router()
 

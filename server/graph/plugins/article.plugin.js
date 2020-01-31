@@ -2,7 +2,7 @@ import GraphileUtils from 'graphile-utils'
 
 import { byTableNameAndId } from '../../utils/graphile.util'
 import * as Storage from '../../utils/storage.util'
-import { database } from '../../config'
+import { database } from '../../../config'
 import { deleteFrom, insertInto } from '../../utils/query.util'
 
 const {

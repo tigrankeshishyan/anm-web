@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { sendinblue } from '../config'
+import { sendinblue } from '../../config'
 import { Slack } from './slack.util'
 
 const http = axios.create({

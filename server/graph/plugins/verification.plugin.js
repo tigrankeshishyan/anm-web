@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import GraphileUtils from 'graphile-utils'
 
-import { models } from '../../sequelize'
+import { models } from '../../_sequelize'
 import * as SendInBlue from '../../utils/sendinblue.util'
 
 const { makeExtendSchemaPlugin, gql } = GraphileUtils

@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import axios from 'axios'
 
-import { slack, adminHost, anmHost } from '../config'
+import { slack, adminHost, anmHost } from '../../config'
 
 export class Slack {
   static async sendMessage ({ text, fields, channel }) {

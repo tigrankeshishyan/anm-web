@@ -1,4 +1,4 @@
-import { database } from '../config'
+import { database } from '../../config'
 
 export async function byTableNameAndId (
   id,

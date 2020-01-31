@@ -1,6 +1,6 @@
 import http from 'http'
 
-import { isProd } from '../config'
+import { isProd } from '../../config'
 
 /**
  * @param {Error} err

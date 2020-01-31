@@ -12,13 +12,13 @@ import hbs from 'express-handlebars'
 
 import { configurePassport } from './utils/passport.util'
 import { errorHandler } from './utils/error.util'
-import { port, sentryDSN, env, host } from './config'
-import { sequelize, init } from './sequelize'
+import { port, sentryDSN, env, host } from '../config'
 import { sessionMiddleware, useRespond } from './utils/express.util'
 import GraphQL from './graph'
 import routes from './routes'
 import reqMiddleware from './middlewares'
 import { dynamicRoutes } from './constants'
+import pgClient from './pgClient'
 
 const { graphqlUploadExpress } = GraphileUpload
 
@@ -27,9 +27,9 @@ const run = async () => {
     Sentry.init({ dsn: sentryDSN })
   }
 
-  await init()
-
   const app = new Express()
+
+  await pgClient.connect()
 
   app.use(
     cors({
@@ -79,7 +79,7 @@ const run = async () => {
   })
 }
 
-const close = () => sequelize.close()
+const close = () => {} // TODO: close connections
 
 run().catch(err => console.error(err) || process.emit(err))
 

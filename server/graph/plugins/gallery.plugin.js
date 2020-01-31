@@ -1,5 +1,5 @@
 import GraphileUtils from 'graphile-utils'
-import { database } from '../../config'
+import { database } from '../../../config'
 
 const {
   gql,

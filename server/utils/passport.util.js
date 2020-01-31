@@ -1,9 +1,9 @@
 import FacebookStrategy from 'passport-facebook'
 import GraphqlPassport from 'graphql-passport'
-import Sequelize from 'sequelize'
+import pgClient from '../pgClient'
 
-import { facebook } from '../config'
-import { models } from '../sequelize'
+import { facebook } from '../../config'
+import { models } from '../_sequelize'
 import { Slack } from './slack.util'
 
 const { GraphQLLocalStrategy } = GraphqlPassport
@@ -13,8 +13,9 @@ function serialize (user, done) {
 }
 
 function deserialize (id, done) {
-  models.User.findByPk(id)
-    .then(user => {
+  pgClient
+    .query('select * from app_public.users where id=$1', [id])
+    .then(({ rows: [user] }) => {
       if (user.status === 1) {
         done(null, false, { message: 'user is blocked' })
       } else {
@@ -25,8 +26,9 @@ function deserialize (id, done) {
 }
 
 const localStrategy = new GraphQLLocalStrategy((email, password, done) => {
-  models.User.findOne({ where: { email } })
-    .then(user => {
+  pgClient
+    .query('select * from app_public.users where email=$1', [email])
+    .then(({ rows: [user] }) => {
       const noUserInfo = { message: 'invalid credentials', errorCode: 1 }
       if (!user) {
         return done(null, false, noUserInfo)
@@ -64,12 +66,14 @@ const facebookStrategy = new FacebookStrategy(
     profileFields: ['id', 'email', 'first_name', 'last_name']
   },
   async (accessToken, refreshToken, profile, done) => {
-    const email =
-      profile.emails && profile.emails[0] && profile.emails[0].value
+    const email = profile.emails && profile.emails[0] && profile.emails[0].value
 
-    const matchingUser = await models.User.findOne({
-      where: { [Sequelize.Op.or]: [{ facebookId: profile.id }, { email }] }
-    })
+    const {
+      rows: [matchingUser]
+    } = await pgClient.query(
+      'select * from app_public.users where facebook_id=$1 or email=$2',
+      [profile.id, email]
+    )
 
     if (matchingUser) {
       if (matchingUser.status === 1) {

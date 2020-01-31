@@ -8,7 +8,7 @@ import {
   anmHost,
   scoreDocumentName,
   scoreComingSoon
-} from '../../config'
+} from '../../../config'
 import {
   selectById,
   userPurchasedScore,
@@ -22,7 +22,7 @@ import {
   isValidPromoCode,
   validateCurrency
 } from '../../utils/validate.util'
-import { Purchase } from '../../sequelize/models/purchase.model'
+import { Purchase } from '../../_sequelize/models/purchase.model'
 import { purchaseLink } from '../../utils/purchase.util'
 
 const {
