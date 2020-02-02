@@ -16,6 +16,8 @@ import { port, sentryDSN, env, host } from '../config'
 import { sessionMiddleware, useRespond } from './utils/express.util'
 import GraphQL from './graph'
 import routes from './routes'
+import worker from './worker'
+
 import reqMiddleware from './middlewares'
 import { dynamicRoutes } from './constants'
 import pgClient from './pgClient'
@@ -30,7 +32,6 @@ const run = async () => {
   const app = new Express()
 
   await pgClient.connect()
-
   app.use(
     cors({
       origin: (origin, callback) => {
@@ -47,6 +48,7 @@ const run = async () => {
     })
   )
 
+  app.set('worker', await worker())
   app.engine('hbs', hbs({ extname: 'hbs' }))
   app.set('view engine', 'hbs')
   app.set('views', path.resolve(dirname(), './views'))

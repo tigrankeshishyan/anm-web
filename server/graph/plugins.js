@@ -17,7 +17,6 @@ import PromoPlugin from './plugins/promo.plugin'
 import PurchasePlugin from './plugins/purchase.plugin'
 import ScorePlugin from './plugins/score.plugin'
 import UserPlugin from './plugins/user.plugin'
-import VerificationPlugin from './plugins/verification.plugin'
 
 const { makePluginByCombiningPlugins } = GraphileUtils
 
@@ -31,7 +30,6 @@ export default makePluginByCombiningPlugins(
   ContactSchema,
   GalleryPlugin,
   AutoUpdatePlugin,
-  VerificationPlugin,
   PromoPlugin,
   AuthPlugin,
   ConnectionFilterPlugin,

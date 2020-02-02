@@ -1,5 +1,4 @@
 import { database } from '../../config'
-import { Purchase } from '../_sequelize/models/purchase.model'
 
 /**
  * @param {Object} pgClient
@@ -87,7 +86,7 @@ export async function userPurchasedScore (pgClient, userId, scoreId) {
 
   const {
     rows: [row]
-  } = await pgClient.query(query, [userId, scoreId, Purchase.PAID])
+  } = await pgClient.query(query, [userId, scoreId, 'paid'])
 
   return row
 }

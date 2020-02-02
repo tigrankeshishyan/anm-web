@@ -3,7 +3,6 @@ import GraphqlPassport from 'graphql-passport'
 import pgClient from '../pgClient'
 
 import { facebook } from '../../config'
-import { models } from '../_sequelize'
 import { Slack } from './slack.util'
 
 const { GraphQLLocalStrategy } = GraphqlPassport
@@ -83,18 +82,17 @@ const facebookStrategy = new FacebookStrategy(
       }
       return
     }
+    const { rows: [user] } = await pgClient.query(
+      `insert into app_public.users (first_name, last_name, facebook_id, email)
+      values ($1, $2, $3, $4) returning *`,
+      [profile.name.givenName, profile.name.familyName, profile.id, email]
+    )
 
-    const user = await models.User.create({
-      firstName: profile.name.givenName,
-      lastName: profile.name.familyName,
-      facebookId: profile.id,
-      email
-    })
     Slack.newUser({
       id: user.id,
       email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
+      firstName: user.first_name,
+      lastName: user.last_name,
       source: 'facebook'
     })
 

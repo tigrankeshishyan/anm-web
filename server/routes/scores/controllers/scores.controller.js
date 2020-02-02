@@ -2,13 +2,12 @@ import assert from 'assert'
 import path from 'path'
 
 import { ExpressError } from '../../../utils/error.util'
-import { models } from '../../../_sequelize'
 import * as Storage from '../../../utils/storage.util'
 import { scoreComingSoon, scorePreviewName } from '../../../../config'
-import { Purchase } from '../../../_sequelize/models/purchase.model'
 import { getPaymentDetails } from '../../../utils/ameria.util'
 import { addStamp } from '../../../utils/score.util'
 import { Slack } from '../../../utils/slack.util'
+import pgClient from '../../../pgClient'
 
 const publicScores = [scoreComingSoon, scorePreviewName]
 
@@ -37,25 +36,32 @@ export async function getScore (req, res, next) {
     assert.ok(scoreId, new Error("can't detect score id for provided key"))
 
     if (!alwaysAllow.includes(user.role)) {
-      const purchase = await models.Purchase.findOne({
-        where: { userId: user.id, scoreId, status: Purchase.PAID }
-      })
+      const {
+        rows: [purchase]
+      } = await pgClient.query(
+        'select * from app_public.purchases where user_id=$1 and score_id=$2 and status=$3',
+        [user.id, scoreId, 'paid']
+      )
       assert.ok(
         purchase,
         new ExpressError('you have to purchase score to access it', 403)
       )
     }
 
-    const score = await models.Score.findByPk(scoreId)
-    if (!score.stampRight && !score.stampCenter) {
+    const {
+      rows: [score]
+    } = await pgClient.query('select * from app_public.scores where id=$1', [
+      scoreId
+    ])
+    if (!score.stamp_right && !score.stamp_center) {
       return await res.s3Object(key)
     }
 
     const doc = await addStamp(
       scoreId,
       key,
-      score.stampRight,
-      score.stampCenter
+      score.stamp_right,
+      score.stamp_center
     )
 
     doc.pipe(res)
@@ -78,9 +84,11 @@ export async function purchaseFromPaddle (req, res, next) {
       purchaseId && token,
       new ExpressError("missing 'purchaseId' or 'token'", 400)
     )
-    const purchase = await models.Purchase.findOne({
-      where: { id: purchaseId, status: Purchase.PENDING }
-    })
+    const {
+      rows: [purchase]
+    } = await pgClient.query('select * from app_public.purchases where id=$1', [
+      purchaseId
+    ])
     assert.ok(
       purchase,
       new ExpressError(
@@ -93,8 +101,10 @@ export async function purchaseFromPaddle (req, res, next) {
       throw new ExpressError('invalid purchase token', 403)
     }
 
-    purchase.status = Purchase.PAID
-    await purchase.save()
+    await pgClient.query(
+      'update app_public.purchases set status=$1 where id=$1',
+      ['paid', purchaseId]
+    )
 
     Slack.newPurchase(user, purchase)
 
@@ -127,16 +137,18 @@ export async function purchaseFromAmeria (req, res, next) {
       purchaseId && token,
       new ExpressError("missing 'purchaseId' or 'token'", 400)
     )
-    const purchase = await models.Purchase.findOne({
-      where: { id: purchaseId }
-    })
+    const {
+      rows: [purchase]
+    } = await pgClient.query('select * from app_public.purchases where id=$1', [
+      purchaseId
+    ])
 
-    if (purchase.status === Purchase.PAID) {
+    if (purchase.status === 'paid') {
       return res.redirect(redirect)
     }
 
     assert.ok(
-      purchase && purchase.status === Purchase.PENDING,
+      purchase && purchase.status === 'pending',
       new ExpressError(
         `the purchase ${purchaseId} with pending status don't exist`,
         404
@@ -148,8 +160,10 @@ export async function purchaseFromAmeria (req, res, next) {
       new ExpressError('invalid purchase token', 403)
     )
 
-    purchase.status = Purchase.PAID
-    await purchase.save()
+    await pgClient.query(
+      'update app_public.purchases set status=$1 where id=$2',
+      ['paid', purchaseId]
+    )
 
     Slack.newPurchase(user, purchase)
 

@@ -12,7 +12,6 @@ import {
 import {
   selectById,
   userPurchasedScore,
-  insertInto,
   getPromoByCode
 } from '../../utils/query.util'
 import { allowOnly } from '../../utils/graphile.util'
@@ -22,7 +21,6 @@ import {
   isValidPromoCode,
   validateCurrency
 } from '../../utils/validate.util'
-import { Purchase } from '../../_sequelize/models/purchase.model'
 import { purchaseLink } from '../../utils/purchase.util'
 
 const {
@@ -89,11 +87,7 @@ const schema = makeExtendSchemaPlugin(build => {
 
           assert.ok(user, new Error('you must be logged in to use this query'))
 
-          const purchased = await userPurchasedScore(
-            pgClient,
-            user.id,
-            scoreId
-          )
+          const purchased = await userPurchasedScore(pgClient, user.id, scoreId)
           return !!purchased
         },
         async scorePurchaseLink (source, args, ctx, info) {
@@ -136,7 +130,7 @@ const schema = makeExtendSchemaPlugin(build => {
             promoCode,
             price
           )
-          if (purchase.status === Purchase.PAID) {
+          if (purchase.status === 'paid') {
             return returnUrl
           }
 
@@ -167,33 +161,37 @@ async function findOrCreatePurchase (
   promoCode,
   price
 ) {
-  const now = new Date().toISOString()
   const token = uuid.v4()
 
   const {
     rows: [already]
   } = await pgClient.query(
-    `SELECT * FROM ${database.schema}.purchases 
-WHERE user_id=$1 AND score_id=$2 AND status=$3`,
-    [userId, scoreId, Purchase.PAID]
+    `select * from ${database.schema}.purchases 
+where user_id=$1 and score_id=$2 and status=$3`,
+    [userId, scoreId, 'paid']
   )
   if (already) {
     return already
   }
 
   const discountPrice = await getPrice(pgClient, price.amount, promoCode)
-  const purchase = await insertInto(pgClient, 'purchases', {
-    user_id: userId,
-    score_id: scoreId,
-    status: Purchase.PENDING,
-    promo_code: promoCode,
-    token,
-    price: price.amount,
-    currency: price.currency,
-    discount_price: discountPrice,
-    created_at: now,
-    updated_at: now
-  })
+  const {
+    rows: [purchase]
+  } = await pgClient.query(
+    `insert into
+  app_public.purchases(user_id, score_id, status, promo_code, token, price, currency, discount_price)
+  values ($1, $2, $3, $4, $5, $6, $7, $8) returning *`,
+    [
+      userId,
+      scoreId,
+      'pending',
+      promoCode,
+      token,
+      price.amount,
+      price.currency,
+      discountPrice
+    ]
+  )
 
   return purchase
 }

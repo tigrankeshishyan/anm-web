@@ -2,8 +2,6 @@ import GraphqlPassport from 'graphql-passport'
 import postgraphile from 'postgraphile'
 import dirname from 'es-dirname'
 
-import { models } from '../_sequelize'
-
 import { database, isDev } from '../../config'
 import * as Storage from '../utils/storage.util'
 
@@ -32,8 +30,7 @@ export default () =>
     additionalGraphQLContextFromRequest (request) {
       return buildContext({
         // for graphql-passport use name 'req'
-        req: request,
-        models
+        req: request
       })
     },
     graphileBuildOptions: {

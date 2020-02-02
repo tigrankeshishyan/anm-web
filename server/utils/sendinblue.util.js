@@ -51,7 +51,8 @@ export async function unsubscribeContact (email) {
   return response.status >= 200 && response.status < 300
 }
 
-export async function sendVerificationEmail (email, code) {
+export async function sendVerificationEmail (email, code, lang) {
+  // TODO: different emails depending on lang
   const response = await http.post(emailUrl, {
     sender: { email: sendinblue.email },
     to: [{ email }],
