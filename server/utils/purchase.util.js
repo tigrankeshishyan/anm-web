@@ -37,3 +37,7 @@ export async function purchaseLink ({
 
   throw Error(`unknown payment service "${service}"`)
 }
+
+export function discountPrice (price, percent) {
+  return price - (price * (percent / 100))
+}

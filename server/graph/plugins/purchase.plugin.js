@@ -15,13 +15,12 @@ import {
   getPromoByCode
 } from '../../utils/query.util'
 import { allowOnly } from '../../utils/graphile.util'
-import { discountPrice } from '../../utils/generate.util'
 import {
   validateRedirect,
   isValidPromoCode,
   validateCurrency
 } from '../../utils/validate.util'
-import { purchaseLink } from '../../utils/purchase.util'
+import { purchaseLink, discountPrice } from '../../utils/purchase.util'
 
 const {
   gql,

@@ -2,8 +2,8 @@ import assert from 'assert'
 
 import GraphileUtil from 'graphile-utils'
 
-import { discountPrice } from '../../utils/generate.util'
 import { isValidPromoCode } from '../../utils/validate.util'
+import { discountPrice } from '../../utils/purchase.util'
 
 const {
   gql,
