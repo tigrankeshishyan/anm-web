@@ -81,7 +81,7 @@ const run = async () => {
   })
 }
 
-const close = () => {} // TODO: close connections
+const close = () => pgClient.end()
 
 run().catch(err => console.error(err) || process.emit(err))
 
