@@ -1,15 +1,15 @@
 import GraphileWorker from 'graphile-worker'
 
 import { database, worker } from '../config'
-import * as tasks from './tasks'
+import * as emailTasks from './tasks/email'
 
-export default function run () {
+export default async function run () {
   return GraphileWorker.run({
     connectionString: database.url,
     concurrency: worker.concurrency,
     pollInterval: worker.pollInterval,
     taskList: {
-      ...tasks
+      ...emailTasks
     }
   })
 }
