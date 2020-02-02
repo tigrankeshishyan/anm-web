@@ -676,7 +676,7 @@ begin
     else
         new.updated_at = v_now;
     end if;
-    return v_new;
+    return new;
 end;
 $$;
 

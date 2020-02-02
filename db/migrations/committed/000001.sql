@@ -1,5 +1,5 @@
 --! Previous: -
---! Hash: sha1:48d5dfbc721a1d7a820d8d30386e45a7997f9375
+--! Hash: sha1:4f03b321e8a2e62f259680c6b5225ba35769e95c
 
 drop schema if exists app_public cascade;
 
@@ -929,7 +929,7 @@ begin
     else
         new.updated_at = v_now;
     end if;
-    return v_new;
+    return new;
 end;
 $$;
 
