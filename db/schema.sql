@@ -126,10 +126,29 @@ COMMENT ON EXTENSION "uuid-ossp" IS 'generate universally unique identifiers (UU
 --
 
 CREATE TYPE app_public.email_verification_status AS ENUM (
-    'pending',
+    'not_verified',
     'sent',
-    'verified',
-    'excess'
+    'verified'
+);
+
+
+--
+-- Name: email_verify_result; Type: TYPE; Schema: app_public; Owner: -
+--
+
+CREATE TYPE app_public.email_verify_result AS (
+	message text,
+	success boolean
+);
+
+
+--
+-- Name: forgot_password_result; Type: TYPE; Schema: app_public; Owner: -
+--
+
+CREATE TYPE app_public.forgot_password_result AS (
+	message text,
+	success boolean
 );
 
 
@@ -144,22 +163,478 @@ CREATE TYPE app_public.media_type AS ENUM (
 
 
 --
--- Name: set_timestamps(); Type: FUNCTION; Schema: app_private; Owner: -
+-- Name: promo_code_status; Type: TYPE; Schema: app_public; Owner: -
 --
 
-CREATE FUNCTION app_private.set_timestamps() RETURNS trigger
+CREATE TYPE app_public.promo_code_status AS ENUM (
+    'active',
+    'used',
+    'canceled'
+);
+
+
+--
+-- Name: purchase_status; Type: TYPE; Schema: app_public; Owner: -
+--
+
+CREATE TYPE app_public.purchase_status AS ENUM (
+    'pending',
+    'canceled',
+    'paid'
+);
+
+
+--
+-- Name: reset_password_result; Type: TYPE; Schema: app_public; Owner: -
+--
+
+CREATE TYPE app_public.reset_password_result AS (
+	message text,
+	success boolean
+);
+
+
+--
+-- Name: send_verification_email_result; Type: TYPE; Schema: app_public; Owner: -
+--
+
+CREATE TYPE app_public.send_verification_email_result AS (
+	message text,
+	success boolean
+);
+
+
+--
+-- Name: user_role; Type: TYPE; Schema: app_public; Owner: -
+--
+
+CREATE TYPE app_public.user_role AS ENUM (
+    'member',
+    'admin',
+    'editor'
+);
+
+
+--
+-- Name: user_status; Type: TYPE; Schema: app_public; Owner: -
+--
+
+CREATE TYPE app_public.user_status AS ENUM (
+    'active',
+    'blocked'
+);
+
+
+--
+-- Name: create_code(integer, boolean); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.create_code(len integer DEFAULT 6, alpha boolean DEFAULT false) RETURNS text
     LANGUAGE plpgsql
     AS $$
 declare
-    v_now timestamp = now();
+  v_serial text = '';
+  v_i int;
+  v_chars text = '0123456789';
 begin
-    if tg_op = 'INSERT' then
-        new.created_at = v_now;
-        new.updated_at = v_now;
-    else
-        new.updated_at = v_now;
+  if alpha then
+    v_chars = v_chars || 'abcdefghijklmnopqrstuvwxyz';
+  end if;
+  for v_i in 1 .. len loop
+      v_serial = v_serial || substr(v_chars, int4(random() * length(v_chars)), 1);
+  end loop;
+  return lower(v_serial);
+end;
+$$;
+
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- Name: users; Type: TABLE; Schema: app_public; Owner: -
+--
+
+CREATE TABLE app_public.users (
+    id integer NOT NULL,
+    first_name character varying(32),
+    last_name character varying(32),
+    avatar character varying(255),
+    email public.citext,
+    facebook_id bigint,
+    status app_public.user_status DEFAULT 'active'::app_public.user_status,
+    password character varying(255),
+    role app_public.user_role DEFAULT 'member'::app_public.user_role NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: COLUMN users.id; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.users.id IS '@omit create,update';
+
+
+--
+-- Name: COLUMN users.status; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.users.status IS '@omit
+0 active, 1 blocked';
+
+
+--
+-- Name: COLUMN users.password; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.users.password IS '@omit update,delete';
+
+
+--
+-- Name: COLUMN users.role; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.users.role IS '@omit create,update';
+
+
+--
+-- Name: change_user_role(integer, app_public.user_role); Type: FUNCTION; Schema: app_public; Owner: -
+--
+
+CREATE FUNCTION app_public.change_user_role(user_id integer, role app_public.user_role) RETURNS app_public.users
+    LANGUAGE sql SECURITY DEFINER
+    SET search_path TO 'app_public'
+    AS $_$
+  update users set role=$2 where id=user_id returning *;
+$_$;
+
+
+--
+-- Name: change_user_status(integer, app_public.user_status); Type: FUNCTION; Schema: app_public; Owner: -
+--
+
+CREATE FUNCTION app_public.change_user_status(user_id integer, status app_public.user_status) RETURNS app_public.users
+    LANGUAGE sql SECURITY DEFINER
+    SET search_path TO 'app_public'
+    AS $_$
+  update users set status=$2 where id=user_id returning *;
+$_$;
+
+
+--
+-- Name: promo_codes; Type: TABLE; Schema: app_public; Owner: -
+--
+
+CREATE TABLE app_public.promo_codes (
+    code text NOT NULL,
+    status app_public.promo_code_status DEFAULT 'active'::app_public.promo_code_status NOT NULL,
+    percent integer DEFAULT 0 NOT NULL,
+    expires_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+--
+-- Name: TABLE promo_codes; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON TABLE app_public.promo_codes IS '@omit create';
+
+
+--
+-- Name: COLUMN promo_codes.code; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.promo_codes.code IS '@omit create,update
+this also will be used as id';
+
+
+--
+-- Name: COLUMN promo_codes.percent; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.promo_codes.percent IS 'discount percent, default is 0';
+
+
+--
+-- Name: create_promo_code(integer, app_public.promo_code_status, timestamp with time zone); Type: FUNCTION; Schema: app_public; Owner: -
+--
+
+CREATE FUNCTION app_public.create_promo_code(percent integer, status app_public.promo_code_status DEFAULT 'active'::app_public.promo_code_status, expires_at timestamp with time zone DEFAULT NULL::timestamp with time zone) RETURNS app_public.promo_codes
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'app_private', 'app_public'
+    AS $_$
+declare
+  v_code text;
+  v_promo_code promo_codes;
+begin
+  loop
+    v_code = create_code(6, false);
+    if not exists(select 1 from promo_codes where code=v_code) then
+        insert into promo_codes(code, percent, status, expires_at)
+          values (v_code, $1, $2, $3) returning * into v_promo_code;
+        return v_promo_code;
     end if;
-    return v_new;
+  end loop;
+end;
+$_$;
+
+
+--
+-- Name: create_promo_codes(integer, integer, app_public.promo_code_status, timestamp with time zone); Type: FUNCTION; Schema: app_public; Owner: -
+--
+
+CREATE FUNCTION app_public.create_promo_codes(count integer, percent integer, status app_public.promo_code_status DEFAULT 'active'::app_public.promo_code_status, expires_at timestamp with time zone DEFAULT NULL::timestamp with time zone) RETURNS app_public.promo_codes[]
+    LANGUAGE plpgsql STRICT SECURITY DEFINER
+    SET search_path TO 'app_private', 'app_public'
+    AS $$
+declare
+  v_promo_codes promo_codes[] = array[]::promo_codes[];
+  v_i int;
+begin
+  for v_i in 1..count loop
+    perform append_array(v_promo_codes, create_promo_code(percent, promo_code_status, expires_at));
+  end loop;
+  return v_promo_codes;
+end;
+$$;
+
+
+--
+-- Name: current_user(boolean); Type: FUNCTION; Schema: app_public; Owner: -
+--
+
+CREATE FUNCTION app_public."current_user"(not_null boolean DEFAULT true) RETURNS app_public.users
+    LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'app_public'
+    AS $$
+  select * from users where id = current_user_id(not_null);
+$$;
+
+
+--
+-- Name: current_user_id(boolean); Type: FUNCTION; Schema: app_public; Owner: -
+--
+
+CREATE FUNCTION app_public.current_user_id(not_null boolean DEFAULT false) RETURNS integer
+    LANGUAGE plpgsql STABLE SECURITY DEFINER
+    SET search_path TO 'public'
+    AS $$
+declare
+    user_id integer = current_setting('user.id', true)::integer;
+begin
+    if not_null and user_id is null then
+        raise exception 'You need to be logged in';
+    end if;
+    return user_id;
+end;
+$$;
+
+
+--
+-- Name: current_user_role(); Type: FUNCTION; Schema: app_public; Owner: -
+--
+
+CREATE FUNCTION app_public.current_user_role() RETURNS app_public.user_role
+    LANGUAGE plpgsql STABLE SECURITY DEFINER
+    SET search_path TO 'app_public'
+    AS $$
+declare
+  v_user users = app_public.current_user();
+begin
+  return v_user.role;
+end;
+$$;
+
+
+--
+-- Name: forgot_password(public.citext); Type: FUNCTION; Schema: app_public; Owner: -
+--
+
+CREATE FUNCTION app_public.forgot_password(email public.citext) RETURNS app_public.forgot_password_result
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'app_private', 'app_public'
+    AS $_$
+#variable_conflict use_column
+declare
+  v_reset_password reset_passwords;
+  v_payload json;
+begin
+  if not exists(select 1 from users where email = $1) then
+    return ('there is no user with that email', false);
+  end if;
+  insert into reset_passwords(email) values(email) returning * into v_reset_password;
+  v_payload = json_build_object(
+      'token', v_reset_password.id, 
+      'email', v_reset_password.email, 
+      'lang', current_setting('locale', false)
+    );
+  perform graphile_worker.add_job('sendResetLink', v_payload);
+  return ('password reset link email have been sent', true)::forget_password_result;
+end;
+$_$;
+
+
+--
+-- Name: reset_password(text, text); Type: FUNCTION; Schema: app_public; Owner: -
+--
+
+CREATE FUNCTION app_public.reset_password(token text, password text) RETURNS app_public.reset_password_result
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'app_private', 'app_hidden'
+    AS $_$
+-- #variable_conflict use_column
+declare
+  v_max_old interval = interval '1 hour';
+  v_max_attempts int = 3;
+  v_reset_password reset_passwords;
+begin
+  update reset_passwords set attempts = attempts + 1
+    where token=$1 returning * into v_reset_password;
+
+  if v_reset_password.created_at + v_max_old > now() then
+    return ('token has been expired, you can use it in one hour', false)::reset_password_result;
+  end if;
+  if v_reset_password.attempts > v_max_attempts then
+    return ('too many attempts for this token', false)::reset_password_result;
+  end if;
+
+  update users set password = $2 where email = v_reset_password.email;
+  return ('password have been changed', true)::reset_password_result;
+end;
+$_$;
+
+
+--
+-- Name: scores; Type: TABLE; Schema: app_public; Owner: -
+--
+
+CREATE TABLE app_public.scores (
+    id integer NOT NULL,
+    path character varying(255) NOT NULL,
+    title character varying(255),
+    description character varying(255),
+    url character varying(255),
+    prices jsonb,
+    stamp_right character varying(12),
+    stamp_center character varying(12),
+    published boolean DEFAULT false NOT NULL,
+    published_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    composition_id integer
+);
+
+
+--
+-- Name: COLUMN scores.id; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.scores.id IS '@omit create,update';
+
+
+--
+-- Name: COLUMN scores.path; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.scores.path IS 'SEO friendly name to use in url';
+
+
+--
+-- Name: COLUMN scores.title; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.scores.title IS '@localize';
+
+
+--
+-- Name: COLUMN scores.description; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.scores.description IS '@localize';
+
+
+--
+-- Name: COLUMN scores.prices; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.scores.prices IS 'amount - currency pairs';
+
+
+--
+-- Name: COLUMN scores.stamp_right; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.scores.stamp_right IS 'Right side stamp page selection https://pdfcpu.io/getting_started/page_selection, ex. 1';
+
+
+--
+-- Name: COLUMN scores.stamp_center; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.scores.stamp_center IS 'Center side stamp page selection https://pdfcpu.io/getting_started/page_selection, ex. 2-';
+
+
+--
+-- Name: COLUMN scores.published_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.scores.published_at IS '@omit create
+This is automatically changed if ''published'' changed, can be manually provided by ''admin''';
+
+
+--
+-- Name: scores_is_purchased(app_public.scores); Type: FUNCTION; Schema: app_public; Owner: -
+--
+
+CREATE FUNCTION app_public.scores_is_purchased(score app_public.scores) RETURNS boolean
+    LANGUAGE plpgsql STABLE SECURITY DEFINER
+    SET search_path TO 'app_public'
+    AS $$
+begin
+  return exists(
+    select 1 from purchases where user_id=current_user_id() and score_id=score.id and status='paid'
+  );
+end;
+$$;
+
+
+--
+-- Name: send_verification_email(); Type: FUNCTION; Schema: app_public; Owner: -
+--
+
+CREATE FUNCTION app_public.send_verification_email() RETURNS app_public.send_verification_email_result
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'app_private', 'app_public'
+    AS $$
+declare
+  v_user users = app_public.current_user();
+  v_verification email_verifications;
+  v_payload json;
+begin
+  if v_user.email is null then
+    return ('account do not have email', false)::send_verification_email_result;
+  end if;
+
+  insert into email_verifications(user_id, email) 
+    values(v_user.id, v_user.email)
+    on conflict (user_id, email) do update set code = create_code()
+    returning * into v_verification;
+  
+  v_payload = json_build_object(
+    'id', v_verification.id,
+    'email', v_user.email,
+    'code', v_verification.code,
+    'lang', current_setting('locale', false)
+  );
+
+  perform graphile_worker.add_job('sendVerificationEmail', v_payload);
+
+  return ('code have been sent to email of this accont', true)::send_verification_email_result;
 end;
 $$;
 
@@ -185,9 +660,58 @@ end;
 $$;
 
 
-SET default_tablespace = '';
+--
+-- Name: users_email_verification_status(app_public.users); Type: FUNCTION; Schema: app_public; Owner: -
+--
 
-SET default_with_oids = false;
+CREATE FUNCTION app_public.users_email_verification_status(i_user app_public.users) RETURNS app_public.email_verification_status
+    LANGUAGE sql STABLE SECURITY DEFINER
+    SET search_path TO 'app_private'
+    AS $$
+  select (
+    case 
+    when is_verified then 'verified'::app_public.email_verification_status
+    when sib_message_id is not null then 'sent'::app_public.email_verification_status
+    else 'not_verified'::app_public.email_verification_status
+    end
+  ) from email_verifications
+    where user_id = i_user.id and email = i_user.email;
+$$;
+
+
+--
+-- Name: verify_email(text); Type: FUNCTION; Schema: app_public; Owner: -
+--
+
+CREATE FUNCTION app_public.verify_email(code text) RETURNS app_public.email_verify_result
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'app_private', 'app_public'
+    AS $_$
+declare
+  v_user users = app_public.current_user(true);
+  v_verification email_verifications;
+  v_max_attempts int = 3;
+begin
+  if v_user.email is null then
+    return ('account do not have email', false);
+  end if;
+
+  update email_verifications set attempts = attempts + 1
+    where email=v_user.email and user_id=v_user.id
+    returning * into v_verification;
+
+  if v_verification.attempts > v_max_attempts then
+    return ('too many attempts you can try only ' || v_max_attempts || 'times', false);
+  end if;
+
+  if v_verification.code = $1 then
+    return ('email is verified', true);
+  end if;
+
+  return ('invalid verification code', false)::email_verify_result;
+end;
+$_$;
+
 
 --
 -- Name: jobs; Type: TABLE; Schema: graphile_worker; Owner: -
@@ -431,74 +955,28 @@ $$;
 
 
 --
--- Name: purchases; Type: TABLE; Schema: app_private; Owner: -
+-- Name: email_verifications; Type: TABLE; Schema: app_private; Owner: -
 --
 
-CREATE TABLE app_private.purchases (
+CREATE TABLE app_private.email_verifications (
     id integer NOT NULL,
-    status integer NOT NULL,
-    promo_code character varying(32),
-    currency character varying(6) NOT NULL,
-    price numeric(12,2) NOT NULL,
-    discount_price numeric(12,2),
-    token character varying(36),
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
-    score_id integer NOT NULL,
-    user_id integer
+    user_id integer,
+    email public.citext NOT NULL,
+    code text DEFAULT app_private.create_code() NOT NULL,
+    is_verified boolean DEFAULT false,
+    attempts integer DEFAULT 0 NOT NULL,
+    sib_message_id text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
 --
--- Name: COLUMN purchases.id; Type: COMMENT; Schema: app_private; Owner: -
+-- Name: email_verifications_id_seq; Type: SEQUENCE; Schema: app_private; Owner: -
 --
 
-COMMENT ON COLUMN app_private.purchases.id IS '@omit create,update';
-
-
---
--- Name: COLUMN purchases.status; Type: COMMENT; Schema: app_private; Owner: -
---
-
-COMMENT ON COLUMN app_private.purchases.status IS 'PENDING = 1, PAID = 2';
-
-
---
--- Name: COLUMN purchases.currency; Type: COMMENT; Schema: app_private; Owner: -
---
-
-COMMENT ON COLUMN app_private.purchases.currency IS '@omit create, update
-Currency requested fot this purchase';
-
-
---
--- Name: COLUMN purchases.token; Type: COMMENT; Schema: app_private; Owner: -
---
-
-COMMENT ON COLUMN app_private.purchases.token IS '@omit
-Token to verify purchase request';
-
-
---
--- Name: COLUMN purchases.created_at; Type: COMMENT; Schema: app_private; Owner: -
---
-
-COMMENT ON COLUMN app_private.purchases.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN purchases.updated_at; Type: COMMENT; Schema: app_private; Owner: -
---
-
-COMMENT ON COLUMN app_private.purchases.updated_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: purchases_id_seq; Type: SEQUENCE; Schema: app_private; Owner: -
---
-
-ALTER TABLE app_private.purchases ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME app_private.purchases_id_seq
+ALTER TABLE app_private.email_verifications ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME app_private.email_verifications_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -512,41 +990,13 @@ ALTER TABLE app_private.purchases ALTER COLUMN id ADD GENERATED BY DEFAULT AS ID
 --
 
 CREATE TABLE app_private.reset_passwords (
-    id uuid NOT NULL,
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
     email text NOT NULL,
     attempts integer DEFAULT 0 NOT NULL,
     is_expired boolean DEFAULT false NOT NULL,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: TABLE reset_passwords; Type: COMMENT; Schema: app_private; Owner: -
---
-
-COMMENT ON TABLE app_private.reset_passwords IS '@omit';
-
-
---
--- Name: COLUMN reset_passwords.id; Type: COMMENT; Schema: app_private; Owner: -
---
-
-COMMENT ON COLUMN app_private.reset_passwords.id IS '@omit create,update';
-
-
---
--- Name: COLUMN reset_passwords.created_at; Type: COMMENT; Schema: app_private; Owner: -
---
-
-COMMENT ON COLUMN app_private.reset_passwords.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN reset_passwords.updated_at; Type: COMMENT; Schema: app_private; Owner: -
---
-
-COMMENT ON COLUMN app_private.reset_passwords.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -555,8 +1005,8 @@ COMMENT ON COLUMN app_private.reset_passwords.updated_at IS 'This field is contr
 
 CREATE TABLE app_public.article_galleries (
     id integer NOT NULL,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -565,20 +1015,6 @@ CREATE TABLE app_public.article_galleries (
 --
 
 COMMENT ON COLUMN app_public.article_galleries.id IS '@omit create,update';
-
-
---
--- Name: COLUMN article_galleries.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.article_galleries.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN article_galleries.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.article_galleries.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -600,25 +1036,11 @@ ALTER TABLE app_public.article_galleries ALTER COLUMN id ADD GENERATED BY DEFAUL
 --
 
 CREATE TABLE app_public.article_gallery_images (
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     gallery_id integer NOT NULL,
     image_id integer NOT NULL
 );
-
-
---
--- Name: COLUMN article_gallery_images.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.article_gallery_images.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN article_gallery_images.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.article_gallery_images.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -628,23 +1050,9 @@ COMMENT ON COLUMN app_public.article_gallery_images.updated_at IS 'This field is
 CREATE TABLE app_public.article_genres (
     article_id integer NOT NULL,
     genre_id integer NOT NULL,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: COLUMN article_genres.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.article_genres.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN article_genres.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.article_genres.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -652,25 +1060,11 @@ COMMENT ON COLUMN app_public.article_genres.updated_at IS 'This field is control
 --
 
 CREATE TABLE app_public.article_images (
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     article_id integer NOT NULL,
     image_id integer NOT NULL
 );
-
-
---
--- Name: COLUMN article_images.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.article_images.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN article_images.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.article_images.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -683,23 +1077,9 @@ CREATE TABLE app_public.article_locales (
     title character varying(255),
     description text,
     content text,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: COLUMN article_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.article_locales.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN article_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.article_locales.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -707,25 +1087,11 @@ COMMENT ON COLUMN app_public.article_locales.updated_at IS 'This field is contro
 --
 
 CREATE TABLE app_public.article_tags (
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     article_id integer NOT NULL,
     tag_id integer NOT NULL
 );
-
-
---
--- Name: COLUMN article_tags.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.article_tags.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN article_tags.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.article_tags.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -740,8 +1106,8 @@ CREATE TABLE app_public.articles (
     content text,
     published boolean DEFAULT false NOT NULL,
     published_at timestamp with time zone,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     author_id integer,
     updater_id integer,
     poster_id integer,
@@ -793,20 +1159,6 @@ This is automatically changed if ''published'' changed, can be manually provided
 
 
 --
--- Name: COLUMN articles.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.articles.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN articles.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.articles.updated_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
 -- Name: articles_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -829,23 +1181,9 @@ CREATE TABLE app_public.composition_locales (
     lang character varying(2) NOT NULL,
     title character varying(255),
     description character varying(255),
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: COLUMN composition_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.composition_locales.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN composition_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.composition_locales.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -861,8 +1199,8 @@ CREATE TABLE app_public.compositions (
     composing_end timestamp with time zone,
     published boolean DEFAULT false NOT NULL,
     published_at timestamp with time zone,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -903,20 +1241,6 @@ This is automatically changed if ''published'' changed, can be manually provided
 
 
 --
--- Name: COLUMN compositions.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.compositions.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN compositions.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.compositions.updated_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
 -- Name: compositions_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -940,8 +1264,8 @@ CREATE TABLE app_public.contact_messages (
     email public.citext NOT NULL,
     message character varying(255) NOT NULL,
     attached_file character varying(255),
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -957,20 +1281,6 @@ COMMENT ON COLUMN app_public.contact_messages.id IS '@omit create,update';
 --
 
 COMMENT ON COLUMN app_public.contact_messages.attached_file IS 'optional file attached by user';
-
-
---
--- Name: COLUMN contact_messages.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.contact_messages.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN contact_messages.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.contact_messages.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -995,23 +1305,9 @@ CREATE TABLE app_public.document_locales (
     source_id integer NOT NULL,
     lang character varying(2) NOT NULL,
     content text,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: COLUMN document_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.document_locales.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN document_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.document_locales.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1022,8 +1318,8 @@ CREATE TABLE app_public.documents (
     id integer NOT NULL,
     name character varying(32),
     content text,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -1042,98 +1338,11 @@ COMMENT ON COLUMN app_public.documents.content IS '@localize';
 
 
 --
--- Name: COLUMN documents.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.documents.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN documents.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.documents.updated_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
 -- Name: documents_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
 ALTER TABLE app_public.documents ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
     SEQUENCE NAME app_public.documents_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
--- Name: email_verifications; Type: TABLE; Schema: app_public; Owner: -
---
-
-CREATE TABLE app_public.email_verifications (
-    id integer NOT NULL,
-    user_id integer,
-    email public.citext NOT NULL,
-    code text,
-    status app_public.email_verification_status DEFAULT 'pending'::app_public.email_verification_status,
-    attempts integer DEFAULT 0 NOT NULL,
-    sib_message_id text,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
-);
-
-
---
--- Name: TABLE email_verifications; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON TABLE app_public.email_verifications IS '@omit';
-
-
---
--- Name: COLUMN email_verifications.id; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.email_verifications.id IS '@omit create,update';
-
-
---
--- Name: COLUMN email_verifications.code; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.email_verifications.code IS 'verification code';
-
-
---
--- Name: COLUMN email_verifications.sib_message_id; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.email_verifications.sib_message_id IS 'Send In Blue messageId';
-
-
---
--- Name: COLUMN email_verifications.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.email_verifications.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN email_verifications.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.email_verifications.updated_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: email_verifications_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
---
-
-ALTER TABLE app_public.email_verifications ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
-    SEQUENCE NAME app_public.email_verifications_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -1150,23 +1359,9 @@ CREATE TABLE app_public.genre_locales (
     source_id integer NOT NULL,
     lang character varying(2) NOT NULL,
     name character varying(255),
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: COLUMN genre_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.genre_locales.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN genre_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.genre_locales.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1176,8 +1371,8 @@ COMMENT ON COLUMN app_public.genre_locales.updated_at IS 'This field is controll
 CREATE TABLE app_public.genres (
     id integer NOT NULL,
     name character varying(255),
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -1193,20 +1388,6 @@ COMMENT ON COLUMN app_public.genres.id IS '@omit create,update';
 --
 
 COMMENT ON COLUMN app_public.genres.name IS '@localize';
-
-
---
--- Name: COLUMN genres.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.genres.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN genres.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.genres.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1230,23 +1411,9 @@ ALTER TABLE app_public.genres ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTI
 CREATE TABLE app_public.group_images (
     group_id integer NOT NULL,
     image_id integer NOT NULL,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: COLUMN group_images.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.group_images.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN group_images.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.group_images.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1258,23 +1425,9 @@ CREATE TABLE app_public.group_locales (
     lang character varying(2) NOT NULL,
     name character varying(255),
     biography text,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: COLUMN group_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.group_locales.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN group_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.group_locales.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1282,25 +1435,11 @@ COMMENT ON COLUMN app_public.group_locales.updated_at IS 'This field is controll
 --
 
 CREATE TABLE app_public.group_musicians (
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     musician_id integer NOT NULL,
     group_id integer NOT NULL
 );
-
-
---
--- Name: COLUMN group_musicians.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.group_musicians.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN group_musicians.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.group_musicians.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1308,25 +1447,11 @@ COMMENT ON COLUMN app_public.group_musicians.updated_at IS 'This field is contro
 --
 
 CREATE TABLE app_public.group_playlists (
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     group_id integer NOT NULL,
     playlist_id integer NOT NULL
 );
-
-
---
--- Name: COLUMN group_playlists.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.group_playlists.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN group_playlists.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.group_playlists.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1338,8 +1463,8 @@ CREATE TABLE app_public.groups (
     founded timestamp with time zone,
     name character varying(255),
     biography text,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     photo_id integer
 );
 
@@ -1366,20 +1491,6 @@ COMMENT ON COLUMN app_public.groups.biography IS '@localize';
 
 
 --
--- Name: COLUMN groups.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.groups.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN groups.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.groups.updated_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
 -- Name: groups_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -1402,23 +1513,9 @@ CREATE TABLE app_public.image_locales (
     lang character varying(2) NOT NULL,
     caption character varying(255),
     description character varying(255),
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: COLUMN image_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.image_locales.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN image_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.image_locales.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1430,8 +1527,8 @@ CREATE TABLE app_public.images (
     url character varying(255) NOT NULL,
     caption character varying(255),
     description character varying(255),
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -1457,20 +1554,6 @@ COMMENT ON COLUMN app_public.images.description IS '@localize';
 
 
 --
--- Name: COLUMN images.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.images.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN images.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.images.updated_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
 -- Name: images_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -1492,23 +1575,9 @@ CREATE TABLE app_public.instrument_locales (
     source_id integer NOT NULL,
     lang character varying(2) NOT NULL,
     name character varying(255),
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: COLUMN instrument_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.instrument_locales.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN instrument_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.instrument_locales.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1519,8 +1588,8 @@ CREATE TABLE app_public.instruments (
     id integer NOT NULL,
     name character varying(255),
     description text,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -1536,20 +1605,6 @@ COMMENT ON COLUMN app_public.instruments.id IS '@omit create,update';
 --
 
 COMMENT ON COLUMN app_public.instruments.name IS '@localize';
-
-
---
--- Name: COLUMN instruments.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.instruments.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN instruments.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.instruments.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1591,8 +1646,8 @@ CREATE TABLE app_public.media (
     url character varying(255) NOT NULL,
     media_type app_public.media_type,
     title character varying(255),
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -1608,20 +1663,6 @@ COMMENT ON COLUMN app_public.media.id IS '@omit create,update';
 --
 
 COMMENT ON COLUMN app_public.media.title IS '@localize';
-
-
---
--- Name: COLUMN media.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.media.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN media.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.media.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1646,23 +1687,9 @@ CREATE TABLE app_public.media_locales (
     source_id integer NOT NULL,
     lang character varying(2) NOT NULL,
     title character varying(255),
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: COLUMN media_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.media_locales.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN media_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.media_locales.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1670,25 +1697,11 @@ COMMENT ON COLUMN app_public.media_locales.updated_at IS 'This field is controll
 --
 
 CREATE TABLE app_public.musician_compositions (
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     composition_id integer NOT NULL,
     musician_id integer NOT NULL
 );
-
-
---
--- Name: COLUMN musician_compositions.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.musician_compositions.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN musician_compositions.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.musician_compositions.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1696,25 +1709,11 @@ COMMENT ON COLUMN app_public.musician_compositions.updated_at IS 'This field is 
 --
 
 CREATE TABLE app_public.musician_genres (
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     musician_id integer NOT NULL,
     genre_id integer NOT NULL
 );
-
-
---
--- Name: COLUMN musician_genres.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.musician_genres.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN musician_genres.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.musician_genres.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1722,25 +1721,11 @@ COMMENT ON COLUMN app_public.musician_genres.updated_at IS 'This field is contro
 --
 
 CREATE TABLE app_public.musician_images (
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     image_id integer NOT NULL,
     musician_id integer NOT NULL
 );
-
-
---
--- Name: COLUMN musician_images.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.musician_images.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN musician_images.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.musician_images.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1754,23 +1739,9 @@ CREATE TABLE app_public.musician_locales (
     first_name character varying(255),
     last_name character varying(255),
     biography text,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: COLUMN musician_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.musician_locales.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN musician_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.musician_locales.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1778,25 +1749,11 @@ COMMENT ON COLUMN app_public.musician_locales.updated_at IS 'This field is contr
 --
 
 CREATE TABLE app_public.musician_playlists (
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     musician_id integer NOT NULL,
     playlist_id integer NOT NULL
 );
-
-
---
--- Name: COLUMN musician_playlists.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.musician_playlists.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN musician_playlists.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.musician_playlists.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1804,25 +1761,11 @@ COMMENT ON COLUMN app_public.musician_playlists.updated_at IS 'This field is con
 --
 
 CREATE TABLE app_public.musician_professions (
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     musician_id integer NOT NULL,
     profession_id integer NOT NULL
 );
-
-
---
--- Name: COLUMN musician_professions.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.musician_professions.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN musician_professions.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.musician_professions.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1830,25 +1773,11 @@ COMMENT ON COLUMN app_public.musician_professions.updated_at IS 'This field is c
 --
 
 CREATE TABLE app_public.musician_tags (
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     musician_id integer NOT NULL,
     tag_id integer NOT NULL
 );
-
-
---
--- Name: COLUMN musician_tags.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.musician_tags.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN musician_tags.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.musician_tags.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1867,8 +1796,8 @@ CREATE TABLE app_public.musicians (
     biography text,
     published boolean DEFAULT false NOT NULL,
     published_at timestamp with time zone,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     photo_id integer
 );
 
@@ -1924,20 +1853,6 @@ This is automatically changed if ''published'' changed, can be manually provided
 
 
 --
--- Name: COLUMN musicians.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.musicians.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN musicians.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.musicians.updated_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
 -- Name: musicians_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -1959,23 +1874,9 @@ CREATE TABLE app_public.page_sections (
     page character varying(255) NOT NULL,
     name character varying(255) NOT NULL,
     attrs jsonb DEFAULT '{}'::jsonb NOT NULL,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: COLUMN page_sections.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.page_sections.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN page_sections.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.page_sections.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -1986,23 +1887,9 @@ CREATE TABLE app_public.playlist_locales (
     source_id integer NOT NULL,
     lang character varying(2) NOT NULL,
     name character varying(255),
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: COLUMN playlist_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.playlist_locales.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN playlist_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.playlist_locales.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -2011,8 +1898,8 @@ COMMENT ON COLUMN app_public.playlist_locales.updated_at IS 'This field is contr
 
 CREATE TABLE app_public.playlist_media (
     index integer,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     media_id integer NOT NULL,
     playlist_id integer NOT NULL
 );
@@ -2026,20 +1913,6 @@ COMMENT ON COLUMN app_public.playlist_media.index IS 'Order in playlist';
 
 
 --
--- Name: COLUMN playlist_media.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.playlist_media.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN playlist_media.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.playlist_media.updated_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
 -- Name: playlists; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -2047,8 +1920,8 @@ CREATE TABLE app_public.playlists (
     id integer NOT NULL,
     is_public boolean DEFAULT false,
     name character varying(255),
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     owner_id integer
 );
 
@@ -2065,20 +1938,6 @@ COMMENT ON COLUMN app_public.playlists.id IS '@omit create,update';
 --
 
 COMMENT ON COLUMN app_public.playlists.name IS '@localize';
-
-
---
--- Name: COLUMN playlists.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.playlists.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN playlists.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.playlists.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -2103,23 +1962,9 @@ CREATE TABLE app_public.profession_locales (
     source_id integer NOT NULL,
     lang character varying(2) NOT NULL,
     name character varying(255),
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: COLUMN profession_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.profession_locales.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN profession_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.profession_locales.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -2129,8 +1974,8 @@ COMMENT ON COLUMN app_public.profession_locales.updated_at IS 'This field is con
 CREATE TABLE app_public.professions (
     id integer NOT NULL,
     name character varying(255),
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -2149,20 +1994,6 @@ COMMENT ON COLUMN app_public.professions.name IS '@localize';
 
 
 --
--- Name: COLUMN professions.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.professions.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN professions.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.professions.updated_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
 -- Name: professions_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -2177,69 +2008,19 @@ ALTER TABLE app_public.professions ALTER COLUMN id ADD GENERATED BY DEFAULT AS I
 
 
 --
--- Name: promo_codes; Type: TABLE; Schema: app_public; Owner: -
---
-
-CREATE TABLE app_public.promo_codes (
-    code character varying(255) NOT NULL,
-    status character varying(32) DEFAULT 'active'::character varying,
-    percent integer DEFAULT 0 NOT NULL,
-    expires_at timestamp with time zone,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
-);
-
-
---
--- Name: COLUMN promo_codes.code; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.promo_codes.code IS '@omit create,update
-this also will be used as id';
-
-
---
--- Name: COLUMN promo_codes.status; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.promo_codes.status IS 'can be active, used, canceled';
-
-
---
--- Name: COLUMN promo_codes.percent; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.promo_codes.percent IS 'discount percent, default is 0';
-
-
---
--- Name: COLUMN promo_codes.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.promo_codes.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN promo_codes.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.promo_codes.updated_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
 -- Name: purchases; Type: TABLE; Schema: app_public; Owner: -
 --
 
 CREATE TABLE app_public.purchases (
     id integer NOT NULL,
-    status integer NOT NULL,
+    status app_public.purchase_status DEFAULT 'pending'::app_public.purchase_status NOT NULL,
     promo_code character varying(32),
     currency character varying(6) NOT NULL,
     price numeric(12,2) NOT NULL,
     discount_price numeric(12,2),
     token character varying(36),
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
     score_id integer NOT NULL,
     user_id integer
 );
@@ -2250,13 +2031,6 @@ CREATE TABLE app_public.purchases (
 --
 
 COMMENT ON COLUMN app_public.purchases.id IS '@omit create,update';
-
-
---
--- Name: COLUMN purchases.status; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.purchases.status IS 'PENDING = 1, PAID = 2';
 
 
 --
@@ -2276,20 +2050,6 @@ Token to verify purchase request';
 
 
 --
--- Name: COLUMN purchases.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.purchases.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN purchases.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.purchases.updated_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
 -- Name: purchases_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -2304,71 +2064,15 @@ ALTER TABLE app_public.purchases ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDE
 
 
 --
--- Name: reset_passwords; Type: TABLE; Schema: app_public; Owner: -
---
-
-CREATE TABLE app_public.reset_passwords (
-    id uuid NOT NULL,
-    email text NOT NULL,
-    attempts integer DEFAULT 0 NOT NULL,
-    is_expired boolean DEFAULT false NOT NULL,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
-);
-
-
---
--- Name: TABLE reset_passwords; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON TABLE app_public.reset_passwords IS '@omit';
-
-
---
--- Name: COLUMN reset_passwords.id; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.reset_passwords.id IS '@omit create,update';
-
-
---
--- Name: COLUMN reset_passwords.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.reset_passwords.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN reset_passwords.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.reset_passwords.updated_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
 -- Name: score_instruments; Type: TABLE; Schema: app_public; Owner: -
 --
 
 CREATE TABLE app_public.score_instruments (
     instrument_id integer NOT NULL,
     score_id integer NOT NULL,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: COLUMN score_instruments.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.score_instruments.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN score_instruments.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.score_instruments.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -2380,115 +2084,9 @@ CREATE TABLE app_public.score_locales (
     lang character varying(2) NOT NULL,
     title character varying(255),
     description character varying(255),
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: COLUMN score_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.score_locales.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN score_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.score_locales.updated_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: scores; Type: TABLE; Schema: app_public; Owner: -
---
-
-CREATE TABLE app_public.scores (
-    id integer NOT NULL,
-    path character varying(255) NOT NULL,
-    title character varying(255),
-    description character varying(255),
-    url character varying(255),
-    prices jsonb,
-    stamp_right character varying(12),
-    stamp_center character varying(12),
-    published boolean DEFAULT false NOT NULL,
-    published_at timestamp with time zone,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone,
-    composition_id integer
-);
-
-
---
--- Name: COLUMN scores.id; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.scores.id IS '@omit create,update';
-
-
---
--- Name: COLUMN scores.path; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.scores.path IS 'SEO friendly name to use in url';
-
-
---
--- Name: COLUMN scores.title; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.scores.title IS '@localize';
-
-
---
--- Name: COLUMN scores.description; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.scores.description IS '@localize';
-
-
---
--- Name: COLUMN scores.prices; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.scores.prices IS 'amount - currency pairs';
-
-
---
--- Name: COLUMN scores.stamp_right; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.scores.stamp_right IS 'Right side stamp page selection https://pdfcpu.io/getting_started/page_selection, ex. 1';
-
-
---
--- Name: COLUMN scores.stamp_center; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.scores.stamp_center IS 'Center side stamp page selection https://pdfcpu.io/getting_started/page_selection, ex. 2-';
-
-
---
--- Name: COLUMN scores.published_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.scores.published_at IS '@omit create
-This is automatically changed if ''published'' changed, can be manually provided by ''admin''';
-
-
---
--- Name: COLUMN scores.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.scores.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN scores.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.scores.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -2512,7 +2110,7 @@ ALTER TABLE app_public.scores ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTI
 CREATE TABLE app_public.sessions (
     sid character varying(255) NOT NULL,
     sess jsonb NOT NULL,
-    expire timestamp with time zone NOT NULL
+    expire timestamp with time zone DEFAULT now()
 );
 
 
@@ -2531,23 +2129,9 @@ CREATE TABLE app_public.tag_locales (
     source_id integer NOT NULL,
     lang character varying(2) NOT NULL,
     name character varying(255),
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
-
-
---
--- Name: COLUMN tag_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.tag_locales.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN tag_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.tag_locales.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -2557,8 +2141,8 @@ COMMENT ON COLUMN app_public.tag_locales.updated_at IS 'This field is controlled
 CREATE TABLE app_public.tags (
     id integer NOT NULL,
     name character varying(255),
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
 
 
@@ -2577,20 +2161,6 @@ COMMENT ON COLUMN app_public.tags.name IS '@localize';
 
 
 --
--- Name: COLUMN tags.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.tags.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN tags.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.tags.updated_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
 -- Name: tags_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -2602,68 +2172,6 @@ ALTER TABLE app_public.tags ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY
     NO MAXVALUE
     CACHE 1
 );
-
-
---
--- Name: users; Type: TABLE; Schema: app_public; Owner: -
---
-
-CREATE TABLE app_public.users (
-    id integer NOT NULL,
-    first_name character varying(32),
-    last_name character varying(32),
-    avatar character varying(255),
-    email public.citext,
-    facebook_id bigint,
-    status integer DEFAULT 0 NOT NULL,
-    password character varying(255),
-    role character varying(32) DEFAULT 'member'::character varying NOT NULL,
-    created_at timestamp with time zone,
-    updated_at timestamp with time zone
-);
-
-
---
--- Name: COLUMN users.id; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.users.id IS '@omit create,update';
-
-
---
--- Name: COLUMN users.status; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.users.status IS '@omit
-0 active, 1 blocked';
-
-
---
--- Name: COLUMN users.password; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.users.password IS '@omit update,delete';
-
-
---
--- Name: COLUMN users.role; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.users.role IS '@omit create,update';
-
-
---
--- Name: COLUMN users.created_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.users.created_at IS 'This field is controlled under the hood, don''t use it.';
-
-
---
--- Name: COLUMN users.updated_at; Type: COMMENT; Schema: app_public; Owner: -
---
-
-COMMENT ON COLUMN app_public.users.updated_at IS 'This field is controlled under the hood, don''t use it.';
 
 
 --
@@ -2729,11 +2237,19 @@ ALTER TABLE ONLY graphile_worker.jobs ALTER COLUMN id SET DEFAULT nextval('graph
 
 
 --
--- Name: purchases purchases_pkey; Type: CONSTRAINT; Schema: app_private; Owner: -
+-- Name: email_verifications email_verifications_pkey; Type: CONSTRAINT; Schema: app_private; Owner: -
 --
 
-ALTER TABLE ONLY app_private.purchases
-    ADD CONSTRAINT purchases_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY app_private.email_verifications
+    ADD CONSTRAINT email_verifications_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: email_verifications email_verifications_user_id_email_key; Type: CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.email_verifications
+    ADD CONSTRAINT email_verifications_user_id_email_key UNIQUE (user_id, email);
 
 
 --
@@ -2854,14 +2370,6 @@ ALTER TABLE ONLY app_public.document_locales
 
 ALTER TABLE ONLY app_public.documents
     ADD CONSTRAINT documents_pkey PRIMARY KEY (id);
-
-
---
--- Name: email_verifications email_verifications_pkey; Type: CONSTRAINT; Schema: app_public; Owner: -
---
-
-ALTER TABLE ONLY app_public.email_verifications
-    ADD CONSTRAINT email_verifications_pkey PRIMARY KEY (id);
 
 
 --
@@ -3145,14 +2653,6 @@ ALTER TABLE ONLY app_public.purchases
 
 
 --
--- Name: reset_passwords reset_passwords_pkey; Type: CONSTRAINT; Schema: app_public; Owner: -
---
-
-ALTER TABLE ONLY app_public.reset_passwords
-    ADD CONSTRAINT reset_passwords_pkey PRIMARY KEY (id);
-
-
---
 -- Name: score_instruments score_instruments_pkey; Type: CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -3322,6 +2822,14 @@ CREATE TRIGGER _900_notify_worker AFTER INSERT ON graphile_worker.jobs FOR EACH 
 
 
 --
+-- Name: email_verifications email_verifications_user_id_fkey; Type: FK CONSTRAINT; Schema: app_private; Owner: -
+--
+
+ALTER TABLE ONLY app_private.email_verifications
+    ADD CONSTRAINT email_verifications_user_id_fkey FOREIGN KEY (user_id) REFERENCES app_public.users(id) ON UPDATE CASCADE ON DELETE SET NULL;
+
+
+--
 -- Name: article_gallery_images article_gallery_images_gallery_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
 --
 
@@ -3463,14 +2971,6 @@ ALTER TABLE ONLY app_public.document_locales
 
 ALTER TABLE ONLY app_public.document_locales
     ADD CONSTRAINT document_locales_source_id_fkey FOREIGN KEY (source_id) REFERENCES app_public.documents(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: email_verifications email_verifications_user_id_fkey; Type: FK CONSTRAINT; Schema: app_public; Owner: -
---
-
-ALTER TABLE ONLY app_public.email_verifications
-    ADD CONSTRAINT email_verifications_user_id_fkey FOREIGN KEY (user_id) REFERENCES app_public.users(id) ON UPDATE CASCADE ON DELETE SET NULL;
 
 
 --
@@ -3875,6 +3375,40 @@ CREATE EVENT TRIGGER postgraphile_watch_drop ON sql_drop
 
 
 --
+-- Name: promo_codes delete_admin; Type: POLICY; Schema: app_public; Owner: -
+--
+
+CREATE POLICY delete_admin ON app_public.promo_codes FOR DELETE USING ((app_public.current_user_role() = 'admin'::app_public.user_role));
+
+
+--
+-- Name: promo_codes insert_admin; Type: POLICY; Schema: app_public; Owner: -
+--
+
+CREATE POLICY insert_admin ON app_public.promo_codes FOR INSERT WITH CHECK ((app_public.current_user_role() = 'admin'::app_public.user_role));
+
+
+--
+-- Name: promo_codes; Type: ROW SECURITY; Schema: app_public; Owner: -
+--
+
+ALTER TABLE app_public.promo_codes ENABLE ROW LEVEL SECURITY;
+
+--
+-- Name: promo_codes select_admin; Type: POLICY; Schema: app_public; Owner: -
+--
+
+CREATE POLICY select_admin ON app_public.promo_codes FOR SELECT USING ((app_public.current_user_role() = 'admin'::app_public.user_role));
+
+
+--
+-- Name: promo_codes update_admin; Type: POLICY; Schema: app_public; Owner: -
+--
+
+CREATE POLICY update_admin ON app_public.promo_codes FOR UPDATE USING ((app_public.current_user_role() = 'admin'::app_public.user_role));
+
+
+--
 -- Name: job_queues; Type: ROW SECURITY; Schema: graphile_worker; Owner: -
 --
 
@@ -3894,6 +3428,13 @@ GRANT USAGE ON SCHEMA app_hidden TO anm_visitor;
 
 
 --
+-- Name: SCHEMA app_public; Type: ACL; Schema: -; Owner: -
+--
+
+GRANT USAGE ON SCHEMA app_public TO anm_visitor;
+
+
+--
 -- Name: SCHEMA public; Type: ACL; Schema: -; Owner: -
 --
 
@@ -3903,10 +3444,98 @@ GRANT USAGE ON SCHEMA public TO anm_visitor;
 
 
 --
--- Name: FUNCTION set_timestamps(); Type: ACL; Schema: app_private; Owner: -
+-- Name: FUNCTION create_code(len integer, alpha boolean); Type: ACL; Schema: app_private; Owner: -
 --
 
-REVOKE ALL ON FUNCTION app_private.set_timestamps() FROM PUBLIC;
+REVOKE ALL ON FUNCTION app_private.create_code(len integer, alpha boolean) FROM PUBLIC;
+
+
+--
+-- Name: FUNCTION change_user_role(user_id integer, role app_public.user_role); Type: ACL; Schema: app_public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_public.change_user_role(user_id integer, role app_public.user_role) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_public.change_user_role(user_id integer, role app_public.user_role) TO anm_visitor;
+
+
+--
+-- Name: FUNCTION change_user_status(user_id integer, status app_public.user_status); Type: ACL; Schema: app_public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_public.change_user_status(user_id integer, status app_public.user_status) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_public.change_user_status(user_id integer, status app_public.user_status) TO anm_visitor;
+
+
+--
+-- Name: FUNCTION create_promo_code(percent integer, status app_public.promo_code_status, expires_at timestamp with time zone); Type: ACL; Schema: app_public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_public.create_promo_code(percent integer, status app_public.promo_code_status, expires_at timestamp with time zone) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_public.create_promo_code(percent integer, status app_public.promo_code_status, expires_at timestamp with time zone) TO anm_visitor;
+
+
+--
+-- Name: FUNCTION create_promo_codes(count integer, percent integer, status app_public.promo_code_status, expires_at timestamp with time zone); Type: ACL; Schema: app_public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_public.create_promo_codes(count integer, percent integer, status app_public.promo_code_status, expires_at timestamp with time zone) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_public.create_promo_codes(count integer, percent integer, status app_public.promo_code_status, expires_at timestamp with time zone) TO anm_visitor;
+
+
+--
+-- Name: FUNCTION "current_user"(not_null boolean); Type: ACL; Schema: app_public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_public."current_user"(not_null boolean) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_public."current_user"(not_null boolean) TO anm_visitor;
+
+
+--
+-- Name: FUNCTION current_user_id(not_null boolean); Type: ACL; Schema: app_public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_public.current_user_id(not_null boolean) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_public.current_user_id(not_null boolean) TO anm_visitor;
+
+
+--
+-- Name: FUNCTION current_user_role(); Type: ACL; Schema: app_public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_public.current_user_role() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_public.current_user_role() TO anm_visitor;
+
+
+--
+-- Name: FUNCTION forgot_password(email public.citext); Type: ACL; Schema: app_public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_public.forgot_password(email public.citext) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_public.forgot_password(email public.citext) TO anm_visitor;
+
+
+--
+-- Name: FUNCTION reset_password(token text, password text); Type: ACL; Schema: app_public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_public.reset_password(token text, password text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_public.reset_password(token text, password text) TO anm_visitor;
+
+
+--
+-- Name: FUNCTION scores_is_purchased(score app_public.scores); Type: ACL; Schema: app_public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_public.scores_is_purchased(score app_public.scores) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_public.scores_is_purchased(score app_public.scores) TO anm_visitor;
+
+
+--
+-- Name: FUNCTION send_verification_email(); Type: ACL; Schema: app_public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_public.send_verification_email() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_public.send_verification_email() TO anm_visitor;
 
 
 --
@@ -3914,6 +3543,23 @@ REVOKE ALL ON FUNCTION app_private.set_timestamps() FROM PUBLIC;
 --
 
 REVOKE ALL ON FUNCTION app_public.set_timestamps() FROM PUBLIC;
+GRANT ALL ON FUNCTION app_public.set_timestamps() TO anm_visitor;
+
+
+--
+-- Name: FUNCTION users_email_verification_status(i_user app_public.users); Type: ACL; Schema: app_public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_public.users_email_verification_status(i_user app_public.users) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_public.users_email_verification_status(i_user app_public.users) TO anm_visitor;
+
+
+--
+-- Name: FUNCTION verify_email(code text); Type: ACL; Schema: app_public; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_public.verify_email(code text) FROM PUBLIC;
+GRANT ALL ON FUNCTION app_public.verify_email(code text) TO anm_visitor;
 
 
 --
@@ -3931,6 +3577,125 @@ REVOKE ALL ON FUNCTION postgraphile_watch.notify_watchers_drop() FROM PUBLIC;
 
 
 --
+-- Name: SEQUENCE article_galleries_id_seq; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_public.article_galleries_id_seq TO anm_visitor;
+
+
+--
+-- Name: SEQUENCE articles_id_seq; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_public.articles_id_seq TO anm_visitor;
+
+
+--
+-- Name: SEQUENCE compositions_id_seq; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_public.compositions_id_seq TO anm_visitor;
+
+
+--
+-- Name: SEQUENCE contact_messages_id_seq; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_public.contact_messages_id_seq TO anm_visitor;
+
+
+--
+-- Name: SEQUENCE documents_id_seq; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_public.documents_id_seq TO anm_visitor;
+
+
+--
+-- Name: SEQUENCE genres_id_seq; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_public.genres_id_seq TO anm_visitor;
+
+
+--
+-- Name: SEQUENCE groups_id_seq; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_public.groups_id_seq TO anm_visitor;
+
+
+--
+-- Name: SEQUENCE images_id_seq; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_public.images_id_seq TO anm_visitor;
+
+
+--
+-- Name: SEQUENCE instruments_id_seq; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_public.instruments_id_seq TO anm_visitor;
+
+
+--
+-- Name: SEQUENCE media_id_seq; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_public.media_id_seq TO anm_visitor;
+
+
+--
+-- Name: SEQUENCE musicians_id_seq; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_public.musicians_id_seq TO anm_visitor;
+
+
+--
+-- Name: SEQUENCE playlists_id_seq; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_public.playlists_id_seq TO anm_visitor;
+
+
+--
+-- Name: SEQUENCE professions_id_seq; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_public.professions_id_seq TO anm_visitor;
+
+
+--
+-- Name: SEQUENCE purchases_id_seq; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_public.purchases_id_seq TO anm_visitor;
+
+
+--
+-- Name: SEQUENCE scores_id_seq; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_public.scores_id_seq TO anm_visitor;
+
+
+--
+-- Name: SEQUENCE tags_id_seq; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_public.tags_id_seq TO anm_visitor;
+
+
+--
+-- Name: SEQUENCE users_id_seq; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT SELECT,USAGE ON SEQUENCE app_public.users_id_seq TO anm_visitor;
+
+
+--
 -- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: app_hidden; Owner: -
 --
 
@@ -3945,6 +3710,23 @@ ALTER DEFAULT PRIVILEGES FOR ROLE anm IN SCHEMA app_hidden GRANT SELECT,USAGE ON
 ALTER DEFAULT PRIVILEGES FOR ROLE anm IN SCHEMA app_hidden REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
 ALTER DEFAULT PRIVILEGES FOR ROLE anm IN SCHEMA app_hidden REVOKE ALL ON FUNCTIONS  FROM anm;
 ALTER DEFAULT PRIVILEGES FOR ROLE anm IN SCHEMA app_hidden GRANT ALL ON FUNCTIONS  TO anm_visitor;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: app_public; Owner: -
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE anm IN SCHEMA app_public REVOKE ALL ON SEQUENCES  FROM anm;
+ALTER DEFAULT PRIVILEGES FOR ROLE anm IN SCHEMA app_public GRANT SELECT,USAGE ON SEQUENCES  TO anm_visitor;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR FUNCTIONS; Type: DEFAULT ACL; Schema: app_public; Owner: -
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE anm IN SCHEMA app_public REVOKE ALL ON FUNCTIONS  FROM PUBLIC;
+ALTER DEFAULT PRIVILEGES FOR ROLE anm IN SCHEMA app_public REVOKE ALL ON FUNCTIONS  FROM anm;
+ALTER DEFAULT PRIVILEGES FOR ROLE anm IN SCHEMA app_public GRANT ALL ON FUNCTIONS  TO anm_visitor;
 
 
 --
