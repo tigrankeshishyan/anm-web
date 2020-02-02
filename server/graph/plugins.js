@@ -7,7 +7,6 @@ import PgManyToManyPlugin from '@graphile-contrib/pg-many-to-many'
 import ArticleSchema from './plugins/article.plugin'
 import AuthPlugin from './plugins/auth.plugin'
 import AutoUpdatePlugin from './plugins/auto-update.plugin'
-import ContactMessagePlugin from './plugins/contact-message.plugin'
 import ContactSchema from './plugins/contact.plugin'
 import GalleryPlugin from './plugins/gallery.plugin'
 import ImagePlugin from './plugins/image.plugin'
@@ -24,7 +23,6 @@ export default makePluginByCombiningPlugins(
   UserPlugin,
   ImagePlugin,
   ScorePlugin,
-  ContactMessagePlugin,
   PurchasePlugin,
   ArticleSchema,
   ContactSchema,
