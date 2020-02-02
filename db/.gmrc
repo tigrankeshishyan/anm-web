@@ -10,7 +10,7 @@
     "afterReset.sql",
     {
       "_": "command",
-      "command": "yarn workspace worker gw"
+      "command": "yarn workspace server gw"
     }
   ],
   "afterAllMigrations": [
