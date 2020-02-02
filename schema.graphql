@@ -1955,14 +1955,68 @@ input BooleanFilter {
   notIn: [Boolean!]
 }
 
-input BulkPromoInput {
-  """How many to create, maximum 100."""
-  count: Int!
-  expiresAt: Datetime!
-  percent: Int!
+"""All input for the `changeUserRole` mutation."""
+input ChangeUserRoleInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  role: UserRole
+  userId: Int
+}
 
-  """The initial status of promo codes default is 'active'."""
-  status: PromoStatus
+"""The output of our `changeUserRole` mutation."""
+type ChangeUserRolePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+  user: User
+
+  """An edge for our `User`. May be used by Relay 1."""
+  userEdge(
+    """The method to use when ordering `User`."""
+    orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): UsersEdge
+}
+
+"""All input for the `changeUserStatus` mutation."""
+input ChangeUserStatusInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  status: UserStatus
+  userId: Int
+}
+
+"""The output of our `changeUserStatus` mutation."""
+type ChangeUserStatusPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+  user: User
+
+  """An edge for our `User`. May be used by Relay 1."""
+  userEdge(
+    """The method to use when ordering `User`."""
+    orderBy: [UsersOrderBy!] = [PRIMARY_KEY_ASC]
+  ): UsersEdge
 }
 
 type Composition implements Node {
@@ -4435,27 +4489,25 @@ type CreateProfessionPayload {
   query: Query
 }
 
-"""All input for the create `PromoCode` mutation."""
+"""All input for the `createPromoCode` mutation."""
 input CreatePromoCodeInput {
   """
   An arbitrary string value with no semantic meaning. Will be included in the
   payload verbatim. May be used to track mutations by the client.
   """
   clientMutationId: String
-
-  """The `PromoCode` to be created by this mutation."""
-  promoCode: PromoCodeInput!
+  expiresAt: Datetime
+  percent: Int
+  status: PromoCodeStatus
 }
 
-"""The output of our create `PromoCode` mutation."""
+"""The output of our `createPromoCode` mutation."""
 type CreatePromoCodePayload {
   """
   The exact same `clientMutationId` that was provided in the mutation input,
   unchanged and unused. May be used by a client to track mutations.
   """
   clientMutationId: String
-
-  """The `PromoCode` that was created by this mutation."""
   promoCode: PromoCode
 
   """An edge for our `PromoCode`. May be used by Relay 1."""
@@ -4463,6 +4515,34 @@ type CreatePromoCodePayload {
     """The method to use when ordering `PromoCode`."""
     orderBy: [PromoCodesOrderBy!] = [PRIMARY_KEY_ASC]
   ): PromoCodesEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+"""All input for the `createPromoCodes` mutation."""
+input CreatePromoCodesInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  count: Int!
+  expiresAt: Datetime
+  percent: Int!
+  status: PromoCodeStatus
+}
+
+"""The output of our `createPromoCodes` mutation."""
+type CreatePromoCodesPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  promoCodes: [PromoCode]
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -7877,13 +7957,87 @@ input DocumentToManyDocumentLocaleFilter {
   some: DocumentLocaleFilter
 }
 
-type ForgetPasswordPayload {
-  """false if not user with email"""
-  success: Boolean!
+enum EmailVerificationStatus {
+  NOT_VERIFIED
+  SENT
+  VERIFIED
 }
 
+"""
+A filter to be used against EmailVerificationStatus fields. All fields are combined with a logical ‘and.’
+"""
+input EmailVerificationStatusFilter {
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: EmailVerificationStatus
+
+  """Equal to the specified value."""
+  equalTo: EmailVerificationStatus
+
+  """Greater than the specified value."""
+  greaterThan: EmailVerificationStatus
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: EmailVerificationStatus
+
+  """Included in the specified list."""
+  in: [EmailVerificationStatus!]
+
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Less than the specified value."""
+  lessThan: EmailVerificationStatus
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: EmailVerificationStatus
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: EmailVerificationStatus
+
+  """Not equal to the specified value."""
+  notEqualTo: EmailVerificationStatus
+
+  """Not included in the specified list."""
+  notIn: [EmailVerificationStatus!]
+}
+
+type EmailVerifyResult {
+  message: String
+  success: Boolean
+}
+
+"""All input for the `forgotPassword` mutation."""
 input ForgotPasswordInput {
-  email: String!
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  email: String
+}
+
+"""The output of our `forgotPassword` mutation."""
+type ForgotPasswordPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  forgotPasswordResult: ForgotPasswordResult
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+}
+
+type ForgotPasswordResult {
+  message: String
+  success: Boolean
 }
 
 type Genre implements Node {
@@ -16403,7 +16557,18 @@ type Mutation {
     """
     input: ContactInput!
   ): Boolean!
-  changeUserRole(role: String!, userId: Int!): Boolean
+  changeUserRole(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: ChangeUserRoleInput!
+  ): ChangeUserRolePayload
+  changeUserStatus(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: ChangeUserStatusInput!
+  ): ChangeUserStatusPayload
 
   """Creates a single `Article`."""
   createArticle(
@@ -16724,22 +16889,18 @@ type Mutation {
     """
     input: CreateProfessionLocaleInput!
   ): CreateProfessionLocalePayload
-
-  """Create promo codes with same expire date and status."""
-  createPromoBulk(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: BulkPromoInput
-  ): [PromoCode!]!
-
-  """Creates a single `PromoCode`."""
   createPromoCode(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: CreatePromoCodeInput!
   ): CreatePromoCodePayload
+  createPromoCodes(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreatePromoCodesInput!
+  ): CreatePromoCodesPayload
 
   """Creates a single `Purchase`."""
   createPurchase(
@@ -16972,9 +17133,6 @@ type Mutation {
     """
     input: DeleteContactMessageByNodeIdInput!
   ): DeleteContactMessagePayload
-
-  """'true' if user have be removed, 'false' if password was incorrect"""
-  deleteCurrentUser(password: String!): Boolean!
 
   """Deletes a single `Document` using a unique key."""
   deleteDocument(
@@ -17647,12 +17805,12 @@ type Mutation {
     """
     input: DeleteUserByNodeIdInput!
   ): DeleteUserPayload
-  forgetPassword(
+  forgotPassword(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: ForgotPasswordInput!
-  ): ForgetPasswordPayload!
+  ): ForgotPasswordPayload
   login(email: String!, password: String!): LoginPayload!
   logout: Boolean
   resetPassword(
@@ -17660,8 +17818,13 @@ type Mutation {
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
     input: ResetPasswordInput!
-  ): ResetPasswordPayload!
-  sendEmailCode: Boolean
+  ): ResetPasswordPayload
+  sendVerificationEmail(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: SendVerificationEmailInput!
+  ): SendVerificationEmailPayload
 
   """
   "true" on success and "false" if user email not found
@@ -18570,15 +18733,12 @@ type Mutation {
     """
     input: UpdateUserByNodeIdInput!
   ): UpdateUserPayload
-  updateUserStatus(
+  verifyEmail(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
     """
-    input: UpdateUserStatusInput!
-  ): Boolean!
-
-  """Returns attempts remaining for this code, null on success."""
-  verifyEmailCode(code: String!): Int
+    input: VerifyEmailInput!
+  ): VerifyEmailPayload
 }
 
 """An object with a globally unique `ID`."""
@@ -20250,9 +20410,7 @@ type PromoCode implements Node {
 
   """discount percent, default is 0"""
   percent: Int!
-
-  """can be active, used, canceled"""
-  status: String
+  status: PromoCodeStatus!
   updatedAt: Datetime
 }
 
@@ -20274,7 +20432,7 @@ input PromoCodeCondition {
   percent: Int
 
   """Checks for equality with the object’s `status` field."""
-  status: String
+  status: PromoCodeStatus
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
@@ -20306,21 +20464,10 @@ input PromoCodeFilter {
   percent: IntFilter
 
   """Filter by the object’s `status` field."""
-  status: StringFilter
+  status: PromoCodeStatusFilter
 
   """Filter by the object’s `updatedAt` field."""
   updatedAt: DatetimeFilter
-}
-
-"""An input for mutations affecting `PromoCode`"""
-input PromoCodeInput {
-  expiresAt: Datetime
-
-  """discount percent, default is 0"""
-  percent: Int
-
-  """can be active, used, canceled"""
-  status: String
 }
 
 """
@@ -20331,9 +20478,7 @@ input PromoCodePatch {
 
   """discount percent, default is 0"""
   percent: Int
-
-  """can be active, used, canceled"""
-  status: String
+  status: PromoCodeStatus
 }
 
 """A connection to a list of `PromoCode` values."""
@@ -20381,14 +20526,55 @@ enum PromoCodesOrderBy {
   UPDATED_AT_DESC
 }
 
-enum PromoStatus {
+enum PromoCodeStatus {
   ACTIVE
   CANCELED
   USED
 }
 
+"""
+A filter to be used against PromoCodeStatus fields. All fields are combined with a logical ‘and.’
+"""
+input PromoCodeStatusFilter {
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: PromoCodeStatus
+
+  """Equal to the specified value."""
+  equalTo: PromoCodeStatus
+
+  """Greater than the specified value."""
+  greaterThan: PromoCodeStatus
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: PromoCodeStatus
+
+  """Included in the specified list."""
+  in: [PromoCodeStatus!]
+
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Less than the specified value."""
+  lessThan: PromoCodeStatus
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: PromoCodeStatus
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: PromoCodeStatus
+
+  """Not equal to the specified value."""
+  notEqualTo: PromoCodeStatus
+
+  """Not included in the specified list."""
+  notIn: [PromoCodeStatus!]
+}
+
 type Purchase implements Node {
-  """This field is controlled under the hood, don't use it."""
   createdAt: Datetime
 
   """Currency requested fot this purchase"""
@@ -20406,11 +20592,7 @@ type Purchase implements Node {
   """Reads a single `Score` that is related to this `Purchase`."""
   score: Score
   scoreId: Int!
-
-  """PENDING = 1, PAID = 2"""
-  status: Int!
-
-  """This field is controlled under the hood, don't use it."""
+  status: PurchaseStatus!
   updatedAt: Datetime
 
   """Reads a single `User` that is related to this `Purchase`."""
@@ -20445,7 +20627,7 @@ input PurchaseCondition {
   scoreId: Int
 
   """Checks for equality with the object’s `status` field."""
-  status: Int
+  status: PurchaseStatus
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
@@ -20492,7 +20674,7 @@ input PurchaseFilter {
   scoreId: IntFilter
 
   """Filter by the object’s `status` field."""
-  status: IntFilter
+  status: PurchaseStatusFilter
 
   """Filter by the object’s `updatedAt` field."""
   updatedAt: DatetimeFilter
@@ -20509,18 +20691,11 @@ input PurchaseFilter {
 
 """An input for mutations affecting `Purchase`"""
 input PurchaseInput {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
   discountPrice: BigFloat
   price: BigFloat!
   promoCode: String
   scoreId: Int!
-
-  """PENDING = 1, PAID = 2"""
-  status: Int!
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
+  status: PurchaseStatus
   userId: Int
 }
 
@@ -20528,21 +20703,13 @@ input PurchaseInput {
 Represents an update to a `Purchase`. Fields that are set will be updated.
 """
 input PurchasePatch {
-  """This field is controlled under the hood, don't use it."""
-  createdAt: Datetime
-
   """Currency requested fot this purchase"""
   currency: String
   discountPrice: BigFloat
   price: BigFloat
   promoCode: String
   scoreId: Int
-
-  """PENDING = 1, PAID = 2"""
-  status: Int
-
-  """This field is controlled under the hood, don't use it."""
-  updatedAt: Datetime
+  status: PurchaseStatus
   userId: Int
 }
 
@@ -20622,6 +20789,54 @@ enum PurchasesOrderBy {
   UPDATED_AT_DESC
   USER_ID_ASC
   USER_ID_DESC
+}
+
+enum PurchaseStatus {
+  CANCELED
+  PAID
+  PENDING
+}
+
+"""
+A filter to be used against PurchaseStatus fields. All fields are combined with a logical ‘and.’
+"""
+input PurchaseStatusFilter {
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: PurchaseStatus
+
+  """Equal to the specified value."""
+  equalTo: PurchaseStatus
+
+  """Greater than the specified value."""
+  greaterThan: PurchaseStatus
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: PurchaseStatus
+
+  """Included in the specified list."""
+  in: [PurchaseStatus!]
+
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Less than the specified value."""
+  lessThan: PurchaseStatus
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: PurchaseStatus
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: PurchaseStatus
+
+  """Not equal to the specified value."""
+  notEqualTo: PurchaseStatus
+
+  """Not included in the specified list."""
+  notIn: [PurchaseStatus!]
 }
 
 """The root query type which gives access points into the data universe."""
@@ -21276,7 +21491,9 @@ type Query implements Node {
     """The method to use when ordering `ContactMessage`."""
     orderBy: [ContactMessagesOrderBy!]
   ): [ContactMessage!]
-  currentUser: User
+  currentUser(notNull: Boolean): User
+  currentUserId(notNull: Boolean): Int
+  currentUserRole: UserRole
   document(id: Int!): Document
 
   """Reads a single `Document` using its globally unique `ID`."""
@@ -23764,14 +23981,35 @@ type Query implements Node {
   ): [User!]
 }
 
+"""All input for the `resetPassword` mutation."""
 input ResetPasswordInput {
-  newPassword: String!
-  token: String!
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  password: String
+  token: String
 }
 
+"""The output of our `resetPassword` mutation."""
 type ResetPasswordPayload {
-  """false if token is missing or expired"""
-  success: Boolean!
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+  resetPasswordResult: ResetPasswordResult
+}
+
+type ResetPasswordResult {
+  message: String
+  success: Boolean
 }
 
 type Score implements Node {
@@ -23837,6 +24075,7 @@ type Score implements Node {
     """The method to use when ordering `Instrument`."""
     orderBy: [InstrumentsOrderBy!]
   ): [Instrument!]!
+  isPurchased: Boolean
 
   """Reads and enables pagination through a set of `Language`."""
   languages(
@@ -24218,6 +24457,9 @@ input ScoreFilter {
 
   """Filter by the object’s `id` field."""
   id: IntFilter
+
+  """Filter by the object’s `isPurchased` field."""
+  isPurchased: BooleanFilter
 
   """Negates the expression."""
   not: ScoreFilter
@@ -24715,6 +24957,35 @@ input ScoreToManyScoreLocaleFilter {
   Some related `ScoreLocale` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   some: ScoreLocaleFilter
+}
+
+"""All input for the `sendVerificationEmail` mutation."""
+input SendVerificationEmailInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+}
+
+"""The output of our `sendVerificationEmail` mutation."""
+type SendVerificationEmailPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
+  sendVerificationEmailResult: SendVerificationEmailResult
+}
+
+type SendVerificationEmailResult {
+  message: String
+  success: Boolean
 }
 
 """
@@ -28558,12 +28829,6 @@ type UpdateUserPayload {
   ): UsersEdge
 }
 
-input UpdateUserStatusInput {
-  """0 active, 1 blocked"""
-  status: Int!
-  userId: Int!
-}
-
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
@@ -28738,12 +29003,7 @@ type User implements Node {
   avatar: String
   createdAt: Datetime
   email: String
-
-  """
-  The verification status. Will be null,
-  if there is no verification attempts.
-  """
-  emailVerificationStatus: String
+  emailVerificationStatus: EmailVerificationStatus
   facebookId: BigInt
   firstName: String
   id: Int!
@@ -28866,7 +29126,7 @@ type User implements Node {
     """The method to use when ordering `Purchase`."""
     orderBy: [PurchasesOrderBy!]
   ): [Purchase!]!
-  role: String!
+  role: UserRole!
 
   """Reads and enables pagination through a set of `Score`."""
   scores(
@@ -29011,7 +29271,7 @@ input UserCondition {
   password: String
 
   """Checks for equality with the object’s `role` field."""
-  role: String
+  role: UserRole
 
   """Checks for equality with the object’s `updatedAt` field."""
   updatedAt: Datetime
@@ -29044,6 +29304,9 @@ input UserFilter {
 
   """Filter by the object’s `email` field."""
   email: StringFilter
+
+  """Filter by the object’s `emailVerificationStatus` field."""
+  emailVerificationStatus: EmailVerificationStatusFilter
 
   """Filter by the object’s `facebookId` field."""
   facebookId: BigIntFilter
@@ -29079,7 +29342,7 @@ input UserFilter {
   purchasesExist: Boolean
 
   """Filter by the object’s `role` field."""
-  role: StringFilter
+  role: UserRoleFilter
 
   """Filter by the object’s `updatedAt` field."""
   updatedAt: DatetimeFilter
@@ -29102,6 +29365,54 @@ input UserPatch {
   facebookId: BigInt
   firstName: String
   lastName: String
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+  MEMBER
+}
+
+"""
+A filter to be used against UserRole fields. All fields are combined with a logical ‘and.’
+"""
+input UserRoleFilter {
+  """
+  Not equal to the specified value, treating null like an ordinary value.
+  """
+  distinctFrom: UserRole
+
+  """Equal to the specified value."""
+  equalTo: UserRole
+
+  """Greater than the specified value."""
+  greaterThan: UserRole
+
+  """Greater than or equal to the specified value."""
+  greaterThanOrEqualTo: UserRole
+
+  """Included in the specified list."""
+  in: [UserRole!]
+
+  """
+  Is null (if `true` is specified) or is not null (if `false` is specified).
+  """
+  isNull: Boolean
+
+  """Less than the specified value."""
+  lessThan: UserRole
+
+  """Less than or equal to the specified value."""
+  lessThanOrEqualTo: UserRole
+
+  """Equal to the specified value, treating null like an ordinary value."""
+  notDistinctFrom: UserRole
+
+  """Not equal to the specified value."""
+  notEqualTo: UserRole
+
+  """Not included in the specified list."""
+  notIn: [UserRole!]
 }
 
 """A connection to a list of `User` values."""
@@ -29155,6 +29466,11 @@ enum UsersOrderBy {
   ROLE_DESC
   UPDATED_AT_ASC
   UPDATED_AT_DESC
+}
+
+enum UserStatus {
+  ACTIVE
+  BLOCKED
 }
 
 """
@@ -29215,4 +29531,29 @@ input UserToManyPurchaseFilter {
   Some related `Purchase` matches the filter criteria. All fields are combined with a logical ‘and.’
   """
   some: PurchaseFilter
+}
+
+"""All input for the `verifyEmail` mutation."""
+input VerifyEmailInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  code: String
+}
+
+"""The output of our `verifyEmail` mutation."""
+type VerifyEmailPayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  emailVerifyResult: EmailVerifyResult
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
 }
