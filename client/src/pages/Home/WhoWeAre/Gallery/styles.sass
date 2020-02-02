@@ -1,9 +1,15 @@
-@import "../../../../styles/variables"
+@import "~styles/variables"
 
 .who-we-are-gallery-wrapper
   width: 90%
   border-top-left-radius: $app-border-radius
   border-bottom-left-radius: $app-border-radius
+
+  .slider-image
+    @media (max-width: $sm-starts)
+      height: 28.125rem
+    @media (max-width: $xs-starts)
+      height: 18.75rem
 
   @media (max-width: $sm-starts)
     width: 100%
