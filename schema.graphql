@@ -2720,151 +2720,6 @@ input ContactInput {
   lastName: String
 }
 
-type ContactMessage implements Node {
-  """optional file attached by user"""
-  attachedFile: String
-  createdAt: Datetime!
-  email: String!
-  id: Int!
-  message: String!
-  name: String
-
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  updatedAt: Datetime!
-}
-
-"""
-A condition to be used against `ContactMessage` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input ContactMessageCondition {
-  """Checks for equality with the object’s `attachedFile` field."""
-  attachedFile: String
-
-  """Checks for equality with the object’s `createdAt` field."""
-  createdAt: Datetime
-
-  """Checks for equality with the object’s `email` field."""
-  email: String
-
-  """Checks for equality with the object’s `id` field."""
-  id: Int
-
-  """Checks for equality with the object’s `message` field."""
-  message: String
-
-  """Checks for equality with the object’s `name` field."""
-  name: String
-
-  """Checks for equality with the object’s `updatedAt` field."""
-  updatedAt: Datetime
-}
-
-"""
-A filter to be used against `ContactMessage` object types. All fields are combined with a logical ‘and.’
-"""
-input ContactMessageFilter {
-  """Checks for all expressions in this list."""
-  and: [ContactMessageFilter!]
-
-  """Filter by the object’s `attachedFile` field."""
-  attachedFile: StringFilter
-
-  """Filter by the object’s `createdAt` field."""
-  createdAt: DatetimeFilter
-
-  """Filter by the object’s `email` field."""
-  email: StringFilter
-
-  """Filter by the object’s `id` field."""
-  id: IntFilter
-
-  """Filter by the object’s `message` field."""
-  message: StringFilter
-
-  """Filter by the object’s `name` field."""
-  name: StringFilter
-
-  """Negates the expression."""
-  not: ContactMessageFilter
-
-  """Checks for any expressions in this list."""
-  or: [ContactMessageFilter!]
-
-  """Filter by the object’s `updatedAt` field."""
-  updatedAt: DatetimeFilter
-}
-
-"""An input for mutations affecting `ContactMessage`"""
-input ContactMessageInput {
-  """optional file attached by user"""
-  attachedFile: Upload
-  email: String!
-  message: String!
-  name: String
-}
-
-"""
-Represents an update to a `ContactMessage`. Fields that are set will be updated.
-"""
-input ContactMessagePatch {
-  """optional file attached by user"""
-  attachedFile: Upload
-  email: String
-  message: String
-  name: String
-}
-
-"""A connection to a list of `ContactMessage` values."""
-type ContactMessagesConnection {
-  """
-  A list of edges which contains the `ContactMessage` and cursor to aid in pagination.
-  """
-  edges: [ContactMessagesEdge!]!
-
-  """A list of `ContactMessage` objects."""
-  nodes: [ContactMessage]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """The count of *all* `ContactMessage` you could get from the connection."""
-  totalCount: Int!
-}
-
-"""A `ContactMessage` edge in the connection."""
-type ContactMessagesEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `ContactMessage` at the end of the edge."""
-  node: ContactMessage
-}
-
-"""Methods to use when ordering `ContactMessage`."""
-enum ContactMessagesOrderBy {
-  ATTACHED_FILE_ASC
-  ATTACHED_FILE_DESC
-  CREATED_AT_ASC
-  CREATED_AT_DESC
-  EMAIL_ASC
-  EMAIL_DESC
-  ID_ASC
-  ID_DESC
-  MESSAGE_ASC
-  MESSAGE_DESC
-  NAME_ASC
-  NAME_DESC
-  NATURAL
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-  UPDATED_AT_ASC
-  UPDATED_AT_DESC
-}
-
 """All input for the create `ArticleGalleryImage` mutation."""
 input CreateArticleGalleryImageInput {
   """The `ArticleGalleryImage` to be created by this mutation."""
@@ -3228,41 +3083,6 @@ type CreateCompositionPayload {
     """The method to use when ordering `Composition`."""
     orderBy: [CompositionsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompositionsEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the create `ContactMessage` mutation."""
-input CreateContactMessageInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `ContactMessage` to be created by this mutation."""
-  contactMessage: ContactMessageInput!
-}
-
-"""The output of our create `ContactMessage` mutation."""
-type CreateContactMessagePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `ContactMessage` that was created by this mutation."""
-  contactMessage: ContactMessage
-
-  """An edge for our `ContactMessage`. May be used by Relay 1."""
-  contactMessageEdge(
-    """The method to use when ordering `ContactMessage`."""
-    orderBy: [ContactMessagesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ContactMessagesEdge
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -4220,6 +4040,41 @@ type CreateMusicianTagPayload {
 
   """Reads a single `Tag` that is related to this `MusicianTag`."""
   tag: Tag
+}
+
+"""All input for the create `OpenMessage` mutation."""
+input CreateOpenMessageInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """The `OpenMessage` to be created by this mutation."""
+  openMessage: OpenMessageInput!
+}
+
+"""The output of our create `OpenMessage` mutation."""
+type CreateOpenMessagePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `OpenMessage` that was created by this mutation."""
+  openMessage: OpenMessage
+
+  """An edge for our `OpenMessage`. May be used by Relay 1."""
+  openMessageEdge(
+    """The method to use when ordering `OpenMessage`."""
+    orderBy: [OpenMessagesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): OpenMessagesEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
 }
 
 """All input for the create `PageSection` mutation."""
@@ -5443,54 +5298,6 @@ type DeleteCompositionPayload {
     orderBy: [CompositionsOrderBy!] = [PRIMARY_KEY_ASC]
   ): CompositionsEdge
   deletedCompositionNodeId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
-"""All input for the `deleteContactMessageByNodeId` mutation."""
-input DeleteContactMessageByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `ContactMessage` to be deleted.
-  """
-  nodeId: ID!
-}
-
-"""All input for the `deleteContactMessage` mutation."""
-input DeleteContactMessageInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: Int!
-}
-
-"""The output of our delete `ContactMessage` mutation."""
-type DeleteContactMessagePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `ContactMessage` that was deleted by this mutation."""
-  contactMessage: ContactMessage
-
-  """An edge for our `ContactMessage`. May be used by Relay 1."""
-  contactMessageEdge(
-    """The method to use when ordering `ContactMessage`."""
-    orderBy: [ContactMessagesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ContactMessagesEdge
-  deletedContactMessageNodeId: ID
 
   """
   Our root query field type. Allows us to run any query from our mutation payload.
@@ -6760,6 +6567,54 @@ type DeleteMusicianTagPayload {
 
   """Reads a single `Tag` that is related to this `MusicianTag`."""
   tag: Tag
+}
+
+"""All input for the `deleteOpenMessageByNodeId` mutation."""
+input DeleteOpenMessageByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `OpenMessage` to be deleted.
+  """
+  nodeId: ID!
+}
+
+"""All input for the `deleteOpenMessage` mutation."""
+input DeleteOpenMessageInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: Int!
+}
+
+"""The output of our delete `OpenMessage` mutation."""
+type DeleteOpenMessagePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+  deletedOpenMessageNodeId: ID
+
+  """The `OpenMessage` that was deleted by this mutation."""
+  openMessage: OpenMessage
+
+  """An edge for our `OpenMessage`. May be used by Relay 1."""
+  openMessageEdge(
+    """The method to use when ordering `OpenMessage`."""
+    orderBy: [OpenMessagesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): OpenMessagesEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
 }
 
 """All input for the `deletePageSectionByNodeId` mutation."""
@@ -16642,14 +16497,6 @@ type Mutation {
     input: CreateCompositionLocaleInput!
   ): CreateCompositionLocalePayload
 
-  """Creates a single `ContactMessage`."""
-  createContactMessage(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateContactMessageInput!
-  ): CreateContactMessagePayload
-
   """Creates a single `Document`."""
   createDocument(
     """
@@ -16841,6 +16688,14 @@ type Mutation {
     """
     input: CreateMusicianTagInput!
   ): CreateMusicianTagPayload
+
+  """Creates a single `OpenMessage`."""
+  createOpenMessage(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: CreateOpenMessageInput!
+  ): CreateOpenMessagePayload
 
   """Creates a single `PageSection`."""
   createPageSection(
@@ -17117,22 +16972,6 @@ type Mutation {
     """
     input: DeleteCompositionLocaleByNodeIdInput!
   ): DeleteCompositionLocalePayload
-
-  """Deletes a single `ContactMessage` using a unique key."""
-  deleteContactMessage(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteContactMessageInput!
-  ): DeleteContactMessagePayload
-
-  """Deletes a single `ContactMessage` using its globally unique id."""
-  deleteContactMessageByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteContactMessageByNodeIdInput!
-  ): DeleteContactMessagePayload
 
   """Deletes a single `Document` using a unique key."""
   deleteDocument(
@@ -17525,6 +17364,22 @@ type Mutation {
     """
     input: DeleteMusicianTagByNodeIdInput!
   ): DeleteMusicianTagPayload
+
+  """Deletes a single `OpenMessage` using a unique key."""
+  deleteOpenMessage(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteOpenMessageInput!
+  ): DeleteOpenMessagePayload
+
+  """Deletes a single `OpenMessage` using its globally unique id."""
+  deleteOpenMessageByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: DeleteOpenMessageByNodeIdInput!
+  ): DeleteOpenMessagePayload
 
   """Deletes a single `PageSection` using a unique key."""
   deletePageSection(
@@ -17989,24 +17844,6 @@ type Mutation {
     """
     input: UpdateCompositionLocaleByNodeIdInput!
   ): UpdateCompositionLocalePayload
-
-  """Updates a single `ContactMessage` using a unique key and a patch."""
-  updateContactMessage(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateContactMessageInput!
-  ): UpdateContactMessagePayload
-
-  """
-  Updates a single `ContactMessage` using its globally unique id and a patch.
-  """
-  updateContactMessageByNodeId(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateContactMessageByNodeIdInput!
-  ): UpdateContactMessagePayload
   updateCurrentUser(
     """
     The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
@@ -18440,6 +18277,24 @@ type Mutation {
     input: UpdateMusicianTagByNodeIdInput!
   ): UpdateMusicianTagPayload
 
+  """Updates a single `OpenMessage` using a unique key and a patch."""
+  updateOpenMessage(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateOpenMessageInput!
+  ): UpdateOpenMessagePayload
+
+  """
+  Updates a single `OpenMessage` using its globally unique id and a patch.
+  """
+  updateOpenMessageByNodeId(
+    """
+    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
+    """
+    input: UpdateOpenMessageByNodeIdInput!
+  ): UpdateOpenMessagePayload
+
   """Updates a single `PageSection` using a unique key and a patch."""
   updatePageSection(
     """
@@ -18747,6 +18602,148 @@ interface Node {
   A globally unique identifier. Can be used in various places throughout the system to identify this single value.
   """
   nodeId: ID!
+}
+
+"""Open message that anyone can send to support team."""
+type OpenMessage implements Node {
+  attachedFile: String
+  createdAt: Datetime!
+  email: String!
+  id: Int!
+  message: String!
+  name: String
+
+  """
+  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
+  """
+  nodeId: ID!
+  updatedAt: Datetime!
+}
+
+"""
+A condition to be used against `OpenMessage` object types. All fields are tested
+for equality and combined with a logical ‘and.’
+"""
+input OpenMessageCondition {
+  """Checks for equality with the object’s `attachedFile` field."""
+  attachedFile: String
+
+  """Checks for equality with the object’s `createdAt` field."""
+  createdAt: Datetime
+
+  """Checks for equality with the object’s `email` field."""
+  email: String
+
+  """Checks for equality with the object’s `id` field."""
+  id: Int
+
+  """Checks for equality with the object’s `message` field."""
+  message: String
+
+  """Checks for equality with the object’s `name` field."""
+  name: String
+
+  """Checks for equality with the object’s `updatedAt` field."""
+  updatedAt: Datetime
+}
+
+"""
+A filter to be used against `OpenMessage` object types. All fields are combined with a logical ‘and.’
+"""
+input OpenMessageFilter {
+  """Checks for all expressions in this list."""
+  and: [OpenMessageFilter!]
+
+  """Filter by the object’s `attachedFile` field."""
+  attachedFile: StringFilter
+
+  """Filter by the object’s `createdAt` field."""
+  createdAt: DatetimeFilter
+
+  """Filter by the object’s `email` field."""
+  email: StringFilter
+
+  """Filter by the object’s `id` field."""
+  id: IntFilter
+
+  """Filter by the object’s `message` field."""
+  message: StringFilter
+
+  """Filter by the object’s `name` field."""
+  name: StringFilter
+
+  """Negates the expression."""
+  not: OpenMessageFilter
+
+  """Checks for any expressions in this list."""
+  or: [OpenMessageFilter!]
+
+  """Filter by the object’s `updatedAt` field."""
+  updatedAt: DatetimeFilter
+}
+
+"""An input for mutations affecting `OpenMessage`"""
+input OpenMessageInput {
+  attachedFile: String
+  email: String!
+  message: String!
+  name: String
+}
+
+"""
+Represents an update to a `OpenMessage`. Fields that are set will be updated.
+"""
+input OpenMessagePatch {
+  attachedFile: String
+  message: String
+  name: String
+}
+
+"""A connection to a list of `OpenMessage` values."""
+type OpenMessagesConnection {
+  """
+  A list of edges which contains the `OpenMessage` and cursor to aid in pagination.
+  """
+  edges: [OpenMessagesEdge!]!
+
+  """A list of `OpenMessage` objects."""
+  nodes: [OpenMessage]!
+
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """The count of *all* `OpenMessage` you could get from the connection."""
+  totalCount: Int!
+}
+
+"""A `OpenMessage` edge in the connection."""
+type OpenMessagesEdge {
+  """A cursor for use in pagination."""
+  cursor: Cursor
+
+  """The `OpenMessage` at the end of the edge."""
+  node: OpenMessage
+}
+
+"""Methods to use when ordering `OpenMessage`."""
+enum OpenMessagesOrderBy {
+  ATTACHED_FILE_ASC
+  ATTACHED_FILE_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  EMAIL_ASC
+  EMAIL_DESC
+  ID_ASC
+  ID_DESC
+  MESSAGE_ASC
+  MESSAGE_DESC
+  NAME_ASC
+  NAME_DESC
+  NATURAL
+  PRIMARY_KEY_ASC
+  PRIMARY_KEY_DESC
+  UPDATED_AT_ASC
+  UPDATED_AT_DESC
 }
 
 """Information about pagination in a connection."""
@@ -21426,71 +21423,6 @@ type Query implements Node {
     """The method to use when ordering `Composition`."""
     orderBy: [CompositionsOrderBy!]
   ): [Composition!]
-  contactMessage(id: Int!): ContactMessage
-
-  """Reads a single `ContactMessage` using its globally unique `ID`."""
-  contactMessageByNodeId(
-    """
-    The globally unique `ID` to be used in selecting a single `ContactMessage`.
-    """
-    nodeId: ID!
-  ): ContactMessage
-
-  """Reads and enables pagination through a set of `ContactMessage`."""
-  contactMessages(
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ContactMessageCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ContactMessageFilter
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """The method to use when ordering `ContactMessage`."""
-    orderBy: [ContactMessagesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ContactMessagesConnection
-
-  """Reads a set of `ContactMessage`."""
-  contactMessagesList(
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ContactMessageCondition
-
-    """
-    A filter to be used in determining which values should be returned by the collection.
-    """
-    filter: ContactMessageFilter
-
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Skip the first `n` values."""
-    offset: Int
-
-    """The method to use when ordering `ContactMessage`."""
-    orderBy: [ContactMessagesOrderBy!]
-  ): [ContactMessage!]
   currentUser(notNull: Boolean): User
   currentUserId(notNull: Boolean): Int
   currentUserRole: UserRole
@@ -23057,6 +22989,71 @@ type Query implements Node {
   The root query type must be a `Node` to work well with Relay 1 mutations. This just resolves to `query`.
   """
   nodeId: ID!
+  openMessage(id: Int!): OpenMessage
+
+  """Reads a single `OpenMessage` using its globally unique `ID`."""
+  openMessageByNodeId(
+    """
+    The globally unique `ID` to be used in selecting a single `OpenMessage`.
+    """
+    nodeId: ID!
+  ): OpenMessage
+
+  """Reads and enables pagination through a set of `OpenMessage`."""
+  openMessages(
+    """Read all values in the set after (below) this cursor."""
+    after: Cursor
+
+    """Read all values in the set before (above) this cursor."""
+    before: Cursor
+
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: OpenMessageCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: OpenMessageFilter
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Only read the last `n` values of the set."""
+    last: Int
+
+    """
+    Skip the first `n` values from our `after` cursor, an alternative to cursor
+    based pagination. May not be used with `last`.
+    """
+    offset: Int
+
+    """The method to use when ordering `OpenMessage`."""
+    orderBy: [OpenMessagesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): OpenMessagesConnection
+
+  """Reads a set of `OpenMessage`."""
+  openMessagesList(
+    """
+    A condition to be used in determining which values should be returned by the collection.
+    """
+    condition: OpenMessageCondition
+
+    """
+    A filter to be used in determining which values should be returned by the collection.
+    """
+    filter: OpenMessageFilter
+
+    """Only read the first `n` values of the set."""
+    first: Int
+
+    """Skip the first `n` values."""
+    offset: Int
+
+    """The method to use when ordering `OpenMessage`."""
+    orderBy: [OpenMessagesOrderBy!]
+  ): [OpenMessage!]
   pageSection(name: String!, page: String!): PageSection
 
   """Reads a single `PageSection` using its globally unique `ID`."""
@@ -26310,63 +26307,6 @@ type UpdateCompositionPayload {
   query: Query
 }
 
-"""All input for the `updateContactMessageByNodeId` mutation."""
-input UpdateContactMessageByNodeIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `ContactMessage` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `ContactMessage` being updated.
-  """
-  patch: ContactMessagePatch!
-}
-
-"""All input for the `updateContactMessage` mutation."""
-input UpdateContactMessageInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: Int!
-
-  """
-  An object where the defined keys will be set on the `ContactMessage` being updated.
-  """
-  patch: ContactMessagePatch!
-}
-
-"""The output of our update `ContactMessage` mutation."""
-type UpdateContactMessagePayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `ContactMessage` that was updated by this mutation."""
-  contactMessage: ContactMessage
-
-  """An edge for our `ContactMessage`. May be used by Relay 1."""
-  contactMessageEdge(
-    """The method to use when ordering `ContactMessage`."""
-    orderBy: [ContactMessagesOrderBy!] = [PRIMARY_KEY_ASC]
-  ): ContactMessagesEdge
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-}
-
 type UpdateCurrentUserPayload {
   currentUser: User!
   query: Query
@@ -27856,6 +27796,63 @@ type UpdateMusicianTagPayload {
 
   """Reads a single `Tag` that is related to this `MusicianTag`."""
   tag: Tag
+}
+
+"""All input for the `updateOpenMessageByNodeId` mutation."""
+input UpdateOpenMessageByNodeIdInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+
+  """
+  The globally unique `ID` which will identify a single `OpenMessage` to be updated.
+  """
+  nodeId: ID!
+
+  """
+  An object where the defined keys will be set on the `OpenMessage` being updated.
+  """
+  patch: OpenMessagePatch!
+}
+
+"""All input for the `updateOpenMessage` mutation."""
+input UpdateOpenMessageInput {
+  """
+  An arbitrary string value with no semantic meaning. Will be included in the
+  payload verbatim. May be used to track mutations by the client.
+  """
+  clientMutationId: String
+  id: Int!
+
+  """
+  An object where the defined keys will be set on the `OpenMessage` being updated.
+  """
+  patch: OpenMessagePatch!
+}
+
+"""The output of our update `OpenMessage` mutation."""
+type UpdateOpenMessagePayload {
+  """
+  The exact same `clientMutationId` that was provided in the mutation input,
+  unchanged and unused. May be used by a client to track mutations.
+  """
+  clientMutationId: String
+
+  """The `OpenMessage` that was updated by this mutation."""
+  openMessage: OpenMessage
+
+  """An edge for our `OpenMessage`. May be used by Relay 1."""
+  openMessageEdge(
+    """The method to use when ordering `OpenMessage`."""
+    orderBy: [OpenMessagesOrderBy!] = [PRIMARY_KEY_ASC]
+  ): OpenMessagesEdge
+
+  """
+  Our root query field type. Allows us to run any query from our mutation payload.
+  """
+  query: Query
 }
 
 """All input for the `updatePageSectionByNodeId` mutation."""
