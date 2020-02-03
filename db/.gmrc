@@ -14,11 +14,11 @@
     }
   ],
   "afterAllMigrations": [
+    "afterAll.sql",
     {
       "_": "command",
       "command": "pg_dump --schema-only --no-owner --exclude-schema=graphile_migrate --file=schema.sql \"$GM_DBURL\""
-    },
-    "afterAll.sql"
+    }
   ],
   "afterCurrent": [
     "afterAll.sql"
