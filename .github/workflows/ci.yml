@@ -22,27 +22,43 @@ jobs:
       shell: bash
       run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       id: extract_branch
-
+    
     - uses: actions/checkout@v1
       with:
         ref: ${{steps.extract_branch.outputs.branch}}
+        
+        
+    - name: Get yarn cache
+      id: yarn-cache
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+    - uses: actions/cache@v1
+      with:
+        path: ${{ steps.yarn-cache.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+          
     - name: Use Node.js 12.x
       uses: actions/setup-node@v1
       with:
         node-version: '12.x'
+
     - run: ssh-keyscan ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+
+    - run: yarn client install
+    - name: Build with 
+      run: yarn client build-${{ steps.extract_branch.outputs.branch }}
+      
     - name: deploy client
       env:
         ANM_ENV: ${{steps.extract_branch.outputs.branch}}
-      run: |
-        yarn install
-        yarn push
+      run: yarn sync
 
     - name: deploy server
       run: >-
         ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER }}
-        'cd ~/anm/${{steps.extract_branch.outputs.branch}}/server/;
-        ANM_ENV=${{steps.extract_branch.outputs.branch}} yarn pull;
-        pm2 restart ${{steps.extract_branch.outputs.branch}}-web'
+        'cd ~/anm/${{steps.extract_branch.outputs.branch}}/web/;
+        ANM_ENV=${{steps.extract_branch.outputs.branch}} yarn server pull;
+        pm2 restart ${{steps.extract_branch.outputs.branch}}'
         
       
