@@ -20,7 +20,7 @@ import withUser from 'hoc/withUser';
 
 import {
   SCORE_DETAIL,
-} from 'locales/constants';
+} from 'localization/constants';
 
 import ContentSection from 'sections/ContentSection';
 
@@ -70,7 +70,6 @@ function ScoreDetails(props) {
       <ContentSection className="anm-scores">
         <Grid
           container
-          spacing={8}
           justify="space-around"
           className="mrg-top-15"
         >
@@ -78,6 +77,7 @@ function ScoreDetails(props) {
             item
             md={6}
             xs={12}
+            className="pad-sides-10"
           >
             {
               !isScorePurchaseCheckLoading && pdfUrl ? (
@@ -104,6 +104,7 @@ function ScoreDetails(props) {
             item
             md={6}
             xs={12}
+            className="pad-sides-10"
           >
             <div className="flex-column justify-center grow mrg-top-15">
               <Typography

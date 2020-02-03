@@ -130,6 +130,7 @@ function ContactUs(props) {
       />
 
       <PosterWithSectionBlock
+        hideBlockOnMobile
         url={pagePosterUrl}
       />
 

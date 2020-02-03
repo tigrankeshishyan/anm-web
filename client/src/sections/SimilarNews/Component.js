@@ -44,7 +44,6 @@ function SimilarNews(props) {
         {hasArticles && (
           <>
             <SectionTitle
-              type="short"
               position="right"
               title={i18n('similarNews')}
             />

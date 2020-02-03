@@ -33,7 +33,6 @@ function HomeLatestNewsSection(props) {
     <Loading isLoading={loading}>
       <div className="latest-news">
         <SectionTitle
-          type="short"
           linkTo="/news"
           position="right"
           title={i18n('news')}

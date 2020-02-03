@@ -6,7 +6,7 @@ import {
 } from 'react-cookie-banner';
 
 import { withI18n } from 'localization/helpers';
-import { getCurrentLang } from 'locales/helpers';
+import { getCurrentLang } from 'localization/helpers';
 
 import './styles.sass';
 

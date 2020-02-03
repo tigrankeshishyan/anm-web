@@ -23,7 +23,14 @@ const defaultOffsetCount = 10;
 
 const tagIdKey = 'tagId';
 
-function News(props) {
+const getTagId = loc => {
+  const params = new URLSearchParams(loc.search);
+  return Number(params.get(tagIdKey));
+};
+
+const isTagIncluded = loc => loc.search.includes(tagIdKey);
+
+function News (props) {
   const [
     fetchNews,
     {
@@ -41,18 +48,21 @@ function News(props) {
 
   const [fetchTags, { data: tagsData }] = useLazyQuery(FETCH_TAGS);
 
-  const handleNewsFetch = useCallback(() => {
+  const fetchNewsByTag = useCallback(() => {
     const variables = {
+      filter: {
+        ...defaultFilter,
+      },
       count: defaultOffsetCount,
     };
 
-    if (props.tagId) {
+    if (isTagIncluded(props.location)) {
       variables.filter = {
-        ...defaultFilter,
+        ...variables.filter,
         articleTags: {
           some: {
             tagId: {
-              equalTo: props.tagId,
+              equalTo: getTagId(props.location),
             }
           }
         }
@@ -65,16 +75,13 @@ function News(props) {
   }, [fetchNews, props]);
 
   useEffect(() => {
-    if (props.location.search) {
-      handleNewsFetch();
+    if (isTagIncluded(props.location)) {
+      fetchTags();
+      fetchNewsByTag();
     } else {
       fetchNews();
     }
-
-    if (props.location.search.includes(tagIdKey)) {
-      fetchTags();
-    }
-  }, [fetchTags, handleNewsFetch, fetchNews, props.location.search]);
+  }, [fetchTags, fetchNewsByTag, fetchNews, props.location]);
 
   const {
     i18n,
@@ -84,8 +91,7 @@ function News(props) {
 
   const news = lodashGet(data, 'articles.nodes', []);
   const totalCount = lodashGet(data, 'articles.totalCount', {});
-  const params = new URLSearchParams(location.search);
-  const tagId = Number(params.get(tagIdKey));
+  const tagId = getTagId(location);
   const currentTag = tagId && tagsData && tagsData.tags
     ? tagsData.tags.find(tag => tag.id === tagId)
     : null;

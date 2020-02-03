@@ -3,8 +3,6 @@ import { useHistory } from 'react-router-dom';
 import ReactGoogleAnalytics from 'react-ga';
 import ReactFacebookPixel from 'react-facebook-pixel';
 
-import { isWindowExists } from 'helpers';
-
 let lastLocation = '/';
 
 const transitionDelay = 300;
@@ -24,7 +22,7 @@ function RouteProvider(props) {
       lastLocation = pathname;
 
       // Scroll the view to the top if the route was changed
-      if (isWindowExists() && isNewLocation && window.scrollY > 0) {
+      if (isNewLocation && window.scrollY > 0) {
         window.setTimeout(() => window.scrollTo({
           top: 0,
           behavior: 'smooth',

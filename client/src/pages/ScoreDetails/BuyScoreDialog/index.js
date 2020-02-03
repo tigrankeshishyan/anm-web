@@ -18,14 +18,14 @@ import Loading from 'components/Loading';
 import withUser from 'hoc/withUser';
 
 import { withI18n } from 'localization/helpers';
-import { getCurrentLang } from 'locales/helpers';
+import { getCurrentLang } from 'localization/helpers';
 import {
   FETCH_SCORE_PURCHASE_LINK,
 } from '_graphql/actions/scores';
 
 import {
   SCORE_DETAIL,
-} from 'locales/constants';
+} from 'localization/constants';
 
 import { downloadLink } from 'utils';
 

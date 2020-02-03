@@ -1,4 +1,4 @@
-import { getCurrentLang } from 'locales/helpers';
+import { getCurrentLang } from 'localization/helpers';
 import formatNames from 'localization/calendar';
 import Moment from 'moment';
 

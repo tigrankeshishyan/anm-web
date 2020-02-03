@@ -10,7 +10,6 @@ import PageTitle from 'components/PageTitle';
 
 import ContentSection from 'sections/ContentSection';
 import SectionWithFetchMore from 'sections/SectionWithFetchMore';
-import PosterWithSectionBlock from 'sections/PosterWithSectionBlock';
 
 import { withI18n } from 'localization/helpers';
 
@@ -66,17 +65,15 @@ function MusicSheetScores(props) {
         descriptionTranslationId="scores.description"
       />
 
-      <PosterWithSectionBlock />
-
       <ContentSection>
         <Grid
           container
-          spacing={10}
         >
           <Grid
             item
             md={6}
             xs={12}
+            className="pad-sides-10"
           >
             <PageTitle
               title={i18n('scores.title')}
@@ -110,6 +107,7 @@ function MusicSheetScores(props) {
             item
             md={6}
             xs={12}
+            className="pad-sides-10"
           >
             <ScoresContactForm />
           </Grid>

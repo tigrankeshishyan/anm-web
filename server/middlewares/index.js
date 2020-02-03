@@ -16,9 +16,12 @@ export const fetchData = async req => {
 
   if (url.includes('about-us')) return appAboutUsData[locale]
   if (url.includes('contact-us')) return appContactUsData[locale]
-  if (url.includes('/news/')) return getSingleNewsData(id, locale, url)
-  if (url.includes('/musician/')) return getSingleMusicianData(id, locale, url)
-  if (url.includes('/score/')) return getSingleScoreData(id, locale, url)
+
+  if (id) {
+    if (url.includes('/news/')) return getSingleNewsData(id, locale, url)
+    if (url.includes('/musician/')) return getSingleMusicianData(id, locale, url)
+    if (url.includes('/score/')) return getSingleScoreData(id, locale, url)
+  }
 
   return { url }
 }

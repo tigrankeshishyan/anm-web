@@ -14,7 +14,7 @@ import SocialIcon from "components/SocialIcon";
 import { validateForm } from "Auth/helpers";
 import { withI18n } from "localization/helpers";
 
-import { getCurrentLang } from "locales/helpers";
+import { getCurrentLang } from "localization/helpers";
 
 import { LOG_IN, CREATE_USER, AUTHENTICATE_USER } from "_graphql/actions/user";
 

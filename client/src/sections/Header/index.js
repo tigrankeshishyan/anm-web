@@ -5,8 +5,6 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import LanguageSwitcher from 'localization/LanguageSwitcher';
 import { withI18n } from 'localization/helpers';
 
-import { isWindowExists } from 'helpers';
-
 import LogoOriginal from 'images/ANM-logo-small-original.png';
 
 import Link from 'components/Link';
@@ -23,26 +21,23 @@ class Header extends React.PureComponent {
     isHeaderOpen: false,
   };
 
-  componentDidMount() {
+  componentDidMount () {
     document.addEventListener('scroll', this.handleScrollChange);
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     document.removeEventListener('scroll', this.handleScrollChange);
   }
 
   handleScrollChange = () => {
+    const isScrolled = window.scrollY > 0;
 
-    if (isWindowExists()) {
-      const isScrolled = window.scrollY > 0;
-
-      if (this.state.isScrolled !== isScrolled) {
-        window.requestAnimationFrame(() => {
-          this.setState({
-            isScrolled,
-          });
+    if (this.state.isScrolled !== isScrolled) {
+      window.requestAnimationFrame(() => {
+        this.setState({
+          isScrolled,
         });
-      }
+      });
     }
   };
 
@@ -52,7 +47,7 @@ class Header extends React.PureComponent {
     });
   };
 
-  render() {
+  render () {
     const {
       isScrolled,
       isHeaderOpen,
@@ -90,9 +85,9 @@ class Header extends React.PureComponent {
               setMenuOpenStatus={this.setMenuOpenStatus}
             />
 
-            <LanguageSwitcher />
+            <LanguageSwitcher/>
 
-            <Auth />
+            <Auth/>
           </div>
         </header>
       </ClickAwayListener>

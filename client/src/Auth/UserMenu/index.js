@@ -12,7 +12,7 @@ import {
 
 import {
   USER_PROFILE,
-} from 'locales/constants';
+} from 'localization/constants';
 
 import './styles.sass';
 

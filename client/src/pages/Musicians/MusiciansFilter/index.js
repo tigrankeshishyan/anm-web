@@ -4,7 +4,7 @@ import SearchIcon from '@material-ui/icons/Search';
 
 import musicianTypes from '_constants/musicianTypes';
 import { withI18n } from 'localization/helpers';
-import { getCurrentLang } from 'locales/helpers';
+import { getCurrentLang } from 'localization/helpers';
 
 import Button from 'components/Button';
 import { Select, TextField } from 'components/Form';

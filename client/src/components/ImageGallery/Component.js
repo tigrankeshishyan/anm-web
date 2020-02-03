@@ -1,5 +1,4 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 import ReactImageGallery from 'react-image-gallery';
 
 import './styles.sass';
@@ -18,11 +17,9 @@ ImageGallery.defaultProps = {
   showNav: false,
   showBullets: true,
   showThumbnails: false,
-  showPlayButton: false,
+  showPlayButton: true,
   showFullscreenButton: false,
   useBrowserFullscreen: false,
 };
-
-ImageGallery.propTypes = {};
 
 export default ImageGallery;

@@ -17,7 +17,7 @@ import {
 
 import {
   SCORES,
-} from 'locales/constants';
+} from 'localization/constants';
 
 import './styles.sass';
 
@@ -36,7 +36,7 @@ const defaultFilterData = {
   composerId: '',
 };
 
-function ScoresFilter(props) {
+function ScoresFilter (props) {
   const { data: { musicians } = {} } = useQuery(FETCH_MUSICIANS, {
     variables: {
       filter: {
@@ -78,7 +78,6 @@ function ScoresFilter(props) {
       composerId: value.composerId,
     }));
   }, [setState]);
-
 
   const handleFilterSubmit = useCallback(() => {
     const filterData = {
@@ -122,10 +121,17 @@ function ScoresFilter(props) {
 
   return (
     <>
-      <SearchIcon
+      <div
         onClick={openPopover}
-        className="anm-icon pointer"
-      />
+        className="pointer flex-row align-center nowrap"
+      >
+        <span className="mrg-sides-10">
+         {i18n('search')}
+        </span>
+        <SearchIcon
+          className="anm-icon pointer"
+        />
+      </div>
 
       <Popover
         anchorEl={anchorEl}
@@ -159,7 +165,6 @@ function ScoresFilter(props) {
             type="submit"
             variant="gradient"
             onClick={handleFilterSubmit}
-            disabled={Object.values(state).every(val => !val)}
           >
             {i18n('search')}
           </Button>

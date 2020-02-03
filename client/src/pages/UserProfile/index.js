@@ -18,7 +18,7 @@ import UserPurchases from './UserPurchases';
 
 import {
   USER_PROFILE,
-} from 'locales/constants';
+} from 'localization/constants';
 
 const tabs = [
   {

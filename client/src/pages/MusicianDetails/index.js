@@ -44,7 +44,9 @@ function MusicianDetails(props) {
       />
 
       <PosterWithSectionBlock
+        hideBlockOnMobile
         url={musicianPhoto}
+        imgAlt={musicianFullName}
       />
 
       <Grid

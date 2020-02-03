@@ -15,7 +15,7 @@ import Loading from 'components/Loading';
 import { withI18n } from 'localization/helpers';
 import {
   PDF_VIEWER,
-} from 'locales/constants';
+} from 'localization/constants';
 
 import './styles.sass';
 

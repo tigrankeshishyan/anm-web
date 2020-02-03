@@ -9,7 +9,7 @@ import { isCorrectPassword } from 'helpers';
 import { withI18n } from 'localization/helpers';
 import { withToastActions } from 'containers/ToastMessages';
 
-import { getCurrentLang } from 'locales/helpers';
+import { getCurrentLang } from 'localization/helpers';
 
 import {
   RESET_PASSWORD,

@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react';
 import clsx from 'clsx';
-import { languages, langStorageKey } from 'locales';
-import { isWindowExists } from 'helpers';
-
-import { getCurrentLang } from 'locales/helpers';
+import {
+  languages,
+  langStorageKey,
+} from 'localization/constants';
+import { getCurrentLang } from 'localization/helpers';
 
 import './styles.sass';
 
@@ -11,7 +12,7 @@ function LanguageSwitcher() {
   const currentLang = getCurrentLang();
 
   const handleLanguageChange = useCallback(lang => {
-    if (lang && currentLang !== lang && isWindowExists()) {
+    if (lang && currentLang !== lang) {
       localStorage.setItem(langStorageKey, lang);
       window.location.href = window.location.href.replace(currentLang, lang);
     }
