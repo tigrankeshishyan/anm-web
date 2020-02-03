@@ -4,6 +4,7 @@ import mime from 'mime-types'
 import sharp from 'sharp'
 
 import * as Storage from '../../../utils/storage.util'
+import { ExpressError } from '../../../utils/error.util'
 
 /**
  * @param {import('express').Request} req
@@ -37,9 +38,23 @@ export async function getImage (req, res, next) {
 
     res.contentType(mime.lookup(ext))
 
-    return await Storage.getObject(key)
+    Storage.getObject(key)
+      .createReadStream()
+      .on('error', (err) => {
+        if (err.code === 'NoSuchKey') {
+          next(new ExpressError(err.message, 404))
+        } else {
+          next(err)
+        }
+      })
       .pipe(trans)
+      .on('error', (err) => {
+        next(err)
+      })
       .pipe(res)
+      .on('error', (err) => {
+        next(err)
+      })
   } catch (err) {
     next(err)
   }
