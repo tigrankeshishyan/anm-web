@@ -7,8 +7,8 @@ export const REQUEST_MESSAGE = gql`
     $message: String!
     $file: Upload
   ) {
-    createContactMessage(input: {
-      contactMessage: {
+    createOpenMessage(input: {
+      openMessage: {
         name: $name
         email: $email
         message: $message
