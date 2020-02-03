@@ -1,4 +1,6 @@
-export const scoreMain = `
+import { gql } from 'apollo-boost';
+
+export const scoreMain = gql`
   fragment scoreMain on Score {
     id
     url

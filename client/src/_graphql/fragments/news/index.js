@@ -1,8 +1,9 @@
+import { gql } from 'apollo-boost';
 import { imageAll } from '../images';
 import { genreAll } from '../genres';
 import { tagAll } from '../tags';
 
-const newsMain = `
+const newsMain = gql`
   fragment newsMain on Article {
     id
     path
@@ -14,7 +15,7 @@ const newsMain = `
   }
 `;
 
-const newsAll = `
+const newsAll = gql`
   fragment newsAll on Article {
     ...newsMain
     author {
