@@ -28,12 +28,12 @@ export default function LocalePlugin (builder) {
 
           queryBuilder.select(
             () => sql.fragment`(
-              SELECT
+              select
                 ${sql.identifier(sub, columnName)} 
-              FROM ${sql.identifier(options.localesSchema, tableName)}
-              AS ${sql.identifier(sub)}
-              WHERE ${sql.identifier(sub, 'lang')} = ${sql.value(locale)}
-              AND ${sql.identifier(
+              from ${sql.identifier(options.localesSchema, tableName)}
+              as ${sql.identifier(sub)}
+              where ${sql.identifier(sub, 'lang')} = ${sql.value(locale)}
+              and ${sql.identifier(
                 sub,
                 'source_id'
               )} = ${queryBuilder.getTableAlias()}.id
