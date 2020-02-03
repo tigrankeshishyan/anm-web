@@ -1,5 +1,5 @@
 --! Previous: -
---! Hash: sha1:4f03b321e8a2e62f259680c6b5225ba35769e95c
+--! Hash: sha1:49f77c45639b796c4dd5f4f5285b86fb47a0bc88
 
 drop schema if exists app_public cascade;
 
@@ -24,9 +24,6 @@ drop schema if exists app_private cascade;
 create schema app_private;
 
 set search_path to app_public, app_hidden, app_private, public;
-
-grant all on all tables in schema app_public to :DATABASE_VISITOR;
-grant all on all sequences in schema app_public to :DATABASE_VISITOR;
 
 create function app_private.create_code(len int = 6, alpha boolean = false) 
   returns text language plpgsql volatile as
@@ -972,3 +969,6 @@ begin
   return v_promo_codes;
 end;
 $$;
+
+grant all on all tables in schema app_public to :DATABASE_VISITOR;
+grant all on all sequences in schema app_public to :DATABASE_VISITOR;

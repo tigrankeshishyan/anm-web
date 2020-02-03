@@ -3513,6 +3513,13 @@ REVOKE ALL ON FUNCTION app_private.new_open_message() FROM PUBLIC;
 
 
 --
+-- Name: TABLE users; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.users TO anm_visitor;
+
+
+--
 -- Name: FUNCTION change_user_role(user_id integer, role app_public.user_role); Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -3526,6 +3533,13 @@ GRANT ALL ON FUNCTION app_public.change_user_role(user_id integer, role app_publ
 
 REVOKE ALL ON FUNCTION app_public.change_user_status(user_id integer, status app_public.user_status) FROM PUBLIC;
 GRANT ALL ON FUNCTION app_public.change_user_status(user_id integer, status app_public.user_status) TO anm_visitor;
+
+
+--
+-- Name: TABLE promo_codes; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.promo_codes TO anm_visitor;
 
 
 --
@@ -3585,6 +3599,13 @@ GRANT ALL ON FUNCTION app_public.reset_password(token text, password text) TO an
 
 
 --
+-- Name: TABLE scores; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.scores TO anm_visitor;
+
+
+--
 -- Name: FUNCTION scores_is_purchased(score app_public.scores); Type: ACL; Schema: app_public; Owner: -
 --
 
@@ -3639,122 +3660,444 @@ REVOKE ALL ON FUNCTION postgraphile_watch.notify_watchers_drop() FROM PUBLIC;
 
 
 --
+-- Name: TABLE article_galleries; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.article_galleries TO anm_visitor;
+
+
+--
 -- Name: SEQUENCE article_galleries_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,USAGE ON SEQUENCE app_public.article_galleries_id_seq TO anm_visitor;
+GRANT ALL ON SEQUENCE app_public.article_galleries_id_seq TO anm_visitor;
+
+
+--
+-- Name: TABLE article_gallery_images; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.article_gallery_images TO anm_visitor;
+
+
+--
+-- Name: TABLE article_genres; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.article_genres TO anm_visitor;
+
+
+--
+-- Name: TABLE article_images; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.article_images TO anm_visitor;
+
+
+--
+-- Name: TABLE article_locales; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.article_locales TO anm_visitor;
+
+
+--
+-- Name: TABLE article_tags; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.article_tags TO anm_visitor;
+
+
+--
+-- Name: TABLE articles; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.articles TO anm_visitor;
 
 
 --
 -- Name: SEQUENCE articles_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,USAGE ON SEQUENCE app_public.articles_id_seq TO anm_visitor;
+GRANT ALL ON SEQUENCE app_public.articles_id_seq TO anm_visitor;
+
+
+--
+-- Name: TABLE composition_locales; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.composition_locales TO anm_visitor;
+
+
+--
+-- Name: TABLE compositions; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.compositions TO anm_visitor;
 
 
 --
 -- Name: SEQUENCE compositions_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,USAGE ON SEQUENCE app_public.compositions_id_seq TO anm_visitor;
+GRANT ALL ON SEQUENCE app_public.compositions_id_seq TO anm_visitor;
+
+
+--
+-- Name: TABLE document_locales; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.document_locales TO anm_visitor;
+
+
+--
+-- Name: TABLE documents; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.documents TO anm_visitor;
 
 
 --
 -- Name: SEQUENCE documents_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,USAGE ON SEQUENCE app_public.documents_id_seq TO anm_visitor;
+GRANT ALL ON SEQUENCE app_public.documents_id_seq TO anm_visitor;
+
+
+--
+-- Name: TABLE genre_locales; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.genre_locales TO anm_visitor;
+
+
+--
+-- Name: TABLE genres; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.genres TO anm_visitor;
 
 
 --
 -- Name: SEQUENCE genres_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,USAGE ON SEQUENCE app_public.genres_id_seq TO anm_visitor;
+GRANT ALL ON SEQUENCE app_public.genres_id_seq TO anm_visitor;
+
+
+--
+-- Name: TABLE group_images; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.group_images TO anm_visitor;
+
+
+--
+-- Name: TABLE group_locales; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.group_locales TO anm_visitor;
+
+
+--
+-- Name: TABLE group_musicians; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.group_musicians TO anm_visitor;
+
+
+--
+-- Name: TABLE group_playlists; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.group_playlists TO anm_visitor;
+
+
+--
+-- Name: TABLE groups; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.groups TO anm_visitor;
 
 
 --
 -- Name: SEQUENCE groups_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,USAGE ON SEQUENCE app_public.groups_id_seq TO anm_visitor;
+GRANT ALL ON SEQUENCE app_public.groups_id_seq TO anm_visitor;
+
+
+--
+-- Name: TABLE image_locales; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.image_locales TO anm_visitor;
+
+
+--
+-- Name: TABLE images; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.images TO anm_visitor;
 
 
 --
 -- Name: SEQUENCE images_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,USAGE ON SEQUENCE app_public.images_id_seq TO anm_visitor;
+GRANT ALL ON SEQUENCE app_public.images_id_seq TO anm_visitor;
+
+
+--
+-- Name: TABLE instrument_locales; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.instrument_locales TO anm_visitor;
+
+
+--
+-- Name: TABLE instruments; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.instruments TO anm_visitor;
 
 
 --
 -- Name: SEQUENCE instruments_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,USAGE ON SEQUENCE app_public.instruments_id_seq TO anm_visitor;
+GRANT ALL ON SEQUENCE app_public.instruments_id_seq TO anm_visitor;
+
+
+--
+-- Name: TABLE languages; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.languages TO anm_visitor;
+
+
+--
+-- Name: TABLE media; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.media TO anm_visitor;
 
 
 --
 -- Name: SEQUENCE media_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,USAGE ON SEQUENCE app_public.media_id_seq TO anm_visitor;
+GRANT ALL ON SEQUENCE app_public.media_id_seq TO anm_visitor;
+
+
+--
+-- Name: TABLE media_locales; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.media_locales TO anm_visitor;
+
+
+--
+-- Name: TABLE musician_compositions; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.musician_compositions TO anm_visitor;
+
+
+--
+-- Name: TABLE musician_genres; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.musician_genres TO anm_visitor;
+
+
+--
+-- Name: TABLE musician_images; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.musician_images TO anm_visitor;
+
+
+--
+-- Name: TABLE musician_locales; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.musician_locales TO anm_visitor;
+
+
+--
+-- Name: TABLE musician_playlists; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.musician_playlists TO anm_visitor;
+
+
+--
+-- Name: TABLE musician_professions; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.musician_professions TO anm_visitor;
+
+
+--
+-- Name: TABLE musician_tags; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.musician_tags TO anm_visitor;
+
+
+--
+-- Name: TABLE musicians; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.musicians TO anm_visitor;
 
 
 --
 -- Name: SEQUENCE musicians_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,USAGE ON SEQUENCE app_public.musicians_id_seq TO anm_visitor;
+GRANT ALL ON SEQUENCE app_public.musicians_id_seq TO anm_visitor;
+
+
+--
+-- Name: TABLE open_messages; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.open_messages TO anm_visitor;
 
 
 --
 -- Name: SEQUENCE open_messages_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,USAGE ON SEQUENCE app_public.open_messages_id_seq TO anm_visitor;
+GRANT ALL ON SEQUENCE app_public.open_messages_id_seq TO anm_visitor;
+
+
+--
+-- Name: TABLE page_sections; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.page_sections TO anm_visitor;
+
+
+--
+-- Name: TABLE playlist_locales; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.playlist_locales TO anm_visitor;
+
+
+--
+-- Name: TABLE playlist_media; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.playlist_media TO anm_visitor;
+
+
+--
+-- Name: TABLE playlists; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.playlists TO anm_visitor;
 
 
 --
 -- Name: SEQUENCE playlists_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,USAGE ON SEQUENCE app_public.playlists_id_seq TO anm_visitor;
+GRANT ALL ON SEQUENCE app_public.playlists_id_seq TO anm_visitor;
+
+
+--
+-- Name: TABLE profession_locales; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.profession_locales TO anm_visitor;
+
+
+--
+-- Name: TABLE professions; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.professions TO anm_visitor;
 
 
 --
 -- Name: SEQUENCE professions_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,USAGE ON SEQUENCE app_public.professions_id_seq TO anm_visitor;
+GRANT ALL ON SEQUENCE app_public.professions_id_seq TO anm_visitor;
+
+
+--
+-- Name: TABLE purchases; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.purchases TO anm_visitor;
 
 
 --
 -- Name: SEQUENCE purchases_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,USAGE ON SEQUENCE app_public.purchases_id_seq TO anm_visitor;
+GRANT ALL ON SEQUENCE app_public.purchases_id_seq TO anm_visitor;
+
+
+--
+-- Name: TABLE score_instruments; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.score_instruments TO anm_visitor;
+
+
+--
+-- Name: TABLE score_locales; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.score_locales TO anm_visitor;
 
 
 --
 -- Name: SEQUENCE scores_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,USAGE ON SEQUENCE app_public.scores_id_seq TO anm_visitor;
+GRANT ALL ON SEQUENCE app_public.scores_id_seq TO anm_visitor;
+
+
+--
+-- Name: TABLE sessions; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.sessions TO anm_visitor;
+
+
+--
+-- Name: TABLE tag_locales; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.tag_locales TO anm_visitor;
+
+
+--
+-- Name: TABLE tags; Type: ACL; Schema: app_public; Owner: -
+--
+
+GRANT ALL ON TABLE app_public.tags TO anm_visitor;
 
 
 --
 -- Name: SEQUENCE tags_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,USAGE ON SEQUENCE app_public.tags_id_seq TO anm_visitor;
+GRANT ALL ON SEQUENCE app_public.tags_id_seq TO anm_visitor;
 
 
 --
 -- Name: SEQUENCE users_id_seq; Type: ACL; Schema: app_public; Owner: -
 --
 
-GRANT SELECT,USAGE ON SEQUENCE app_public.users_id_seq TO anm_visitor;
+GRANT ALL ON SEQUENCE app_public.users_id_seq TO anm_visitor;
 
 
 --
