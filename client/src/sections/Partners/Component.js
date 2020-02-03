@@ -79,7 +79,7 @@ function HomePartnersSection(props) {
   const { i18n } = props;
 
   return (
-    <div className="home-partners-section-wrapper">
+    <div className="partners-section-wrapper">
       <SectionTitle
         type="normal"
         position="right"

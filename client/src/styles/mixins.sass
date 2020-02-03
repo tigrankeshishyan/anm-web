@@ -23,9 +23,9 @@
     background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%)
 
 @mixin blue-gradient($property: background, $from: $primary-blue, $to: $secondary-blue)
-  #{$property}: $primary-blue
+  #{$property}: $from
   #{$property}: -moz-linear-gradient(left, $from 0%, $to 100%)
-  #{$property}: -webkit-gradient(left top, right top, color-stop(0%, $primary-blue), color-stop(100%, $to))
+  #{$property}: -webkit-gradient(left top, right top, color-stop(0%, $from), color-stop(100%, $to))
   #{$property}: -webkit-linear-gradient(left, $from 0%, $to 100%)
   #{$property}: -o-linear-gradient(left, $from 0%, $to 100%)
   #{$property}: -ms-linear-gradient(left, $from 0%, $to 100%)
