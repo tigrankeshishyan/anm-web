@@ -129,7 +129,7 @@ function ContactForm(props) {
 
           <DropZone
             className="remove-outline"
-            onFileUpload={file => handleFormChange({ target: { name: 'file', value: file } })}
+            onFileUpload={file => handleFormChange({ file })}
           >
             <div className="flex-row align-center pad-top-15 pad-bottom-15 pointer attach-file-row">
               <AttachFileIcon
