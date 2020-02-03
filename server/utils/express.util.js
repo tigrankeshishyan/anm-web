@@ -30,7 +30,7 @@ export function useRespond (req, res, next) {
     const head = await Storage.headObject(key).catch(() => null)
     assert.ok(head, new ExpressError(`can't find object '${key}'`))
     res.contentType(head.ContentType)
-    return Storage.getObject(key).pipe(res)
+    return Storage.getObject(key).createReadStream().pipe(res)
   }
 
   next()

@@ -43,7 +43,6 @@ export function getObject (key) {
       Key: key.startsWith('/') ? key.substring(1) : key,
       Bucket: s3Bucket
     })
-    .createReadStream()
 }
 
 export async function deleteObject (...keys) {
