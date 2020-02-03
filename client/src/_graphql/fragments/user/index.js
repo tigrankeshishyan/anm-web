@@ -11,7 +11,7 @@ export const userAll = gql`
     createdAt
     updatedAt
     role
-    purchases: purchasesList(filter: { status: { equalTo: 2 } }) {
+    purchases: purchasesList(filter: { status: { equalTo: PAID } }) {
       score {
         ...scoreMain
       }
