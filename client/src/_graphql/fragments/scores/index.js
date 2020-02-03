@@ -1,4 +1,4 @@
-const scoreMain = `
+export const scoreMain = `
   fragment scoreMain on Score {
     id
     url
@@ -31,7 +31,3 @@ const scoreMain = `
     }
   }
 `;
-
-module.exports = {
-  scoreMain,
-};
