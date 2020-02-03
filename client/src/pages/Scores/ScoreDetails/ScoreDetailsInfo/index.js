@@ -6,9 +6,9 @@ import Tag from 'components/Tag';
 import { SCORE_DETAIL } from 'localization/constants';
 
 import { withI18n } from 'localization/helpers';
-import ScoreInfoSection from 'pages/ScoreDetails/ScoreInfoSection';
+import ScoreInfoSection from 'pages/Scores/ScoreDetails/ScoreInfoSection';
 
-import './styles.sass';
+import 'pages/Scores/ScoreDetails/ScoreDetailsInfo/styles.sass';
 
 function ScoreDetailsInfo(props) {
   const {

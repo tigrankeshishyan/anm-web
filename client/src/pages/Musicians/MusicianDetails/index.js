@@ -17,7 +17,7 @@ import {
   FETCH_SINGLE_MUSICIAN,
 } from '_graphql/actions/musicians';
 
-import 'pages/MusicianDetails/styles.sass';
+import './styles.sass';
 
 const dateFormat = 'MMM DD YYYY';
 

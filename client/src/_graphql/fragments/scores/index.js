@@ -11,6 +11,7 @@ export const scoreMain = gql`
     createdAt
     updatedAt
     published
+    isPurchased
     publishedAt
     description
     composition {

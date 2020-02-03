@@ -26,7 +26,7 @@ import {
   FETCH_SINGLE_ARTICLE,
 } from '_graphql/actions/news';
 
-import 'pages/NewsDetails/styles.sass';
+import './styles.sass';
 
 function NewsDetails(props) {
   const { data: { articleByPath: article = {} } = {} } = useQuery(FETCH_SINGLE_ARTICLE, {

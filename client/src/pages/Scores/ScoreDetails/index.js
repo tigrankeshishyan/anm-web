@@ -13,7 +13,6 @@ import { withI18n } from 'localization/helpers';
 
 import {
   FETCH_SINGLE_SCORE,
-  CHECK_IF_SCORE_PURCHASED,
 } from '_graphql/actions/scores';
 
 import withUser from 'hoc/withUser';
@@ -24,14 +23,14 @@ import {
 
 import ContentSection from 'sections/ContentSection';
 
-import BuyScoreDialog from 'pages/ScoreDetails/BuyScoreDialog';
-import ScoreDetailsInfo from 'pages/ScoreDetails/ScoreDetailsInfo';
+import BuyScoreDialog from './BuyScoreDialog';
+import ScoreDetailsInfo from './ScoreDetailsInfo';
 
-import 'pages/ScoreDetails/styles.sass';
+import './styles.sass';
 
 const getId = props => Number(props.match.params.scoreId);
 
-function ScoreDetails(props) {
+function ScoreDetails (props) {
   const {
     data: { score = {} } = {},
     loading: isScoreLoading,
@@ -42,25 +41,17 @@ function ScoreDetails(props) {
   });
 
   const {
-    data: { isScorePurchased } = {},
-    loading: isScorePurchaseCheckLoading,
-  } = useQuery(CHECK_IF_SCORE_PURCHASED, {
-    variables: {
-      scoreId: getId(props),
-    },
-  });
-
-  const {
     i18n,
   } = props;
 
+  const isScorePurchased = lodashGet(score, 'isPurchased', false);
   const scoreUrl = lodashGet(score, 'url', '');
   const previewUrl = lodashGet(score, 'preview.url', '');
 
   const pdfUrl = isScorePurchased ? scoreUrl : previewUrl;
 
   return (
-    <Loading isLoading={isScoreLoading || isScorePurchaseCheckLoading}>
+    <Loading isLoading={isScoreLoading}>
       <SEO
         title={score.title}
         imageUrl={previewUrl}
@@ -79,24 +70,23 @@ function ScoreDetails(props) {
             xs={12}
             className="pad-sides-10"
           >
-            {
-              !isScorePurchaseCheckLoading && pdfUrl ? (
-                <>
-                  {
-                    !isScorePurchased && (
-                      <div className="mrg-vertical-half mrg-bottom-15">
-                        <Typography color="textSecondary">
-                          {i18n(`${SCORE_DETAIL}.pagesAvailability`)}
-                        </Typography>
-                      </div>
-                    )
-                  }
-                  <PDFViewer
-                    pdfUrl={pdfUrl}
-                    className="score-preview-wrapper"
-                  />
-                </>
-              ) : i18n('somethingWrong')
+            {pdfUrl ? (
+              <>
+                {
+                  !isScorePurchased && (
+                    <div className="mrg-vertical-half mrg-bottom-15">
+                      <Typography color="textSecondary">
+                        {i18n(`${SCORE_DETAIL}.pagesAvailability`)}
+                      </Typography>
+                    </div>
+                  )
+                }
+                <PDFViewer
+                  pdfUrl={pdfUrl}
+                  className="score-preview-wrapper"
+                />
+              </>
+            ) : i18n('somethingWrong')
             }
           </Grid>
 
@@ -128,12 +118,10 @@ function ScoreDetails(props) {
               />
             </div>
             <div className="flex-row justify-end">
-              {!isScorePurchaseCheckLoading && (
-                <BuyScoreDialog
-                  score={score}
-                  isScorePurchased={isScorePurchased}
-                />
-              )}
+              <BuyScoreDialog
+                score={score}
+                isScorePurchased={isScorePurchased}
+              />
             </div>
           </Grid>
         </Grid>

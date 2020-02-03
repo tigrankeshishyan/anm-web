@@ -11,7 +11,7 @@ import newsLocalesEn from '../News/locales/en';
 import contactUsLocalesEn from '../ContactUs/locales/en';
 import userProfileLocalesEn from '../UserProfile/locales/en';
 import musicSheetScoresLocalesEn from '../Scores/locales/en';
-import scoreDetailLocalesEn from '../ScoreDetails/locales/en';
+import scoreDetailLocalesEn from '../Scores/ScoreDetails/locales/en';
 
 export default {
   ...newsLocalesEn,

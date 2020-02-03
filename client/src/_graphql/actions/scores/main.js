@@ -42,27 +42,6 @@ export const FETCH_SCORE_PURCHASE_LINK = gql`
   }
 `;
 
-export const CHECK_IF_SCORE_PURCHASED = gql`
-  query CheckIfscorePurchased($scoreId: Int!) {
-    isScorePurchased(scoreId: $scoreId)
-  }
-`;
-
-export const SEARCH_SCORE = gql`
-  query SearchScore($title: String) {
-    scores(filter: {
-      scoreLocalesBySourceId: {
-        some: { title: { includesInsensitive: $title } }
-      }}) {
-      nodes {
-        ...scoreMain,
-      }
-    }
-  }
-  
-  ${scoreMain}
-`;
-
 export const FETCH_SINGLE_SCORE = gql`
   query FetchScore($id: Int!) {
     score(id: $id) {

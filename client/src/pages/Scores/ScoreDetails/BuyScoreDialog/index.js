@@ -29,11 +29,11 @@ import {
 
 import { downloadLink } from 'utils';
 
-import countryList from 'pages/ScoreDetails/BuyScoreDialog/countries';
+import countryList from 'pages/Scores/ScoreDetails/BuyScoreDialog/countries';
 
-import ScoreDetailsInfo from 'pages/ScoreDetails/ScoreDetailsInfo';
+import ScoreDetailsInfo from 'pages/Scores/ScoreDetails/ScoreDetailsInfo';
 
-import 'pages/ScoreDetails/BuyScoreDialog/styles.sass';
+import 'pages/Scores/ScoreDetails/BuyScoreDialog/styles.sass';
 
 const countryOptions = countryList.map(country => ({
   label: country.name,

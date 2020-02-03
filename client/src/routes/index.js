@@ -18,7 +18,7 @@ export default [
     exact: true,
     title: 'News Details',
     path: '/:locale/news/:path/:articleId?',
-    component: AsyncComponentLoader(lazy( () => import('pages/NewsDetails/index.js'))),
+    component: AsyncComponentLoader(lazy( () => import('pages/News/NewsDetails/index.js'))),
   },
   {
     exact: true,
@@ -35,7 +35,7 @@ export default [
     key: 'musician-details',
     title: 'Musician Details',
     path: '/:locale/musician/:path/:musicianId',
-    component: AsyncComponentLoader(lazy( () => import('pages/MusicianDetails/index.js'))),
+    component: AsyncComponentLoader(lazy( () => import('pages/Musicians/MusicianDetails/index.js'))),
   },
   {
     isMain: true,
@@ -52,7 +52,7 @@ export default [
     key: 'score-details',
     title: 'Music Sheet Score Details',
     path: '/:locale/music-sheet-score/:path/:scoreId',
-    component: AsyncComponentLoader(lazy( () => import('pages/ScoreDetails/index.js'))),
+    component: AsyncComponentLoader(lazy( () => import('pages/Scores/ScoreDetails/index.js'))),
   },
   {
     isStatic: true,
