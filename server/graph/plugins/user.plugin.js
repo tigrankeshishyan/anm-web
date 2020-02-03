@@ -2,7 +2,7 @@ import GraphileUtils from 'graphile-utils'
 
 import { byTableNameAndId, allowOnly } from '../../utils/graphile.util'
 import { createContact, sendWelcome } from '../../utils/sendinblue.util'
-import { passwordMaker } from '../../utils/hash.util'
+import { passwordMaker, compareHash } from '../../utils/hash.util'
 import * as Storage from '../../utils/storage.util'
 import { Slack } from '../../utils/slack.util'
 
@@ -148,7 +148,7 @@ const schema = makeExtendSchemaPlugin(build => {
           const patch = args.input
 
           if (patch.password) {
-            if (!(await user.comparePassword(patch.password.old))) {
+            if (!(await compareHash(patch.password.old, user.password))) {
               throw Error('invalid current password')
             }
             patch.password.new = await passwordMaker(patch.password.new)

@@ -4,6 +4,7 @@ import pgClient from '../pgClient'
 
 import { facebook } from '../../config'
 import { Slack } from './slack.util'
+import { compareHash } from './hash.util'
 
 const { GraphQLLocalStrategy } = GraphqlPassport
 
@@ -46,7 +47,7 @@ const localStrategy = new GraphQLLocalStrategy((email, password, done) => {
         return done(null, false, { message: 'user is blocked' })
       }
 
-      return user.comparePassword(password).then(isCorrect => {
+      return compareHash(password, user.password).then(isCorrect => {
         if (isCorrect) {
           return done(null, user)
         } else {
@@ -82,7 +83,9 @@ const facebookStrategy = new FacebookStrategy(
       }
       return
     }
-    const { rows: [user] } = await pgClient.query(
+    const {
+      rows: [user]
+    } = await pgClient.query(
       `insert into app_public.users (first_name, last_name, facebook_id, email)
       values ($1, $2, $3, $4) returning *`,
       [profile.name.givenName, profile.name.familyName, profile.id, email]
