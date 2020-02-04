@@ -16,8 +16,11 @@ export const REQUEST_MESSAGE = gql`
       }
     }){
       # only admin can read open messages
-      # so you can select openMessage field
-      clientMutationId
+      # so you can select openMessage immediately, but not later
+      openMessage {
+        id
+        message
+      }
     }
   }
 `;
