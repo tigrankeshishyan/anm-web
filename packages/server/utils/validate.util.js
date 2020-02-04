@@ -4,8 +4,8 @@ import moment from 'moment'
 
 import { anmHost, currencies } from '../../config'
 
-export function isUploadPDF (upload) {
-  if (upload.mimetype !== 'application/pdf') {
+export function isUploadPDF (file) {
+  if (file.mimetype !== 'application/pdf') {
     throw Error('upload item can only be of type pdf')
   }
 }

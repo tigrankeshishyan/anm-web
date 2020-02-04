@@ -119,7 +119,7 @@ async function mutateArticle (resolve, parent, args, ctx, info) {
   if (Array.isArray(createImages) && createImages.length) {
     await Promise.all(
       createImages.map(async img => {
-        const url = await Storage.uploadImage(await img.url.file)
+        const url = await Storage.uploadImage(await img.url)
 
         const imgData = { url, caption: img.caption, description: img.description }
         const row = await insertInto(pgClient, 'images', imgData)
