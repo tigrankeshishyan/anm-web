@@ -5,6 +5,7 @@ on:
     branches: ['stage', 'prod']
     paths: 
       - packages/client
+      - package.json
 
 jobs:
   build:
