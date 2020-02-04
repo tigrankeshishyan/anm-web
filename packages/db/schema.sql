@@ -457,7 +457,7 @@ $$;
 -- Name: current_user(boolean); Type: FUNCTION; Schema: app_public; Owner: -
 --
 
-CREATE FUNCTION app_public."current_user"(not_null boolean DEFAULT true) RETURNS app_public.users
+CREATE FUNCTION app_public."current_user"(not_null boolean DEFAULT false) RETURNS app_public.users
     LANGUAGE sql STABLE SECURITY DEFINER
     SET search_path TO 'app_public'
     AS $$
@@ -675,7 +675,7 @@ CREATE FUNCTION app_public.send_verification_email() RETURNS app_public.send_ver
     SET search_path TO 'app_private', 'app_public'
     AS $$
 declare
-  v_user users = app_public.current_user();
+  v_user users = app_public.current_user(true);
   v_verification email_verifications;
   v_payload json;
 begin
@@ -2353,7 +2353,8 @@ CREATE TABLE app_public.open_messages (
 -- Name: TABLE open_messages; Type: COMMENT; Schema: app_public; Owner: -
 --
 
-COMMENT ON TABLE app_public.open_messages IS 'Open message that anyone can send to support team.';
+COMMENT ON TABLE app_public.open_messages IS 'Open message that anyone can send to support team.
+Can be selected immediately by everyone and later by admins.';
 
 
 --
@@ -4433,7 +4434,7 @@ ALTER TABLE app_public.promo_codes ENABLE ROW LEVEL SECURITY;
 -- Name: open_messages select_admin; Type: POLICY; Schema: app_public; Owner: -
 --
 
-CREATE POLICY select_admin ON app_public.open_messages FOR SELECT USING ((app_public.current_user_role() = 'admin'::app_public.user_role));
+CREATE POLICY select_admin ON app_public.open_messages FOR SELECT USING (((created_at = now()) OR (app_public.current_user_role() = 'admin'::app_public.user_role)));
 
 
 --

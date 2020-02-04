@@ -1,5 +1,5 @@
 --! Previous: -
---! Hash: sha1:49f77c45639b796c4dd5f4f5285b86fb47a0bc88
+--! Hash: sha1:8bf42c8dd13a501b45a1a7f10b39dc9a4c8841cd
 
 drop schema if exists app_public cascade;
 
@@ -85,7 +85,7 @@ begin
 end;
 $$;
 
-create function app_public.current_user(not_null boolean default true)
+create function app_public.current_user(not_null boolean default false)
   returns users
   stable security definer set search_path to app_public
   language sql as
@@ -267,13 +267,15 @@ create table app_public.open_messages (
   primary key (id)
 );
 
-comment on table open_messages is E'Open message that anyone can send to support team.';
+comment on table open_messages is 
+  E'Open message that anyone can send to support team.
+Can be selected immediately by everyone and later by admins.';
 comment on column open_messages.id is E'@omit create,update';
 comment on column open_messages.email is E'@omit update';
 
 alter table open_messages enable row level security;
 
-create policy select_admin on open_messages for select using (current_user_role() = 'admin');
+create policy select_admin on open_messages for select using (created_at = now() or current_user_role() = 'admin');
 create policy insert_all on open_messages for insert with check (true);
 
 create function app_private.new_open_message()
@@ -348,7 +350,7 @@ create function app_public.send_verification_email()
   language plpgsql as
 $$
 declare
-  v_user users = app_public.current_user();
+  v_user users = app_public.current_user(true);
   v_verification email_verifications;
   v_payload json;
 begin
