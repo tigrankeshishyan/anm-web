@@ -3,6 +3,8 @@ name: CI
 on:
   push:
     branches: ['stage', 'prod']
+    paths: 
+      - packages/client
 
 jobs:
   build:
@@ -52,13 +54,4 @@ jobs:
     - name: deploy client
       env:
         ANM_ENV: ${{steps.extract_branch.outputs.branch}}
-      run: yarn sync
-
-    - name: deploy server
-      run: >-
-        ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER }}
-        'cd ~/anm/${{steps.extract_branch.outputs.branch}}/web/;
-        ANM_ENV=${{steps.extract_branch.outputs.branch}} yarn server pull;
-        pm2 restart ${{steps.extract_branch.outputs.branch}}'
-        
-      
+      run: yarn sync      
