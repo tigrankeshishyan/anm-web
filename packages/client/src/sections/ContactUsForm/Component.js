@@ -75,7 +75,7 @@ function ContactForm(props) {
           variables: transformDataBeforeSend(formData),
         });
 
-        if (res && res.data && res.data.createContactMessage) {
+        if (res && res.data) {
           setFormData({ ...emptyForm });
           setFormKey(generateDateKeyString());
           setReCaptchaStatus(false);
