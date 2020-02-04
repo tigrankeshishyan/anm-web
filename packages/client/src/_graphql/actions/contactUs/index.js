@@ -15,7 +15,7 @@ export const REQUEST_MESSAGE = gql`
         attachedFile: $file
       }
     }){
-      contactMessage {
+      openMessage {
         id
         email
       }
