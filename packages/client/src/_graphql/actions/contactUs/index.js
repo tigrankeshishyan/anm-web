@@ -1,7 +1,7 @@
 import { gql } from 'apollo-boost';
 
 export const REQUEST_MESSAGE = gql`
-  mutation ReaquestMessage(
+  mutation RequestMessage(
     $name: String
     $email: String!
     $message: String!
@@ -15,10 +15,9 @@ export const REQUEST_MESSAGE = gql`
         attachedFile: $file
       }
     }){
-      openMessage {
-        id
-        email
-      }
+      # only admin can read open messages
+      # so you can select openMessage field
+      clientMutationId
     }
   }
 `;
