@@ -200,7 +200,7 @@ export async function uploadScorePreview (scoreId, opts) {
 /**
  * @param {Upload} upload Multer file object.
  */
-export async function uploadContactAttachment (upload) {
+export async function uploadOpenMessageAttachment (upload) {
   const s3Key = `${CONTACT_ATTACHMENT_PREFIX}/${uuid()}`
 
   const { Location } = await s3

@@ -39,13 +39,11 @@ const graphileBuildOptions = {
       match: all => all.column === 'url' && all.table === 'media',
       resolve: Storage.uploadAudio
     },
-    {
-      match: all => all.column === 'url' && all.table === 'scores'
-    },
+    { match: all => all.column === 'url' && all.table === 'scores' },
     {
       match: all =>
-        all.column === 'attached_file' && all.table === 'contact_messages',
-      resolve: Storage.uploadContactAttachment
+        all.column === 'attached_file' && all.table === 'open_messages',
+      resolve: Storage.uploadOpenMessageAttachment
     }
   ]
 }
