@@ -23,7 +23,7 @@ function PosterWithSectionBlock (props) {
       justify="space-between"
       className="page-title-with-poster"
     >
-      <Hidden only={hideBlockOnMobile && blockHiddenPoints}>
+      <Hidden only={hideBlockOnMobile ? blockHiddenPoints : []}>
         <Grid
           item
           md={2}
