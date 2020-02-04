@@ -6,6 +6,7 @@ on:
     paths:
       - packages/server
       - packages/db
+      - package.json
 
 jobs:
   build:
