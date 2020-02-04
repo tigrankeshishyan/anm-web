@@ -25,7 +25,7 @@
     "db": "yarn workspace db",
     "server": "yarn workspace server",
     "worker": "yarn workspace worker",
-    "sync": "rsync -avzr packages/client/build root@anmmedia.am:~/anm/${ANM_ENV:?}/web/client --delete",
+    "sync": "rsync -avzr packages/client/build root@anmmedia.am:~/anm/${ANM_ENV:?}/web/packages/client --delete",
     "push": "yarn client build && yarn sync"
   },
   "workspaces": [
