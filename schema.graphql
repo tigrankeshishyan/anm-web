@@ -18604,7 +18604,10 @@ interface Node {
   nodeId: ID!
 }
 
-"""Open message that anyone can send to support team."""
+"""
+Open message that anyone can send to support team.
+Can be selected immediately by everyone and later by admins.
+"""
 type OpenMessage implements Node {
   attachedFile: String
   createdAt: Datetime!
