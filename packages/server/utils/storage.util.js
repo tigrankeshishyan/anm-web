@@ -59,7 +59,6 @@ export async function deleteObject (...keys) {
  * @param {Upload} upload Multer file object.
  */
 export async function uploadImage (upload) {
-  const { file } = upload
   const name = uuid()
   const s3Key = `${IMAGE_PREFIX}/${name}`
   const stream = sharp().resize(maxImageSize, maxImageSize, {
@@ -70,10 +69,10 @@ export async function uploadImage (upload) {
   await s3
     .upload({
       Key: s3Key,
-      Body: file.createReadStream().pipe(stream),
+      Body: upload.createReadStream().pipe(stream),
       Bucket: s3Bucket,
       ContentDisposition: 'inline',
-      ContentType: file.mimetype
+      ContentType: upload.mimetype
     })
     .promise()
 
@@ -86,7 +85,6 @@ export async function uploadImage (upload) {
  * @param {Object} ctx resolver context.
  */
 export async function uploadAvatar (upload, args, ctx) {
-  const { file } = upload
   const user = ctx.getUser()
   const s3Key = `${USER_PREFIX}/${user.id}/avatar.jpg`
   const stream = sharp()
@@ -99,11 +97,11 @@ export async function uploadAvatar (upload, args, ctx) {
   const result = await s3
     .upload({
       Key: s3Key,
-      Body: file.createReadStream().pipe(stream),
+      Body: upload.createReadStream().pipe(stream),
       Bucket: s3Bucket,
       ACL: 'public-read',
       ContentDisposition: 'inline',
-      ContentType: file.mimetype
+      ContentType: upload.mimetype
     })
     .promise()
 
@@ -114,16 +112,15 @@ export async function uploadAvatar (upload, args, ctx) {
  * @param {Upload} upload Multer file object.
  */
 export async function uploadAudio (upload) {
-  const { file } = upload
   const s3Key = `${AUDIO_PREFIX}/${uuid()}`
 
   await s3
     .upload({
       Key: s3Key,
-      Body: file.createReadStream(),
+      Body: upload.createReadStream(),
       Bucket: s3Bucket,
       ContentDisposition: 'inline',
-      ContentType: file.mimetype
+      ContentType: upload.mimetype
     })
     .promise()
 
@@ -135,8 +132,7 @@ export async function uploadAudio (upload) {
  * @param {number} scoreId
  */
 export async function uploadScore (upload, scoreId) {
-  const { file } = upload
-  isUploadPDF(file)
+  isUploadPDF(upload)
 
   const path = `${SCORE_PREFIX}/${scoreId}`
   const s3Key = `${path}/${scoreDocumentName}`
@@ -144,10 +140,10 @@ export async function uploadScore (upload, scoreId) {
   await s3
     .upload({
       Key: s3Key,
-      Body: file.createReadStream(),
+      Body: upload.createReadStream(),
       Bucket: s3Bucket,
       ContentDisposition: 'inline',
-      ContentType: file.mimetype
+      ContentType: upload.mimetype
     })
     .promise()
 
@@ -247,12 +243,9 @@ export async function deleteAudio (key) {
 }
 
 /**
- * @typedef UploadFile
+ * @typedef Upload
  * @property {string} filename Uploaded file name
  * @property {string} mimetype File mime type
  * @property {string} encoding
  * @property {Function} createReadStream [Function: createReadStream]
- *
- * @typedef Upload
- * @property {UploadFile} file
  */

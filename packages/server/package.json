@@ -19,7 +19,7 @@
     "graphile-worker": "^0.2.0",
     "graphql": "^14.6.0",
     "graphql-passport": "^0.6.0",
-    "graphql-upload": "^10.0.0",
+    "graphql-upload": "^8.0.0",
     "isbot": "^2.5.4",
     "isomorphic-fetch": "^2.2.1",
     "locale": "^0.1.0",
