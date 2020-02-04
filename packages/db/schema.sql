@@ -322,6 +322,20 @@ COMMENT ON COLUMN app_public.users.role IS '@omit create,update';
 
 
 --
+-- Name: COLUMN users.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.users.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN users.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.users.updated_at IS '@omit create,update';
+
+
+--
 -- Name: change_user_role(integer, app_public.user_role); Type: FUNCTION; Schema: app_public; Owner: -
 --
 
@@ -379,6 +393,20 @@ this also will be used as id';
 --
 
 COMMENT ON COLUMN app_public.promo_codes.percent IS 'discount percent, default is 0';
+
+
+--
+-- Name: COLUMN promo_codes.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.promo_codes.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN promo_codes.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.promo_codes.updated_at IS '@omit create,update';
 
 
 --
@@ -606,6 +634,20 @@ COMMENT ON COLUMN app_public.scores.stamp_center IS 'Center side stamp page sele
 
 COMMENT ON COLUMN app_public.scores.published_at IS '@omit create
 This is automatically changed if ''published'' changed, can be manually provided by ''admin''';
+
+
+--
+-- Name: COLUMN scores.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.scores.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN scores.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.scores.updated_at IS '@omit create,update';
 
 
 --
@@ -1039,6 +1081,20 @@ COMMENT ON COLUMN app_public.article_galleries.id IS '@omit create,update';
 
 
 --
+-- Name: COLUMN article_galleries.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.article_galleries.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN article_galleries.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.article_galleries.updated_at IS '@omit create,update';
+
+
+--
 -- Name: article_galleries_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -1065,6 +1121,20 @@ CREATE TABLE app_public.article_gallery_images (
 
 
 --
+-- Name: COLUMN article_gallery_images.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.article_gallery_images.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN article_gallery_images.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.article_gallery_images.updated_at IS '@omit create,update';
+
+
+--
 -- Name: article_genres; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -1077,6 +1147,20 @@ CREATE TABLE app_public.article_genres (
 
 
 --
+-- Name: COLUMN article_genres.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.article_genres.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN article_genres.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.article_genres.updated_at IS '@omit create,update';
+
+
+--
 -- Name: article_images; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -1086,6 +1170,20 @@ CREATE TABLE app_public.article_images (
     article_id integer NOT NULL,
     image_id integer NOT NULL
 );
+
+
+--
+-- Name: COLUMN article_images.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.article_images.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN article_images.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.article_images.updated_at IS '@omit create,update';
 
 
 --
@@ -1104,6 +1202,20 @@ CREATE TABLE app_public.article_locales (
 
 
 --
+-- Name: COLUMN article_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.article_locales.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN article_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.article_locales.updated_at IS '@omit create,update';
+
+
+--
 -- Name: article_tags; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -1113,6 +1225,20 @@ CREATE TABLE app_public.article_tags (
     article_id integer NOT NULL,
     tag_id integer NOT NULL
 );
+
+
+--
+-- Name: COLUMN article_tags.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.article_tags.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN article_tags.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.article_tags.updated_at IS '@omit create,update';
 
 
 --
@@ -1180,6 +1306,20 @@ This is automatically changed if ''published'' changed, can be manually provided
 
 
 --
+-- Name: COLUMN articles.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.articles.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN articles.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.articles.updated_at IS '@omit create,update';
+
+
+--
 -- Name: articles_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -1205,6 +1345,20 @@ CREATE TABLE app_public.composition_locales (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
+
+
+--
+-- Name: COLUMN composition_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.composition_locales.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN composition_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.composition_locales.updated_at IS '@omit create,update';
 
 
 --
@@ -1262,6 +1416,20 @@ This is automatically changed if ''published'' changed, can be manually provided
 
 
 --
+-- Name: COLUMN compositions.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.compositions.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN compositions.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.compositions.updated_at IS '@omit create,update';
+
+
+--
 -- Name: compositions_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -1286,6 +1454,20 @@ CREATE TABLE app_public.document_locales (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
+
+
+--
+-- Name: COLUMN document_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.document_locales.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN document_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.document_locales.updated_at IS '@omit create,update';
 
 
 --
@@ -1316,6 +1498,20 @@ COMMENT ON COLUMN app_public.documents.content IS '@localize';
 
 
 --
+-- Name: COLUMN documents.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.documents.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN documents.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.documents.updated_at IS '@omit create,update';
+
+
+--
 -- Name: documents_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -1340,6 +1536,20 @@ CREATE TABLE app_public.genre_locales (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
+
+
+--
+-- Name: COLUMN genre_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.genre_locales.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN genre_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.genre_locales.updated_at IS '@omit create,update';
 
 
 --
@@ -1369,6 +1579,20 @@ COMMENT ON COLUMN app_public.genres.name IS '@localize';
 
 
 --
+-- Name: COLUMN genres.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.genres.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN genres.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.genres.updated_at IS '@omit create,update';
+
+
+--
 -- Name: genres_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -1395,6 +1619,20 @@ CREATE TABLE app_public.group_images (
 
 
 --
+-- Name: COLUMN group_images.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.group_images.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN group_images.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.group_images.updated_at IS '@omit create,update';
+
+
+--
 -- Name: group_locales; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -1406,6 +1644,20 @@ CREATE TABLE app_public.group_locales (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
+
+
+--
+-- Name: COLUMN group_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.group_locales.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN group_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.group_locales.updated_at IS '@omit create,update';
 
 
 --
@@ -1421,6 +1673,20 @@ CREATE TABLE app_public.group_musicians (
 
 
 --
+-- Name: COLUMN group_musicians.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.group_musicians.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN group_musicians.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.group_musicians.updated_at IS '@omit create,update';
+
+
+--
 -- Name: group_playlists; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -1430,6 +1696,20 @@ CREATE TABLE app_public.group_playlists (
     group_id integer NOT NULL,
     playlist_id integer NOT NULL
 );
+
+
+--
+-- Name: COLUMN group_playlists.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.group_playlists.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN group_playlists.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.group_playlists.updated_at IS '@omit create,update';
 
 
 --
@@ -1469,6 +1749,20 @@ COMMENT ON COLUMN app_public.groups.biography IS '@localize';
 
 
 --
+-- Name: COLUMN groups.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.groups.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN groups.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.groups.updated_at IS '@omit create,update';
+
+
+--
 -- Name: groups_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -1494,6 +1788,20 @@ CREATE TABLE app_public.image_locales (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
+
+
+--
+-- Name: COLUMN image_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.image_locales.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN image_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.image_locales.updated_at IS '@omit create,update';
 
 
 --
@@ -1532,6 +1840,20 @@ COMMENT ON COLUMN app_public.images.description IS '@localize';
 
 
 --
+-- Name: COLUMN images.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.images.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN images.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.images.updated_at IS '@omit create,update';
+
+
+--
 -- Name: images_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -1559,6 +1881,20 @@ CREATE TABLE app_public.instrument_locales (
 
 
 --
+-- Name: COLUMN instrument_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.instrument_locales.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN instrument_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.instrument_locales.updated_at IS '@omit create,update';
+
+
+--
 -- Name: instruments; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -1583,6 +1919,20 @@ COMMENT ON COLUMN app_public.instruments.id IS '@omit create,update';
 --
 
 COMMENT ON COLUMN app_public.instruments.name IS '@localize';
+
+
+--
+-- Name: COLUMN instruments.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.instruments.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN instruments.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.instruments.updated_at IS '@omit create,update';
 
 
 --
@@ -1644,6 +1994,20 @@ COMMENT ON COLUMN app_public.media.title IS '@localize';
 
 
 --
+-- Name: COLUMN media.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.media.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN media.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.media.updated_at IS '@omit create,update';
+
+
+--
 -- Name: media_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -1671,6 +2035,20 @@ CREATE TABLE app_public.media_locales (
 
 
 --
+-- Name: COLUMN media_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.media_locales.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN media_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.media_locales.updated_at IS '@omit create,update';
+
+
+--
 -- Name: musician_compositions; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -1680,6 +2058,20 @@ CREATE TABLE app_public.musician_compositions (
     composition_id integer NOT NULL,
     musician_id integer NOT NULL
 );
+
+
+--
+-- Name: COLUMN musician_compositions.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.musician_compositions.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN musician_compositions.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.musician_compositions.updated_at IS '@omit create,update';
 
 
 --
@@ -1695,6 +2087,20 @@ CREATE TABLE app_public.musician_genres (
 
 
 --
+-- Name: COLUMN musician_genres.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.musician_genres.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN musician_genres.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.musician_genres.updated_at IS '@omit create,update';
+
+
+--
 -- Name: musician_images; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -1704,6 +2110,20 @@ CREATE TABLE app_public.musician_images (
     image_id integer NOT NULL,
     musician_id integer NOT NULL
 );
+
+
+--
+-- Name: COLUMN musician_images.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.musician_images.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN musician_images.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.musician_images.updated_at IS '@omit create,update';
 
 
 --
@@ -1723,6 +2143,20 @@ CREATE TABLE app_public.musician_locales (
 
 
 --
+-- Name: COLUMN musician_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.musician_locales.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN musician_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.musician_locales.updated_at IS '@omit create,update';
+
+
+--
 -- Name: musician_playlists; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -1732,6 +2166,20 @@ CREATE TABLE app_public.musician_playlists (
     musician_id integer NOT NULL,
     playlist_id integer NOT NULL
 );
+
+
+--
+-- Name: COLUMN musician_playlists.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.musician_playlists.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN musician_playlists.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.musician_playlists.updated_at IS '@omit create,update';
 
 
 --
@@ -1747,6 +2195,20 @@ CREATE TABLE app_public.musician_professions (
 
 
 --
+-- Name: COLUMN musician_professions.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.musician_professions.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN musician_professions.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.musician_professions.updated_at IS '@omit create,update';
+
+
+--
 -- Name: musician_tags; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -1756,6 +2218,20 @@ CREATE TABLE app_public.musician_tags (
     musician_id integer NOT NULL,
     tag_id integer NOT NULL
 );
+
+
+--
+-- Name: COLUMN musician_tags.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.musician_tags.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN musician_tags.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.musician_tags.updated_at IS '@omit create,update';
 
 
 --
@@ -1831,6 +2307,20 @@ This is automatically changed if ''published'' changed, can be manually provided
 
 
 --
+-- Name: COLUMN musicians.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.musicians.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN musicians.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.musicians.updated_at IS '@omit create,update';
+
+
+--
 -- Name: musicians_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -1881,6 +2371,20 @@ COMMENT ON COLUMN app_public.open_messages.email IS '@omit update';
 
 
 --
+-- Name: COLUMN open_messages.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.open_messages.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN open_messages.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.open_messages.updated_at IS '@omit create,update';
+
+
+--
 -- Name: open_messages_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -1908,6 +2412,20 @@ CREATE TABLE app_public.page_sections (
 
 
 --
+-- Name: COLUMN page_sections.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.page_sections.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN page_sections.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.page_sections.updated_at IS '@omit create,update';
+
+
+--
 -- Name: playlist_locales; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -1918,6 +2436,20 @@ CREATE TABLE app_public.playlist_locales (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
+
+
+--
+-- Name: COLUMN playlist_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.playlist_locales.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN playlist_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.playlist_locales.updated_at IS '@omit create,update';
 
 
 --
@@ -1938,6 +2470,20 @@ CREATE TABLE app_public.playlist_media (
 --
 
 COMMENT ON COLUMN app_public.playlist_media.index IS 'Order in playlist';
+
+
+--
+-- Name: COLUMN playlist_media.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.playlist_media.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN playlist_media.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.playlist_media.updated_at IS '@omit create,update';
 
 
 --
@@ -1969,6 +2515,20 @@ COMMENT ON COLUMN app_public.playlists.name IS '@localize';
 
 
 --
+-- Name: COLUMN playlists.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.playlists.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN playlists.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.playlists.updated_at IS '@omit create,update';
+
+
+--
 -- Name: playlists_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -1996,6 +2556,20 @@ CREATE TABLE app_public.profession_locales (
 
 
 --
+-- Name: COLUMN profession_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.profession_locales.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN profession_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.profession_locales.updated_at IS '@omit create,update';
+
+
+--
 -- Name: professions; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -2019,6 +2593,20 @@ COMMENT ON COLUMN app_public.professions.id IS '@omit create,update';
 --
 
 COMMENT ON COLUMN app_public.professions.name IS '@localize';
+
+
+--
+-- Name: COLUMN professions.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.professions.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN professions.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.professions.updated_at IS '@omit create,update';
 
 
 --
@@ -2078,6 +2666,20 @@ Token to verify purchase request';
 
 
 --
+-- Name: COLUMN purchases.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.purchases.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN purchases.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.purchases.updated_at IS '@omit create,update';
+
+
+--
 -- Name: purchases_id_seq; Type: SEQUENCE; Schema: app_public; Owner: -
 --
 
@@ -2104,6 +2706,20 @@ CREATE TABLE app_public.score_instruments (
 
 
 --
+-- Name: COLUMN score_instruments.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.score_instruments.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN score_instruments.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.score_instruments.updated_at IS '@omit create,update';
+
+
+--
 -- Name: score_locales; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -2115,6 +2731,20 @@ CREATE TABLE app_public.score_locales (
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL
 );
+
+
+--
+-- Name: COLUMN score_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.score_locales.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN score_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.score_locales.updated_at IS '@omit create,update';
 
 
 --
@@ -2163,6 +2793,20 @@ CREATE TABLE app_public.tag_locales (
 
 
 --
+-- Name: COLUMN tag_locales.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.tag_locales.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN tag_locales.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.tag_locales.updated_at IS '@omit create,update';
+
+
+--
 -- Name: tags; Type: TABLE; Schema: app_public; Owner: -
 --
 
@@ -2186,6 +2830,20 @@ COMMENT ON COLUMN app_public.tags.id IS '@omit create,update';
 --
 
 COMMENT ON COLUMN app_public.tags.name IS '@localize';
+
+
+--
+-- Name: COLUMN tags.created_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.tags.created_at IS '@omit create,update';
+
+
+--
+-- Name: COLUMN tags.updated_at; Type: COMMENT; Schema: app_public; Owner: -
+--
+
+COMMENT ON COLUMN app_public.tags.updated_at IS '@omit create,update';
 
 
 --
@@ -2805,6 +3463,335 @@ ALTER TABLE ONLY graphile_worker.migrations
 --
 
 CREATE INDEX jobs_priority_run_at_id_idx ON graphile_worker.jobs USING btree (priority, run_at, id);
+
+
+--
+-- Name: article_galleries _100_ts_app_public_article_galleries; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_article_galleries BEFORE INSERT OR UPDATE ON app_public.article_galleries FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: article_gallery_images _100_ts_app_public_article_gallery_images; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_article_gallery_images BEFORE INSERT OR UPDATE ON app_public.article_gallery_images FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: article_genres _100_ts_app_public_article_genres; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_article_genres BEFORE INSERT OR UPDATE ON app_public.article_genres FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: article_images _100_ts_app_public_article_images; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_article_images BEFORE INSERT OR UPDATE ON app_public.article_images FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: article_locales _100_ts_app_public_article_locales; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_article_locales BEFORE INSERT OR UPDATE ON app_public.article_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: article_tags _100_ts_app_public_article_tags; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_article_tags BEFORE INSERT OR UPDATE ON app_public.article_tags FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: articles _100_ts_app_public_articles; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_articles BEFORE INSERT OR UPDATE ON app_public.articles FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: composition_locales _100_ts_app_public_composition_locales; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_composition_locales BEFORE INSERT OR UPDATE ON app_public.composition_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: compositions _100_ts_app_public_compositions; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_compositions BEFORE INSERT OR UPDATE ON app_public.compositions FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: document_locales _100_ts_app_public_document_locales; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_document_locales BEFORE INSERT OR UPDATE ON app_public.document_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: documents _100_ts_app_public_documents; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_documents BEFORE INSERT OR UPDATE ON app_public.documents FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: genre_locales _100_ts_app_public_genre_locales; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_genre_locales BEFORE INSERT OR UPDATE ON app_public.genre_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: genres _100_ts_app_public_genres; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_genres BEFORE INSERT OR UPDATE ON app_public.genres FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: group_images _100_ts_app_public_group_images; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_group_images BEFORE INSERT OR UPDATE ON app_public.group_images FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: group_locales _100_ts_app_public_group_locales; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_group_locales BEFORE INSERT OR UPDATE ON app_public.group_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: group_musicians _100_ts_app_public_group_musicians; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_group_musicians BEFORE INSERT OR UPDATE ON app_public.group_musicians FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: group_playlists _100_ts_app_public_group_playlists; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_group_playlists BEFORE INSERT OR UPDATE ON app_public.group_playlists FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: groups _100_ts_app_public_groups; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_groups BEFORE INSERT OR UPDATE ON app_public.groups FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: image_locales _100_ts_app_public_image_locales; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_image_locales BEFORE INSERT OR UPDATE ON app_public.image_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: images _100_ts_app_public_images; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_images BEFORE INSERT OR UPDATE ON app_public.images FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: instrument_locales _100_ts_app_public_instrument_locales; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_instrument_locales BEFORE INSERT OR UPDATE ON app_public.instrument_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: instruments _100_ts_app_public_instruments; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_instruments BEFORE INSERT OR UPDATE ON app_public.instruments FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: media _100_ts_app_public_media; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_media BEFORE INSERT OR UPDATE ON app_public.media FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: media_locales _100_ts_app_public_media_locales; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_media_locales BEFORE INSERT OR UPDATE ON app_public.media_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: musician_compositions _100_ts_app_public_musician_compositions; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_musician_compositions BEFORE INSERT OR UPDATE ON app_public.musician_compositions FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: musician_genres _100_ts_app_public_musician_genres; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_musician_genres BEFORE INSERT OR UPDATE ON app_public.musician_genres FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: musician_images _100_ts_app_public_musician_images; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_musician_images BEFORE INSERT OR UPDATE ON app_public.musician_images FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: musician_locales _100_ts_app_public_musician_locales; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_musician_locales BEFORE INSERT OR UPDATE ON app_public.musician_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: musician_playlists _100_ts_app_public_musician_playlists; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_musician_playlists BEFORE INSERT OR UPDATE ON app_public.musician_playlists FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: musician_professions _100_ts_app_public_musician_professions; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_musician_professions BEFORE INSERT OR UPDATE ON app_public.musician_professions FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: musician_tags _100_ts_app_public_musician_tags; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_musician_tags BEFORE INSERT OR UPDATE ON app_public.musician_tags FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: musicians _100_ts_app_public_musicians; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_musicians BEFORE INSERT OR UPDATE ON app_public.musicians FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: open_messages _100_ts_app_public_open_messages; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_open_messages BEFORE INSERT OR UPDATE ON app_public.open_messages FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: page_sections _100_ts_app_public_page_sections; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_page_sections BEFORE INSERT OR UPDATE ON app_public.page_sections FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: playlist_locales _100_ts_app_public_playlist_locales; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_playlist_locales BEFORE INSERT OR UPDATE ON app_public.playlist_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: playlist_media _100_ts_app_public_playlist_media; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_playlist_media BEFORE INSERT OR UPDATE ON app_public.playlist_media FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: playlists _100_ts_app_public_playlists; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_playlists BEFORE INSERT OR UPDATE ON app_public.playlists FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: profession_locales _100_ts_app_public_profession_locales; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_profession_locales BEFORE INSERT OR UPDATE ON app_public.profession_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: professions _100_ts_app_public_professions; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_professions BEFORE INSERT OR UPDATE ON app_public.professions FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: promo_codes _100_ts_app_public_promo_codes; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_promo_codes BEFORE INSERT OR UPDATE ON app_public.promo_codes FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: purchases _100_ts_app_public_purchases; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_purchases BEFORE INSERT OR UPDATE ON app_public.purchases FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: score_instruments _100_ts_app_public_score_instruments; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_score_instruments BEFORE INSERT OR UPDATE ON app_public.score_instruments FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: score_locales _100_ts_app_public_score_locales; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_score_locales BEFORE INSERT OR UPDATE ON app_public.score_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: scores _100_ts_app_public_scores; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_scores BEFORE INSERT OR UPDATE ON app_public.scores FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: tag_locales _100_ts_app_public_tag_locales; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_tag_locales BEFORE INSERT OR UPDATE ON app_public.tag_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: tags _100_ts_app_public_tags; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_tags BEFORE INSERT OR UPDATE ON app_public.tags FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+
+
+--
+-- Name: users _100_ts_app_public_users; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER _100_ts_app_public_users BEFORE INSERT OR UPDATE ON app_public.users FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
 
 
 --
