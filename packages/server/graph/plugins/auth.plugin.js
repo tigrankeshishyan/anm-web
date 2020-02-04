@@ -9,7 +9,7 @@ const publicMutations = [
   'logout',
   'addContact',
   'createUser',
-  'createContactMessage',
+  'createOpenMessage',
   'updateCurrentUser',
   'purchaseScore',
   'forgetPassword',
