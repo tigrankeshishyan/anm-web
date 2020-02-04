@@ -4,8 +4,8 @@ on:
   push:
     branches: ['stage', 'prod']
     paths:
-      - packages/server
-      - packages/db
+      - packages/server/**
+      - packages/db/**
       - package.json
 
 jobs:
