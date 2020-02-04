@@ -1,11 +1,11 @@
-name: CI
+name: deploy server
 
 on:
   push:
     branches: ['stage', 'prod']
-  paths:
-    - packages/server
-    - packages/db
+    paths:
+      - packages/server
+      - packages/db
 
 jobs:
   build:
