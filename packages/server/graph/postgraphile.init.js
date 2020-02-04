@@ -63,7 +63,7 @@ export default () =>
     pgSettings,
     graphileBuildOptions,
     exportGqlSchemaPath: isDev
-      ? `${dirname()}/../../schema.graphql`
+      ? `${dirname()}/../../../schema.graphql`
       : undefined,
     additionalGraphQLContextFromRequest (request) {
       return buildContext({
