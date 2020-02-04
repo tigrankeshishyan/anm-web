@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import ReactGoogleAnalytics from 'react-ga';
 import { useHistory } from 'react-router-dom';
 import ReactFacebookPixel from 'react-facebook-pixel';
@@ -16,15 +16,21 @@ ReactGoogleAnalytics.initialize(googleAnalyticsTrackId);
 function RouteProvider(props) {
   const history = useHistory();
 
+  const registerPageEnter = useCallback((pathname = window.location.pathname) => {
+    ReactGoogleAnalytics.pageview(pathname); // Record a page view for the given page
+    ReactGoogleAnalytics.set({ page: pathname }); // Update the user's current page
+    ReactFacebookPixel.pageView();
+  }, []);
+
+  useEffect(() => registerPageEnter(), [registerPageEnter]);
+
   useEffect(() => {
     history.listen(({ pathname }) => {
       const isNewLocation = lastLocation !== pathname;
       lastLocation = pathname;
 
       if (isNewLocation) {
-        ReactGoogleAnalytics.set({ page: pathname }); // Update the user's current page
-        ReactGoogleAnalytics.pageview(pathname); // Record a page view for the given page
-        ReactFacebookPixel.pageView();
+        registerPageEnter(pathname);
 
         // Scroll the view to the top if the route was changed
         if (window.scrollY > 0) {
@@ -37,7 +43,7 @@ function RouteProvider(props) {
 
       return lastLocation;
     });
-  }, [history]);
+  }, [history, registerPageEnter]);
 
   return (
     <>
@@ -47,3 +53,7 @@ function RouteProvider(props) {
 }
 
 export default RouteProvider;
+export {
+  ReactFacebookPixel,
+  ReactGoogleAnalytics,
+}
