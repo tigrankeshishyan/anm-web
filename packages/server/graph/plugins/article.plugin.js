@@ -117,11 +117,9 @@ async function mutateArticle (resolve, parent, args, ctx, info) {
   }
 
   if (Array.isArray(createImages) && createImages.length) {
-    createImages.forEach(validateImageInput)
-
     await Promise.all(
       createImages.map(async img => {
-        const url = await Storage.uploadImage(await img.url)
+        const url = await Storage.uploadImage(await img.url.file)
 
         const imgData = { url, caption: img.caption, description: img.description }
         const row = await insertInto(pgClient, 'images', imgData)
@@ -133,12 +131,4 @@ async function mutateArticle (resolve, parent, args, ctx, info) {
   return {
     data: await byTableNameAndId(_id, 'articles', info)
   }
-}
-
-function validateImageInput (input) {
-  if (typeof input.url.then === 'function') {
-    return
-  }
-
-  throw Error(`invalid input for createImages ${JSON.stringify(input)}`)
 }
