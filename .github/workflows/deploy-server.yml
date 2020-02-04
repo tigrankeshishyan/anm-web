@@ -1,0 +1,39 @@
+name: deploy server
+
+on:
+  push:
+    branches: ['stage', 'prod']
+    paths:
+      - packages/server
+      - packages/db
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Create ssh keys from SECRETS
+      run: |
+        mkdir ~/.ssh
+        echo "${{ secrets.GITHUB_RSA }}" > ~/.ssh/id_rsa
+        echo "${{ secrets.GITHUB_RSA_PUBLIC }}" > ~/.ssh/id_rsa.pub
+        chmod 400 ~/.ssh/id_rsa
+        chmod 400 ~/.ssh/id_rsa.pub
+
+    - name: Extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
+
+    - run: ssh-keyscan ${{ secrets.HOST }} >> ~/.ssh/known_hosts
+
+    - name: deploy server
+      run: >-
+        ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER }}
+        'cd ~/anm/${{steps.extract_branch.outputs.branch}}/web/;
+        ANM_ENV=${{steps.extract_branch.outputs.branch}} yarn server pull;
+        yarn db migrate;
+        pm2 restart ${{steps.extract_branch.outputs.branch}}'
+        
+      
