@@ -1,63 +1,63 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect } from 'react';
 
-import { useMutation } from "@apollo/react-hooks";
+import { useMutation } from '@apollo/react-hooks';
 
-import Grid from "@material-ui/core/Grid";
+import Grid from '@material-ui/core/Grid';
 
-import { withToastActions } from "containers/ToastMessages";
+import { withToastActions } from 'containers/ToastMessages';
 
-import ContentSection from "sections/ContentSection";
+import ContentSection from 'sections/ContentSection';
 
-import SEO from "components/SEO";
-import SocialIcon from "components/SocialIcon";
+import SEO from 'components/SEO';
+import SocialIcon from 'components/SocialIcon';
 
-import { validateForm } from "Auth/helpers";
-import { withI18n } from "localization/helpers";
+import { validateForm } from 'Auth/helpers';
+import { withI18n } from 'localization/helpers';
 
-import { getCurrentLang } from "localization/helpers";
+import { getCurrentLang } from 'localization/helpers';
 
-import { LOG_IN, CREATE_USER, AUTHENTICATE_USER } from "_graphql/actions/user";
+import { LOG_IN, CREATE_USER, AUTHENTICATE_USER } from '_graphql/actions/user';
 
-import Loading from "components/Loading";
-import AuthForm from "Auth/AuthForm";
+import Loading from 'components/Loading';
+import AuthForm from 'Auth/AuthForm';
 
-import "./styles.sass";
+import './styles.sass';
 
 const { REACT_APP_HOST } = process.env;
 
 const emptySignInForm = {
-  email: "",
-  password: ""
+  email: '',
+  password: ''
 };
 
 const emptySignUpForm = {
-  email: "",
-  password: "",
-  lastName: "",
-  firstName: "",
-  confirmPassword: ""
+  email: '',
+  password: '',
+  lastName: '',
+  firstName: '',
+  confirmPassword: ''
 };
 
-const DUPLICATE_EMAIL_ERROR = "duplicate key value";
+const DUPLICATE_EMAIL_ERROR = 'duplicate key value';
 
-const loginRequiredFields = ["password", "email"];
+const loginRequiredFields = ['password', 'email'];
 
-const requiredFields = ["firstName", "lastName"];
+const requiredFields = ['firstName', 'lastName'];
 
 const getResponseStatusKey = code => {
   switch (code) {
     case 2:
-      return "useFacebook";
+      return 'useFacebook';
     case 1:
     default:
-      return "wrongCredentials";
+      return 'wrongCredentials';
   }
 };
 
 const locale = getCurrentLang();
 
 function AuthFormWrapper(props) {
-  const [formKey, setFormKey] = useState("form");
+  const [formKey, setFormKey] = useState('form');
   const [formData, setFormData] = useState(emptySignUpForm);
   const [isSignInMode, setSignInMode] = useState(true);
   const [isPageLoading, setPageLoading] = useState(false);
@@ -76,7 +76,7 @@ function AuthFormWrapper(props) {
         userCreateError.message &&
         userCreateError.message.includes(DUPLICATE_EMAIL_ERROR)
       ) {
-        errors.email = props.i18n("email.duplicateEmailError");
+        errors.email = props.i18n('email.duplicateEmailError');
         props.addToastMessage.error(errors.email);
         setErrors(errors);
       }
@@ -84,7 +84,7 @@ function AuthFormWrapper(props) {
   }, [props, setErrors, createUser, userCreateError]);
 
   useEffect(() => {
-    const isSignInMode = props.location.pathname.includes("sign-in");
+    const isSignInMode = props.location.pathname.includes('sign-in');
     const formData = isSignInMode ? emptySignInForm : emptySignUpForm;
 
     setFormData(formData);
@@ -106,9 +106,9 @@ function AuthFormWrapper(props) {
         // Log in user or create a new one
         const res = isSignInMode
           ? await logIn({
-              variables: data,
-              refetchQueries: [{ query: AUTHENTICATE_USER }]
-            })
+            variables: data,
+            refetchQueries: [{ query: AUTHENTICATE_USER }]
+          })
           : await createUser({ variables: data });
 
         if (res && res.data) {
@@ -118,13 +118,13 @@ function AuthFormWrapper(props) {
 
           // if createUser exists that means that user just was created
           if (createUser) {
-            addToastMessage.success(i18n("profileCreated"));
-            history.push(`${locale}/auth/sign-in`);
+            addToastMessage.success(i18n('profileCreated'));
+            history.push(`/${locale}/auth/sign-in`);
           } else if (errorCode) {
             addToastMessage.error(i18n(getResponseStatusKey(errorCode)));
           } else {
             setFormData(emptySignUpForm);
-            history.push(`${locale}/home`);
+            history.push(`/${locale}/home`);
           }
         }
       }
@@ -144,7 +144,7 @@ function AuthFormWrapper(props) {
 
   return (
     <>
-      <SEO title={i18n(isSignInMode ? "signIn" : "signUp")} />
+      <SEO title={i18n(isSignInMode ? 'signIn' : 'signUp')}/>
 
       <ContentSection>
         <Grid container justify="center">
@@ -154,14 +154,14 @@ function AuthFormWrapper(props) {
               isLoading={isPageLoading || isCreateUserLoading || isLoginLoading}
             >
               <p className="secondary-text-color mrg-vertical-half">
-                {i18n("useSocialAccount")}
+                {i18n('useSocialAccount')}
               </p>
 
               <a
                 onClick={() => setPageLoading(true)}
                 href={`${REACT_APP_HOST}/auth/facebook`}
               >
-                <SocialIcon iconName="Facebook" />
+                <SocialIcon iconName="Facebook"/>
               </a>
 
               <AuthForm
