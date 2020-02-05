@@ -32,7 +32,8 @@ const theme = createMuiTheme({
   },
 });
 
-function MaterialThemeProvider({ children }) {
+function MaterialThemeProvider(props) {
+  const { children } = props;
   return (
     <MuiThemeProvider theme={theme}>
       <CssBaseline/>
