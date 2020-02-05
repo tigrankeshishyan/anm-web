@@ -66,7 +66,7 @@ export const LOGOUT = gql`
 
 export const FORGET_PASSWORD = gql`
   mutation ForgetPassword($email: String!) {
-    forgetPassword(
+    forgotPassword(
       input: {
         email: $email
       }
@@ -80,9 +80,12 @@ export const RESET_PASSWORD = gql`
   mutation ResetPassword($token: String!, $newPassword: String!) {
     resetPassword(input: {
       token: $token
-      newPassword: $newPassword
+      password: $newPassword
     }) {
-      success
+      resetPasswordResult {
+          message
+          success
+      }
     }
   }
 `;
