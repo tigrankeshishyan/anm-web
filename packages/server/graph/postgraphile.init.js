@@ -2,7 +2,7 @@ import GraphqlPassport from 'graphql-passport'
 import postgraphile from 'postgraphile'
 import dirname from 'es-dirname'
 
-import { database, isDev, isProd } from '../../config'
+import { database, isDev } from '../../config'
 import * as Storage from '../utils/storage.util'
 
 import CustomPlugins, { SameGraphQLAndGraphiQLPathnameTweak } from './plugins'
