@@ -45,6 +45,10 @@ export function getObject (key) {
     })
 }
 
+export function getScorePosterKey (scoreId) {
+  return `${SCORE_PREFIX}/${scoreId}/poster.png`
+}
+
 export async function deleteObject (...keys) {
   const Objects = keys.map(k => ({ Key: k }))
   return s3
@@ -73,6 +77,29 @@ export async function uploadImage (upload) {
       Bucket: s3Bucket,
       ContentDisposition: 'inline',
       ContentType: upload.mimetype
+    })
+    .promise()
+
+  return s3Key
+}
+
+/**
+ * @param {Upload} upload Multer file object.
+ */
+export async function uploadScorePoster (upload, scoreId) {
+  const s3Key = getScorePosterKey(scoreId)
+  const stream = sharp().resize(maxImageSize, maxImageSize, {
+    fit: 'inside',
+    withoutEnlargement: true
+  }).png()
+
+  await s3
+    .upload({
+      Key: s3Key,
+      Body: upload.createReadStream().pipe(stream),
+      Bucket: s3Bucket,
+      ContentDisposition: 'inline',
+      ContentType: 'image/png'
     })
     .promise()
 
@@ -240,6 +267,13 @@ export async function deleteAudio (key) {
       Bucket: s3Bucket
     })
     .promise()
+}
+
+/**
+ * @param {string} key Bucket ks3Bucket,
+ */
+export async function deleteScorePoster (scoreId) {
+  return deleteObject(getScorePosterKey(scoreId))
 }
 
 /**
