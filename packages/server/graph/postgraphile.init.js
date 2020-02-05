@@ -48,16 +48,14 @@ const graphileBuildOptions = {
   ]
 }
 
-const enableGraphiql = !isProd
-
 export default () =>
   postgraphile.postgraphql(database.authUrl, [database.schema], {
     ownerConnectionString: database.url,
     appendPlugins: [CustomPlugins],
     pluginHook,
     watchPg: true,
-    graphiql: enableGraphiql,
-    enhanceGraphiql: enableGraphiql,
+    graphiql: true,
+    enhanceGraphiql: true,
     dynamicJson: true,
     simpleCollections: 'both',
     bodySizeLimit: '50mb',
