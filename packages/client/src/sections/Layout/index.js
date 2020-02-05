@@ -5,8 +5,6 @@ import { renderRoutes } from 'react-router-config';
 import { ApolloProvider } from '@apollo/react-hooks';
 import ToastMessages from 'containers/ToastMessages';
 
-import MaterialThemeProvider from 'theme/MaterialThemeProvider';
-
 import CookieBanner from 'components/CookieBanner';
 
 import RouteProvider from 'containers/RouteProvider';
@@ -20,6 +18,8 @@ import client from '_graphql';
 
 import routes from 'routes';
 
+import 'styles/common.sass';
+
 import './index.sass';
 
 function Layout(props) {
@@ -28,24 +28,22 @@ function Layout(props) {
       <RouteProvider>
         <IntlProvider {...props}>
           <ApolloProvider client={client}>
-            <MaterialThemeProvider>
-              <ToastMessages>
-                <div className="flex-column anm-app-layout">
-                  <div className="grow">
-                    <Header
-                      location={props.location}
-                    />
-                    <Switch>
-                      <main className="main-app">
-                        {renderRoutes(routes)}
-                      </main>
-                    </Switch>
-                  </div>
-                  <Footer/>
-                  <CookieBanner/>
+            <ToastMessages>
+              <div className="flex-column anm-app-layout">
+                <div className="grow">
+                  <Header
+                    location={props.location}
+                  />
+                  <Switch>
+                    <main className="main-app">
+                      {renderRoutes(routes)}
+                    </main>
+                  </Switch>
                 </div>
-              </ToastMessages>
-            </MaterialThemeProvider>
+                <Footer/>
+                <CookieBanner/>
+              </div>
+            </ToastMessages>
           </ApolloProvider>
         </IntlProvider>
       </RouteProvider>

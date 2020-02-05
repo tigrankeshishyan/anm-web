@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Layout from 'sections/Layout';
+import MaterialThemeProvider from 'theme/MaterialThemeProvider';
 
 import { withStyles } from '@material-ui/core/styles';
 
@@ -15,9 +16,11 @@ const styles = theme => ({
 
 function App({ children }) {
   return (
-    <Layout>
-      {children}
-    </Layout>
+    <MaterialThemeProvider>
+      <Layout>
+        {children}
+      </Layout>
+    </MaterialThemeProvider>
   );
 }
 
