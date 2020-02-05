@@ -2,7 +2,7 @@ import GraphqlPassport from 'graphql-passport'
 import postgraphile from 'postgraphile'
 import dirname from 'es-dirname'
 
-import { database, isDev } from '../../config'
+import { database, isDev, isProd } from '../../config'
 import * as Storage from '../utils/storage.util'
 
 import CustomPlugins, { SameGraphQLAndGraphiQLPathnameTweak } from './plugins'
@@ -48,14 +48,16 @@ const graphileBuildOptions = {
   ]
 }
 
+const enableGraphiql = !isProd
+
 export default () =>
   postgraphile.postgraphql(database.authUrl, [database.schema], {
     ownerConnectionString: database.url,
     appendPlugins: [CustomPlugins],
     pluginHook,
     watchPg: true,
-    graphiql: true,
-    enhanceGraphiql: true,
+    graphiql: enableGraphiql,
+    enhanceGraphiql: enableGraphiql,
     dynamicJson: true,
     simpleCollections: 'both',
     bodySizeLimit: '50mb',
