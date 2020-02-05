@@ -48,6 +48,7 @@ const fields = [
 
 const anmEmails = [
   supportEmail,
+  'contact@anmmedia.am',
   'info@anmmedia.am',
   'press@anmmedia.am',
 ];
