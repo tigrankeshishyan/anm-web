@@ -12,7 +12,6 @@ import {
 import Button from 'components/Button';
 import Loading from 'components/Loading';
 import DropZone from 'components/DropZone';
-import ReCaptcha from 'components/ReCaptcha';
 
 import { withI18n } from 'localization/helpers';
 
@@ -45,7 +44,6 @@ function ContactForm(props) {
   const [formKey, setFormKey] = useState(generateDateKeyString());
   const [formData, setFormData] = useState(emptyForm);
   const [requestMessage, { loading }] = useMutation(REQUEST_MESSAGE);
-  const [isRecaptchaConfirmed, setReCaptchaStatus] = useState(false);
   const {
     i18n,
     title,
@@ -69,7 +67,7 @@ function ContactForm(props) {
   }, [addToastMessage, i18n]);
 
   const handleFormSubmit = useCallback(async () => {
-    if (isRecaptchaConfirmed && canSubmitForm(formData)) {
+    if (canSubmitForm(formData)) {
       try {
         const res = await requestMessage({
           variables: transformDataBeforeSend(formData),
@@ -78,7 +76,6 @@ function ContactForm(props) {
         if (res && res.data) {
           setFormData({ ...emptyForm });
           setFormKey(generateDateKeyString());
-          setReCaptchaStatus(false);
           addToastMessage.success(i18n('contactUs.sent'));
         } else {
           showError();
@@ -96,8 +93,6 @@ function ContactForm(props) {
     canSubmitForm,
     requestMessage,
     addToastMessage,
-    setReCaptchaStatus,
-    isRecaptchaConfirmed,
     transformDataBeforeSend,
   ]);
 
@@ -151,17 +146,12 @@ function ContactForm(props) {
           </DropZone>
         </div>
 
-        <div className="flex-row justify-between align-center wrap">
-          <ReCaptcha
-            className="mrg-top-15"
-            onChange={res => setReCaptchaStatus(!!res)}
-          />
-
+        <div className="flex-row justify-end align-center wrap">
           <Button
             variant="ghost-blue"
             className="mrg-top-15"
             onClick={handleFormSubmit}
-            disabled={loading || !isRecaptchaConfirmed || !validateForm(formData)}
+            disabled={loading || !validateForm(formData)}
           >
             {submitButtonText}
           </Button>
