@@ -56,7 +56,7 @@ export class Slack {
     })
   }
 
-  static contactMessage (message, user) {
+  static openMessage (message, user) {
     const _user = user || { id: 'unknown' }
     const email = _user.email ? ` email(${_user.email})` : ''
     let str = `Message from user(${_user.id})${email}`
