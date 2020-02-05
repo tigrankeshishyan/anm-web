@@ -6,7 +6,6 @@ import { withI18n } from 'localization/helpers';
 import { getCurrentLang } from 'localization/helpers';
 
 import Button from 'components/Button';
-import ReCaptcha from 'components/ReCaptcha';
 
 import {
   TextField
@@ -18,7 +17,6 @@ import './styles.sass';
 
 function AuthForm (props) {
   const [isForgotPasswordMode, setForGotPasswordMode] = useState(false);
-  const [isRecaptchaSet, setRecaptcha] = useState(false);
   const [agreedWithTerms, setTermsAgreed] = useState(false);
 
   const {
@@ -31,7 +29,7 @@ function AuthForm (props) {
   } = props;
 
   const arePasswordMatch = formData.password === formData.confirmPassword;
-  const isSubmitDisabled = !isSignInMode && arePasswordMatch && (!isRecaptchaSet || !agreedWithTerms);
+  const isSubmitDisabled = !isSignInMode && arePasswordMatch && !agreedWithTerms;
 
   const onFormChange = useCallback(data => {
     handleFormChange({
@@ -39,12 +37,6 @@ function AuthForm (props) {
       ...data,
     });
   }, [handleFormChange, formData]);
-
-  const handleRecaptchaSet = useCallback(cKey => {
-    if (cKey) {
-      setRecaptcha(true);
-    }
-  }, [setRecaptcha]);
 
   const onFormSubmit = useCallback(e => {
     e.preventDefault();
@@ -176,11 +168,6 @@ function AuthForm (props) {
                     </a>
                   </span>
                 </div>
-                {!isSignInMode && (
-                  <ReCaptcha
-                    onChange={handleRecaptchaSet}
-                  />
-                )}
               </div>
             )}
             <div className="auth-form-footer">

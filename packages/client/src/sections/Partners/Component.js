@@ -14,6 +14,7 @@ import HoverChoirLogo from 'images/partners/hoverChoir.png';
 import QuartertoneLogo from 'images/partners/quartertone.png';
 import AssonanceLogo from 'images/partners/assonance.jpg';
 import YerevanStringQuartetLogo from 'images/partners/yerevanStringQuartet.png';
+import KhachatryanHomeMuseumLogo from 'images/partners/khachatryanHomeMuseum.png';
 
 import './styles.sass';
 
@@ -21,55 +22,51 @@ import './styles.sass';
 const logos = [
   {
     logo: AgbuLogo,
-    logoName: 'agbu',
     website: 'https://agbu.org',
     title: 'AGBU',
   },
   {
     logo: AvetisAssociationLogo,
-    logoName: 'avetisAssociation',
     website: ' http://www.avetis.ch',
     title: 'Avetis Association',
   },
   {
     logo: KomitasInstituteLogo,
-    logoName: 'komitasInstitute',
     website: 'https://www.gomidas.org',
     title: 'Komitas Museum-Institute',
   },
   {
     logo: ConservatoryLogo,
-    logoName: 'conservatory',
+    website: 'http://www.khachaturian.am/eng/museum.htm',
+    title: 'Aram Khachatryan Home Museum',
+  },
+  {
+    logo: KhachatryanHomeMuseumLogo,
     website: 'https://conservatory.am',
     title: 'Yerevan Komitas State Conservatory',
   },
   {
     logo: AnpoLogo,
-    logoName: 'anpo',
     website: 'https://apo.am',
     title: 'Armenian National Philharmonic Orchestra',
   },
   {
     logo: HoverChoirLogo,
-    logoName: 'hoverChoir',
     website: 'http://hoverchoir.org',
     title: 'Hover Choir',
   },
   {
     logo: QuartertoneLogo,
-    logoName: 'quartertone',
     website: 'https://www.quartertone.org',
     title: 'Quarter Tone',
   },
   {
     logo: AssonanceLogo,
-    logoName: 'assonance',
     website: 'https://www.facebook.com/ensembleassonance',
     title: 'Assonance Ensemble',
   },
   {
     logo: YerevanStringQuartetLogo,
-    logoName: 'yerevanStringQuartet',
     website: 'https://www.facebook.com/Yerevanquartet/',
     title: '"Yerevan" String Quartet',
   },
@@ -98,6 +95,7 @@ function HomePartnersSection(props) {
             className="partner-logo"
           >
             <Img
+              alt={logo.title}
               src={logo.logo}
             />
           </a>
