@@ -474,7 +474,7 @@ CREATE FUNCTION app_public.current_user_id(not_null boolean DEFAULT false) RETUR
     SET search_path TO 'public'
     AS $$
 declare
-    user_id integer = current_setting('user.id', true)::integer;
+    user_id integer = nullif(current_setting('user.id', true), '')::integer;
 begin
     if not_null and user_id is null then
         raise exception 'You need to be logged in';
