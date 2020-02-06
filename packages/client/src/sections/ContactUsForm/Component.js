@@ -107,7 +107,7 @@ function ContactForm(props) {
             {title}
           </Typography>
           {subTitle && (
-            <Typography variant="h6">
+            <Typography variant="h6" color="textSecondary">
               {subTitle}
             </Typography>
           )}
