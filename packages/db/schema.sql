@@ -249,6 +249,31 @@ $$;
 
 
 --
+-- Name: generate_sitemap(); Type: FUNCTION; Schema: app_private; Owner: -
+--
+
+CREATE FUNCTION app_private.generate_sitemap() RETURNS trigger
+    LANGUAGE plpgsql SECURITY DEFINER
+    SET search_path TO 'app_public'
+    AS $$
+declare
+  suffix text = tg_argv[0];
+begin
+  perform graphile_worker.add_job(
+    'generateSitemap',
+    payload := json_build_object('suffix', suffix),
+    run_at := now() + interval '2 Minutes',
+    job_key := 'generate-sitemap-' || suffix
+    );
+  if tg_op = 'delete' then
+    return old;
+  end if;
+  return new;
+end;
+$$;
+
+
+--
 -- Name: new_open_message(); Type: FUNCTION; Schema: app_private; Owner: -
 --
 
@@ -782,7 +807,7 @@ $_$;
 
 CREATE TABLE graphile_worker.jobs (
     id bigint NOT NULL,
-    queue_name text DEFAULT (public.gen_random_uuid())::text NOT NULL,
+    queue_name text DEFAULT (public.gen_random_uuid())::text,
     task_identifier text NOT NULL,
     payload json DEFAULT '{}'::json NOT NULL,
     priority integer DEFAULT 0 NOT NULL,
@@ -791,18 +816,79 @@ CREATE TABLE graphile_worker.jobs (
     max_attempts integer DEFAULT 25 NOT NULL,
     last_error text,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL
+    updated_at timestamp with time zone DEFAULT now() NOT NULL,
+    key text,
+    locked_at timestamp with time zone,
+    locked_by text,
+    CONSTRAINT jobs_key_check CHECK ((length(key) > 0))
 );
 
 
 --
--- Name: add_job(text, json, text, timestamp with time zone, integer); Type: FUNCTION; Schema: graphile_worker; Owner: -
+-- Name: add_job(text, json, text, timestamp with time zone, integer, text); Type: FUNCTION; Schema: graphile_worker; Owner: -
 --
 
-CREATE FUNCTION graphile_worker.add_job(identifier text, payload json DEFAULT '{}'::json, queue_name text DEFAULT (public.gen_random_uuid())::text, run_at timestamp with time zone DEFAULT now(), max_attempts integer DEFAULT 25) RETURNS graphile_worker.jobs
-    LANGUAGE sql
+CREATE FUNCTION graphile_worker.add_job(identifier text, payload json DEFAULT '{}'::json, queue_name text DEFAULT NULL::text, run_at timestamp with time zone DEFAULT now(), max_attempts integer DEFAULT 25, job_key text DEFAULT NULL::text) RETURNS graphile_worker.jobs
+    LANGUAGE plpgsql
     AS $$
-  insert into graphile_worker.jobs(task_identifier, payload, queue_name, run_at, max_attempts) values(identifier, payload, queue_name, run_at, max_attempts) returning *;
+declare
+  v_job graphile_worker.jobs;
+begin
+  if job_key is not null then
+    -- Upsert job
+    insert into graphile_worker.jobs (task_identifier, payload, queue_name, run_at, max_attempts, key)
+      values(
+        identifier,
+        payload,
+        queue_name,
+        run_at,
+        max_attempts,
+        job_key
+      )
+      on conflict (key) do update set
+        task_identifier=excluded.task_identifier,
+        payload=excluded.payload,
+        queue_name=excluded.queue_name,
+        max_attempts=excluded.max_attempts,
+        run_at=excluded.run_at,
+
+        -- always reset error/retry state
+        attempts=0,
+        last_error=null
+      where jobs.locked_at is null
+      returning *
+      into v_job;
+
+    -- If upsert succeeded (insert or update), return early
+    if not (v_job is null) then
+      return v_job;
+    end if;
+
+    -- Upsert failed -> there must be an existing job that is locked. Remove
+    -- existing key to allow a new one to be inserted, and prevent any
+    -- subsequent retries by bumping attempts to the max allowed.
+    update graphile_worker.jobs
+      set
+        key = null,
+        attempts = jobs.max_attempts
+      where key = job_key;
+  end if;
+
+  -- insert the new job. Assume no conflicts due to the update above
+  insert into graphile_worker.jobs(task_identifier, payload, queue_name, run_at, max_attempts, key)
+    values(
+      identifier,
+      payload,
+      queue_name,
+      run_at,
+      max_attempts,
+      job_key
+    )
+    returning *
+    into v_job;
+
+  return v_job;
+end;
 $$;
 
 
@@ -820,9 +906,11 @@ begin
     where id = job_id
     returning * into v_row;
 
-  update graphile_worker.job_queues
-    set locked_by = null, locked_at = null
-    where queue_name = v_row.queue_name and locked_by = worker_id;
+  if v_row.queue_name is not null then
+    update graphile_worker.job_queues
+      set locked_by = null, locked_at = null
+      where queue_name = v_row.queue_name and locked_by = worker_id;
+  end if;
 
   return v_row;
 end;
@@ -834,7 +922,7 @@ $$;
 --
 
 CREATE FUNCTION graphile_worker.fail_job(worker_id text, job_id bigint, error_message text) RETURNS graphile_worker.jobs
-    LANGUAGE plpgsql
+    LANGUAGE plpgsql STRICT
     AS $$
 declare
   v_row graphile_worker.jobs;
@@ -842,13 +930,17 @@ begin
   update graphile_worker.jobs
     set
       last_error = error_message,
-      run_at = greatest(now(), run_at) + (exp(least(attempts, 10))::text || ' seconds')::interval
-    where id = job_id
+      run_at = greatest(now(), run_at) + (exp(least(attempts, 10))::text || ' seconds')::interval,
+      locked_by = null,
+      locked_at = null
+    where id = job_id and locked_by = worker_id
     returning * into v_row;
 
-  update graphile_worker.job_queues
-    set locked_by = null, locked_at = null
-    where queue_name = v_row.queue_name and locked_by = worker_id;
+  if v_row.queue_name is not null then
+    update graphile_worker.job_queues
+      set locked_by = null, locked_at = null
+      where queue_name = v_row.queue_name and locked_by = worker_id;
+  end if;
 
   return v_row;
 end;
@@ -865,37 +957,53 @@ CREATE FUNCTION graphile_worker.get_job(worker_id text, task_identifiers text[] 
 declare
   v_job_id bigint;
   v_queue_name text;
-  v_default_job_max_attempts text = '25';
   v_row graphile_worker.jobs;
+  v_now timestamptz = now();
 begin
   if worker_id is null or length(worker_id) < 10 then
     raise exception 'invalid worker id';
   end if;
 
-  select job_queues.queue_name, jobs.id into v_queue_name, v_job_id
+  select jobs.queue_name, jobs.id into v_queue_name, v_job_id
     from graphile_worker.jobs
-    inner join graphile_worker.job_queues using (queue_name)
-    where (locked_at is null or locked_at < (now() - job_expiry))
-    and run_at <= now()
+    where (jobs.locked_at is null or jobs.locked_at < (v_now - job_expiry))
+    and (
+      jobs.queue_name is null
+    or
+      exists (
+        select 1
+        from graphile_worker.job_queues
+        where job_queues.queue_name = jobs.queue_name
+        and (job_queues.locked_at is null or job_queues.locked_at < (v_now - job_expiry))
+        for update
+        skip locked
+      )
+    )
+    and run_at <= v_now
     and attempts < max_attempts
     and (task_identifiers is null or task_identifier = any(task_identifiers))
     order by priority asc, run_at asc, id asc
     limit 1
-    for update of job_queues
+    for update
     skip locked;
 
-  if v_queue_name is null then
+  if v_job_id is null then
     return null;
   end if;
 
-  update graphile_worker.job_queues
-    set
-      locked_by = worker_id,
-      locked_at = now()
-    where job_queues.queue_name = v_queue_name;
+  if v_queue_name is not null then
+    update graphile_worker.job_queues
+      set
+        locked_by = worker_id,
+        locked_at = v_now
+      where job_queues.queue_name = v_queue_name;
+  end if;
 
   update graphile_worker.jobs
-    set attempts = attempts + 1
+    set
+      attempts = attempts + 1,
+      locked_by = worker_id,
+      locked_at = v_now
     where id = v_job_id
     returning * into v_row;
 
@@ -944,6 +1052,20 @@ begin
 
   return new;
 end;
+$$;
+
+
+--
+-- Name: remove_job(text); Type: FUNCTION; Schema: graphile_worker; Owner: -
+--
+
+CREATE FUNCTION graphile_worker.remove_job(job_key text) RETURNS graphile_worker.jobs
+    LANGUAGE sql STRICT
+    AS $$
+  delete from graphile_worker.jobs
+    where key = job_key
+    and locked_at is null
+  returning *;
 $$;
 
 
@@ -3444,6 +3566,14 @@ ALTER TABLE ONLY graphile_worker.job_queues
 
 
 --
+-- Name: jobs jobs_key_key; Type: CONSTRAINT; Schema: graphile_worker; Owner: -
+--
+
+ALTER TABLE ONLY graphile_worker.jobs
+    ADD CONSTRAINT jobs_key_key UNIQUE (key);
+
+
+--
 -- Name: jobs jobs_pkey; Type: CONSTRAINT; Schema: graphile_worker; Owner: -
 --
 
@@ -3796,6 +3926,27 @@ CREATE TRIGGER _100_ts_app_public_users BEFORE INSERT OR UPDATE ON app_public.us
 
 
 --
+-- Name: musicians generate_musicians_sitemap; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER generate_musicians_sitemap AFTER INSERT OR DELETE ON app_public.musicians FOR EACH ROW EXECUTE PROCEDURE app_private.generate_sitemap('musicians');
+
+
+--
+-- Name: articles generate_news_sitemap; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER generate_news_sitemap AFTER INSERT OR DELETE ON app_public.articles FOR EACH ROW EXECUTE PROCEDURE app_private.generate_sitemap('news');
+
+
+--
+-- Name: scores generate_scores_sitemap; Type: TRIGGER; Schema: app_public; Owner: -
+--
+
+CREATE TRIGGER generate_scores_sitemap AFTER INSERT OR DELETE ON app_public.scores FOR EACH ROW EXECUTE PROCEDURE app_private.generate_sitemap('scores');
+
+
+--
 -- Name: open_messages send_slack_message; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
@@ -3813,28 +3964,28 @@ CREATE TRIGGER _100_timestamps BEFORE UPDATE ON graphile_worker.jobs FOR EACH RO
 -- Name: jobs _500_decrease_job_queue_count; Type: TRIGGER; Schema: graphile_worker; Owner: -
 --
 
-CREATE TRIGGER _500_decrease_job_queue_count AFTER DELETE ON graphile_worker.jobs FOR EACH ROW EXECUTE PROCEDURE graphile_worker.jobs__decrease_job_queue_count();
+CREATE TRIGGER _500_decrease_job_queue_count AFTER DELETE ON graphile_worker.jobs FOR EACH ROW WHEN ((old.queue_name IS NOT NULL)) EXECUTE PROCEDURE graphile_worker.jobs__decrease_job_queue_count();
 
 
 --
 -- Name: jobs _500_decrease_job_queue_count_update; Type: TRIGGER; Schema: graphile_worker; Owner: -
 --
 
-CREATE TRIGGER _500_decrease_job_queue_count_update AFTER UPDATE OF queue_name ON graphile_worker.jobs FOR EACH ROW EXECUTE PROCEDURE graphile_worker.jobs__decrease_job_queue_count();
+CREATE TRIGGER _500_decrease_job_queue_count_update AFTER UPDATE OF queue_name ON graphile_worker.jobs FOR EACH ROW WHEN (((new.queue_name IS DISTINCT FROM old.queue_name) AND (old.queue_name IS NOT NULL))) EXECUTE PROCEDURE graphile_worker.jobs__decrease_job_queue_count();
 
 
 --
 -- Name: jobs _500_increase_job_queue_count; Type: TRIGGER; Schema: graphile_worker; Owner: -
 --
 
-CREATE TRIGGER _500_increase_job_queue_count AFTER INSERT ON graphile_worker.jobs FOR EACH ROW EXECUTE PROCEDURE graphile_worker.jobs__increase_job_queue_count();
+CREATE TRIGGER _500_increase_job_queue_count AFTER INSERT ON graphile_worker.jobs FOR EACH ROW WHEN ((new.queue_name IS NOT NULL)) EXECUTE PROCEDURE graphile_worker.jobs__increase_job_queue_count();
 
 
 --
 -- Name: jobs _500_increase_job_queue_count_update; Type: TRIGGER; Schema: graphile_worker; Owner: -
 --
 
-CREATE TRIGGER _500_increase_job_queue_count_update AFTER UPDATE OF queue_name ON graphile_worker.jobs FOR EACH ROW EXECUTE PROCEDURE graphile_worker.jobs__increase_job_queue_count();
+CREATE TRIGGER _500_increase_job_queue_count_update AFTER UPDATE OF queue_name ON graphile_worker.jobs FOR EACH ROW WHEN (((new.queue_name IS DISTINCT FROM old.queue_name) AND (new.queue_name IS NOT NULL))) EXECUTE PROCEDURE graphile_worker.jobs__increase_job_queue_count();
 
 
 --
@@ -4494,6 +4645,13 @@ REVOKE ALL ON FUNCTION app_private.create_code(len integer, alpha boolean) FROM 
 
 
 --
+-- Name: FUNCTION generate_sitemap(); Type: ACL; Schema: app_private; Owner: -
+--
+
+REVOKE ALL ON FUNCTION app_private.generate_sitemap() FROM PUBLIC;
+
+
+--
 -- Name: FUNCTION new_open_message(); Type: ACL; Schema: app_private; Owner: -
 --
 
@@ -4631,6 +4789,20 @@ GRANT ALL ON FUNCTION app_public.users_email_verification_status(i_user app_publ
 
 REVOKE ALL ON FUNCTION app_public.verify_email(code text) FROM PUBLIC;
 GRANT ALL ON FUNCTION app_public.verify_email(code text) TO anm_visitor;
+
+
+--
+-- Name: FUNCTION add_job(identifier text, payload json, queue_name text, run_at timestamp with time zone, max_attempts integer, job_key text); Type: ACL; Schema: graphile_worker; Owner: -
+--
+
+REVOKE ALL ON FUNCTION graphile_worker.add_job(identifier text, payload json, queue_name text, run_at timestamp with time zone, max_attempts integer, job_key text) FROM PUBLIC;
+
+
+--
+-- Name: FUNCTION remove_job(job_key text); Type: ACL; Schema: graphile_worker; Owner: -
+--
+
+REVOKE ALL ON FUNCTION graphile_worker.remove_job(job_key text) FROM PUBLIC;
 
 
 --
