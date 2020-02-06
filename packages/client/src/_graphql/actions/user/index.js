@@ -64,14 +64,17 @@ export const LOGOUT = gql`
   }
 `;
 
-export const FORGET_PASSWORD = gql`
-  mutation ForgetPassword($email: String!) {
+export const FORGOT_PASSWORD = gql`
+  mutation ForgotPassword($email: String!) {
     forgotPassword(
       input: {
         email: $email
       }
     ) {
-      success
+      forgotPasswordResult {
+          message
+          success
+      }
     }
   }
 `;
