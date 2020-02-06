@@ -11,7 +11,9 @@ import {
   headObject,
   SCORE_PREFIX,
   uploadScore,
-  uploadScorePreview
+  uploadScorePreview,
+  uploadScorePoster,
+  getScorePosterKey
 } from '../../utils/storage.util'
 import { deleteFrom, insertInto } from '../../utils/query.util'
 import { validatePrices } from '../../utils/validate.util'
@@ -105,6 +107,13 @@ async function createUpdateScore (resolve, parent, args, ctx, info) {
       [url, scoreId]
     )
     resolved.data['@score'].url = url
+  }
+
+  if (patch.poster) {
+    const upload = await patch.poster
+    await uploadScorePoster(upload, scoreId)
+  } else if (patch.poster === null) {
+    await deleteObject(scoreId)
   }
 
   // when preview options provided
@@ -229,7 +238,40 @@ const schema = makeExtendSchemaPlugin(build => {
         """
         previewOptions: CreatePreviewOptions
       }
-    `
+
+      extend type Score {
+        poster: String
+      }
+
+      extend input ScoreInput {
+        "Uploaded image will be saved in png format"
+        poster: Upload
+      }
+
+      extend input ScorePatch {
+        "Uploaded image will be saved in png format"
+        poster: Upload
+      }
+    `,
+    resolvers: {
+      Score: {
+        poster: {
+          requires: {
+            childColumns: [{ alias: 'id', column: 'id' }]
+          },
+          async resolve (source) {
+            const s3Key = getScorePosterKey(source.id)
+
+            const poster = await headObject(s3Key).catch(() => null)
+            if (poster) {
+              return `${anmHost}/images/${s3Key}`
+            } else {
+              return null
+            }
+          }
+        }
+      }
+    }
   }
 })
 

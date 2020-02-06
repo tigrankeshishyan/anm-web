@@ -24140,6 +24140,7 @@ type Score implements Node {
 
   """SEO friendly name to use in url"""
   path: String!
+  poster: String
   preview: Preview
 
   """amount - currency pairs"""
@@ -24521,6 +24522,9 @@ input ScoreInput {
   """SEO friendly name to use in url"""
   path: String!
 
+  """Uploaded image will be saved in png format"""
+  poster: Upload
+
   """amount - currency pairs"""
   prices: JSON
   published: Boolean
@@ -24817,6 +24821,9 @@ input ScorePatch {
 
   """SEO friendly name to use in url"""
   path: String
+
+  """Uploaded image will be saved in png format"""
+  poster: Upload
 
   """amount - currency pairs"""
   prices: JSON

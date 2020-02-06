@@ -52,7 +52,7 @@ const getSitemapBlock = ({ url, lastMod, changefreq = "weekly" }) => {
 };
 
 const articleQuery = gql`
-  query {
+  query Articles {
     articles (filter: {
     published: {
       equalTo: true,
@@ -68,7 +68,7 @@ const articleQuery = gql`
 `;
 
 const musiciansQuery = gql`
-  query {
+  query Musicians {
     musicians (filter: {
     published: {
       equalTo: true,
@@ -84,7 +84,7 @@ const musiciansQuery = gql`
 `;
 
 const scoresQuery = gql`
-  query {
+  query Scores {
     scores (filter: {
     published: {
       equalTo: true,
