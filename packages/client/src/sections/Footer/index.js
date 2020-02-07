@@ -23,7 +23,7 @@ function Footer(props) {
     >
       <div className="flex-row align-center wrap footer-logo-and-terms-wrapper">
         <div className="mobile-social-icons-wrapper justify-center">
-          {/*<SocialIcons />*/}
+          <SocialIcons />
         </div>
 
         <Link to="/home">
