@@ -3,7 +3,7 @@
 @import "styles/mixins.sass"
 
 .score-card
-  width: 18rem
+  width: 20rem
   margin: 1.5rem
   margin-bottom: 0
   overflow: hidden
@@ -13,6 +13,7 @@
 
   @media (max-width: $xs-starts)
     margin: 0.625rem
+    width: 22rem
 
   &:hover
     color: $primary-blue
@@ -23,10 +24,7 @@
   .score-card-poster-image-wrapper
     border-radius: $app-border-radius
     overflow: hidden
-    height: 20rem
-
-    @media (max-width: $xs-starts)
-      height: 18rem
+    height: 24rem
 
     .score-card-poster-image
       width: 100%
