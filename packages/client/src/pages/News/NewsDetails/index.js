@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
-import { withI18n } from 'localization/helpers';
+import { getCurrentLang, withI18n } from 'localization/helpers';
 
 import PosterWithSectionBlock from 'sections/PosterWithSectionBlock';
 
@@ -92,6 +92,19 @@ function NewsDetails(props) {
               className="break-word mrg-top-15 pad-10"
               dangerouslySetInnerHTML={{ __html: content }}
             />
+
+            <div className="mrg-top-15">
+              <iframe
+                id="fb-iframe"
+                src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FArmeniannationalmusic%2Fposts%2F1486891618101131&width=500"
+                width="500"
+                height="555"
+                scrolling="no"
+                frameBorder="0"
+                allow="encrypted-media"
+                allowTransparency="true"
+              />
+            </div>
 
             {!!tags.length && (
               <div className="pad-sides-10">
