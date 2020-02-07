@@ -265,7 +265,7 @@ const schema = makeExtendSchemaPlugin(build => {
 
             const poster = await headObject(s3Key).catch(() => null)
             if (poster) {
-              return `${anmHost}/images/${s3Key}`
+              return `${anmHost}/${s3Key}`
             } else {
               return null
             }
