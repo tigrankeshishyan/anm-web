@@ -93,7 +93,21 @@ function NewsDetails(props) {
               dangerouslySetInnerHTML={{ __html: content }}
             />
 
-            <div className="mrg-top-15">
+            <div className="mrg-top-15 pad-sides-10">
+              {i18n('followUs')}
+              <a
+                target="_blank"
+                rel="noopener noreferer"
+                className="mrg-sides-5"
+                href="https://t.me/anmmedia"
+              >
+                <span className="font-bold">
+                  {i18n('onTelegram')}
+                </span>
+              </a>
+            </div>
+
+            <div className="mrg-top-15 pad-sides-10">
               <iframe
                 id="fb-iframe"
                 src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FArmeniannationalmusic%2Fposts%2F1486891618101131&width=500"

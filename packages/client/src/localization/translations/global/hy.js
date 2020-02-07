@@ -53,6 +53,7 @@ export default {
   'shareOnSocial': 'Կիսվել սոց. ցանցում',
   'submit': 'Ընդունել',
   'search': 'Փնտրել',
+  'onTelegram': 'Տելեգրամում',
   'termsAndPrivacyPolicy': 'Պայմաններ և Գաղտնիություն',
   'termsAndPrivacyPolicyPlural': 'Պայմաններին և Գաղտնիությանը',
   'whyWeDoThis': 'Ո՞րն է մեր մոտիվացիան',

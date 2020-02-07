@@ -53,6 +53,7 @@ export default {
   'somethingWrong': 'Something went wrong. Please try again or contact to uor team using "Contact Us" section.',
   'submit': 'Submit',
   'search': 'Search',
+  'onTelegram': 'on Telegram',
   'termsAndPrivacyPolicy': 'Terms and Privacy Policy',
   'termsAndPrivacyPolicyPlural': 'Terms and Privacy Policy',
   'whyWeDoThis': 'What is our motivation?',
