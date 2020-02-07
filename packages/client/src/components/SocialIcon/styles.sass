@@ -14,22 +14,28 @@
     transition: all .1s linear
 
   &.default
+    &, circle
+      fill: white
+
+    path, g
+      fill: $primary-blue
+
     &:hover
-      circle
+      circle, g
         fill: $primary-blue
 
       path
         fill: white
 
   &.primary
-    circle
+    circle, g
       fill: $primary-blue
 
     path
       fill: white
 
     &:hover
-      circle
+      circle, g
         fill: rgba($primary-blue, .05)
 
       path

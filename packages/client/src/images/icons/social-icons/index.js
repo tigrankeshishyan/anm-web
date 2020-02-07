@@ -20,6 +20,11 @@ export const anmSocialIcons = [
     path: 'https://www.instagram.com/anmmedia/',
   },
   {
+    name: 'Telegram',
+    icon: TelegramIcon,
+    path: 'https://t.me/anmmedia',
+  },
+  {
     name: 'Twitter',
     icon: TwitterIcon,
     path: 'https://twitter.com/anmmedia',
