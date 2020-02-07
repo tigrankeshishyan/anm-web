@@ -10,13 +10,13 @@ import Loading from 'components/Loading';
 import { isEmail } from 'helpers';
 
 import {
-  FORGET_PASSWORD,
+  FORGOT_PASSWORD,
 } from '_graphql/actions/user';
 
 function ForgetPassword(props) {
   const [state, setState] = useState({ email: '' });
   const [requestStatus, setRequestStatus] = useState(false);
-  const [forgetPassword, { loading }] = useMutation(FORGET_PASSWORD);
+  const [forgotPassword, { loading }] = useMutation(FORGOT_PASSWORD);
 
   const {
     i18n,
@@ -29,16 +29,19 @@ function ForgetPassword(props) {
   const handleFormSubmit = useCallback(async event => {
     event.preventDefault();
 
-    const res = await forgetPassword({
+    const res = await forgotPassword({
       variables: {
         email: state.email,
       },
     });
 
-    if (res && res.data && res.data.forgetPassword) {
-      setRequestStatus(res.data.forgetPassword.success);
+    if (res) {
+      const { forgotPassword: response } = (res.data || {});
+      if (response && response.forgotPasswordResult) {
+        setRequestStatus(response.forgotPasswordResult.success);
+      }
     }
-  }, [setRequestStatus, forgetPassword, state]);
+  }, [setRequestStatus, forgotPassword, state]);
 
   return (
     <Loading isLoading={loading}>
