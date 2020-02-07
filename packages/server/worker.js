@@ -3,6 +3,7 @@ import GraphileWorker from 'graphile-worker'
 import { database, worker } from '../config'
 import * as emailTasks from './tasks/email'
 import * as slackTasks from './tasks/slack'
+import * as sitemap from './tasks/sitemap'
 
 export default async function run () {
   return GraphileWorker.run({
@@ -11,7 +12,8 @@ export default async function run () {
     pollInterval: worker.pollInterval,
     taskList: {
       ...emailTasks,
-      ...slackTasks
+      ...slackTasks,
+      ...sitemap
     }
   })
 }

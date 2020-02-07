@@ -21,6 +21,7 @@ export const CONTACT_ATTACHMENT_PREFIX = 'attachments'
 export const IMAGE_PREFIX = 'images'
 export const SCORE_PREFIX = 'scores'
 export const USER_PREFIX = 'users'
+export const PUBLIC_PREFIX = 'public'
 
 /**
  * @param {string} key
@@ -38,15 +39,33 @@ export async function headObject (key) {
  * @param {string} key
  */
 export function getObject (key) {
-  return s3
-    .getObject({
-      Key: key.startsWith('/') ? key.substring(1) : key,
-      Bucket: s3Bucket
-    })
+  return s3.getObject({
+    Key: key.startsWith('/') ? key.substring(1) : key,
+    Bucket: s3Bucket
+  })
 }
 
 export function getScorePosterKey (scoreId) {
   return `${SCORE_PREFIX}/${scoreId}/poster.png`
+}
+
+export function getSitemapKey (suffix) {
+  return `${PUBLIC_PREFIX}/sitemap/${suffix}.xml`
+}
+
+export function getSitemap (suffix) {
+  return getObject(getSitemapKey(suffix))
+}
+
+export function uploadSitemap (context, suffix) {
+  return s3
+    .upload({
+      Key: getSitemapKey(suffix),
+      Body: context,
+      Bucket: s3Bucket,
+      ContentType: 'text/xml'
+    })
+    .promise()
 }
 
 export async function deleteObject (...keys) {
@@ -88,10 +107,12 @@ export async function uploadImage (upload) {
  */
 export async function uploadScorePoster (upload, scoreId) {
   const s3Key = getScorePosterKey(scoreId)
-  const stream = sharp().resize(maxImageSize, maxImageSize, {
-    fit: 'inside',
-    withoutEnlargement: true
-  }).png()
+  const stream = sharp()
+    .resize(maxImageSize, maxImageSize, {
+      fit: 'inside',
+      withoutEnlargement: true
+    })
+    .png()
 
   await s3
     .upload({

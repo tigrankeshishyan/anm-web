@@ -1,7 +1,7 @@
 import { Slack } from '../utils/slack.util'
 
-export async function slackMessage (payload, helpers) {
+export async function sendMessage (payload, helpers) {
   const { message, user } = payload
 
-  Slack.contactMessage(message, user)
+  Slack.openMessage(message, user)
 }

@@ -1,5 +1,5 @@
 --! Previous: -
---! Hash: sha1:8bf42c8dd13a501b45a1a7f10b39dc9a4c8841cd
+--! Hash: sha1:337f0f2e7355cd0473642a709d620414d7eef3e2
 
 drop schema if exists app_public cascade;
 
@@ -76,7 +76,7 @@ create function app_public.current_user_id(not_null boolean default false)
     stable security definer set search_path to public as
 $$
 declare
-    user_id integer = current_setting('user.id', true)::integer;
+    user_id integer = nullif(current_setting('user.id', true), '')::integer;
 begin
     if not_null and user_id is null then
         raise exception 'You need to be logged in';
