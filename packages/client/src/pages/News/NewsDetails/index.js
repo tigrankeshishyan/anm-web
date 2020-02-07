@@ -12,6 +12,7 @@ import PosterWithSectionBlock from 'sections/PosterWithSectionBlock';
 
 import SocialShareIcons from 'components/SocialShareIcons';
 import PublishedText from 'components/PublishedText';
+import SocialIcons from 'components/SocialIcons';
 import NewsGallery from 'components/NewsGallery';
 import SimilarNews from 'sections/SimilarNews';
 import PageTitle from 'components/PageTitle';
@@ -94,17 +95,13 @@ function NewsDetails(props) {
             />
 
             <div className="mrg-top-15 pad-sides-10">
-              {i18n('followUs')}
-              <a
-                target="_blank"
-                rel="noopener noreferer"
-                className="mrg-sides-5"
-                href="https://t.me/anmmedia"
-              >
-                <span className="font-bold">
-                  {i18n('onTelegram')}
-                </span>
-              </a>
+              <b className="font-bold">
+                {i18n('followUs')}
+              </b>
+              <SocialIcons
+                type="primary"
+                className="mrg-top-15 justify-start"
+              />
             </div>
 
             <div className="mrg-top-15 pad-sides-10">
@@ -137,7 +134,6 @@ function NewsDetails(props) {
 
             <div className="mrg-top-15 pad-sides-10">
               <Divider/>
-
               <Typography
                 color="primary"
                 className="share-on-social-text"

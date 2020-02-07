@@ -1,7 +1,9 @@
 import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+
 import { anmSocialIcons } from 'images/icons/social-icons';
+
 import SocialIcon from 'components/SocialIcon';
 
 import './styles.sass';
@@ -29,6 +31,7 @@ function SocialIcons(props) {
             key={icon.path}
             href={icon.path}
             rel="noopener noreferrer"
+            title={`ANM Media on ${icon.name}`}
           >
             <SocialIcon
               iconType={type}

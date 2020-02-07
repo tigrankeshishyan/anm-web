@@ -10,11 +10,6 @@ import { ReactComponent as TelegramIcon } from 'images/icons/social-icons/telegr
 
 export const anmSocialIcons = [
   {
-    name: 'Facebook',
-    icon: FacebookIcon,
-    path: 'https://www.facebook.com/Armeniannationalmusic',
-  },
-  {
     name: 'Instagram',
     icon: InstagramIcon,
     path: 'https://www.instagram.com/anmmedia/',
@@ -23,6 +18,11 @@ export const anmSocialIcons = [
     name: 'Telegram',
     icon: TelegramIcon,
     path: 'https://t.me/anmmedia',
+  },
+  {
+    name: 'Facebook',
+    icon: FacebookIcon,
+    path: 'https://www.facebook.com/Armeniannationalmusic',
   },
   {
     name: 'Twitter',
