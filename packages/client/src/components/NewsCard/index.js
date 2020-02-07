@@ -8,7 +8,7 @@ import CardFooter from 'components/CardFooter';
 import './styles.sass';
 
 const imageSizes = {
-  width: 300,
+  width: 600,
 };
 
 function NewsCard(props) {
