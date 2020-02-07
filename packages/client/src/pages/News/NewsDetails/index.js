@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
-import { getCurrentLang, withI18n } from 'localization/helpers';
+import { withI18n } from 'localization/helpers';
 
 import PosterWithSectionBlock from 'sections/PosterWithSectionBlock';
 
