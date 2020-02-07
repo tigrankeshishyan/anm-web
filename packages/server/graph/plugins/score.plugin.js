@@ -13,7 +13,8 @@ import {
   uploadScore,
   uploadScorePreview,
   uploadScorePoster,
-  getScorePosterKey
+  getScorePosterKey,
+  deleteScorePoster
 } from '../../utils/storage.util'
 import { deleteFrom, insertInto } from '../../utils/query.util'
 import { validatePrices } from '../../utils/validate.util'
@@ -113,7 +114,7 @@ async function createUpdateScore (resolve, parent, args, ctx, info) {
     const upload = await patch.poster
     await uploadScorePoster(upload, scoreId)
   } else if (patch.poster === null) {
-    await deleteObject(scoreId)
+    await deleteScorePoster(scoreId)
   }
 
   // when preview options provided
@@ -264,7 +265,7 @@ const schema = makeExtendSchemaPlugin(build => {
 
             const poster = await headObject(s3Key).catch(() => null)
             if (poster) {
-              return `${anmHost}/images/${s3Key}`
+              return `${anmHost}/${s3Key}`
             } else {
               return null
             }

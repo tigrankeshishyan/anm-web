@@ -10,7 +10,6 @@ import AutoUpdatePlugin from './plugins/auto-update.plugin'
 import ContactSchema from './plugins/contact.plugin'
 import GalleryPlugin from './plugins/gallery.plugin'
 import ImagePlugin from './plugins/image.plugin'
-import OpenMessagePlugin from './plugins/open-message.plugin'
 import LocalePlugin from './plugins/locale.plugin'
 import PgManyToManyInflector from './plugins/inflectors.plugin'
 import PromoPlugin from './plugins/promo.plugin'
@@ -31,7 +30,6 @@ export default makePluginByCombiningPlugins(
   AutoUpdatePlugin,
   PromoPlugin,
   AuthPlugin,
-  OpenMessagePlugin,
   ConnectionFilterPlugin,
   PostGraphileUploadFieldPlugin,
   PgManyToManyPlugin,
