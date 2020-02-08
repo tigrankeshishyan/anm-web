@@ -84,7 +84,7 @@ export async function getPoster (req, res, next) {
     const width = parseInt(req.query.width) || undefined
     const height = parseInt(req.query.height) || undefined
     const disposition = req.query.filename
-      ? `attachment; filename="${req.query.filename}"`
+      ? `filename="${req.query.filename}";`
       : req.header('Content-Disposition')
     const fit = req.query.fit || undefined
 
