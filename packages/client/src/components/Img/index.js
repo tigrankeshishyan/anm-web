@@ -31,7 +31,7 @@ function Img(props) {
     ...imageProps
   } = props;
 
-  const imageSrc = addImageProportions(src, sizes.width, sizes.height, fitImage);
+  const imageSrc = addImageProportions(src, sizes.width, sizes.height, fitImage, alt);
 
   // It will be run only once for the same src.
   useEffect(() => {
