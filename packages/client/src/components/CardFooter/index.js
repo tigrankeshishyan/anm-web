@@ -13,6 +13,7 @@ function CardFooter(props) {
     date,
     title,
     className,
+    description,
     titleClassName,
   } = props;
 
@@ -29,10 +30,21 @@ function CardFooter(props) {
         </Typography>
       )}
 
-      <PublishedText
-        className="date-block"
-        date={date}
-      />
+      {date && (
+        <PublishedText
+          date={date}
+          className="date-block"
+        />
+      )}
+
+      {description && (
+        <div
+          title={description}
+          className="truncate secondary-text-color"
+        >
+          {description}
+        </div>
+      )}
     </div>
   );
 }
@@ -41,6 +53,7 @@ CardFooter.defaultProps = {
   title: '',
   date: null,
   className: '',
+  description: '',
   titleClassName: '',
 };
 
@@ -48,6 +61,7 @@ CardFooter.propTypes = {
   date: PropTypes.string,
   title: PropTypes.string,
   className: PropTypes.string,
+  description: PropTypes.string,
   titleClassName: PropTypes.string,
 };
 

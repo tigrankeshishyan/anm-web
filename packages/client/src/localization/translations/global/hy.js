@@ -15,7 +15,7 @@ export default {
   'email': 'Էլ. փոստ',
   'email.duplicateEmailError': 'Մուտքագրված Էլ. փոստն արդեն գրանցված է։ Խնդրում ենք մուտք գործել կամ փորձել մեկ այլ էլ. փոստ։',
   'email.wrongEmail': 'Էլ. փոստը սխալ է',
-  'followUs': 'Հետևեք մեզ',
+  'followUs': 'Հետևեք մեզ՝',
   'form.email': 'Էլ. փոստ',
   'form.forgotPass': 'Մոռացե՞լ եք գաղտնաբառը',
   'form.firstName': 'Անուն',

@@ -44,7 +44,7 @@ function PosterWithSectionBlock (props) {
           <div className="poster-image-wrapper">
             <BlockWithImage
               url={url}
-              imgAlt={imgAlt}
+              imgAlt={`${imgAlt} - Armenian National Music (anmmedia.am)`}
             />
           </div>
         </Grid>

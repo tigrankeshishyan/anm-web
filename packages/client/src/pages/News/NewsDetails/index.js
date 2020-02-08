@@ -12,6 +12,7 @@ import PosterWithSectionBlock from 'sections/PosterWithSectionBlock';
 
 import SocialShareIcons from 'components/SocialShareIcons';
 import PublishedText from 'components/PublishedText';
+import SocialIcons from 'components/SocialIcons';
 import NewsGallery from 'components/NewsGallery';
 import SimilarNews from 'sections/SimilarNews';
 import PageTitle from 'components/PageTitle';
@@ -93,6 +94,30 @@ function NewsDetails(props) {
               dangerouslySetInnerHTML={{ __html: content }}
             />
 
+            <div className="mrg-top-15 pad-sides-10">
+              <b className="font-bold">
+                {i18n('followUs')}
+              </b>
+              <SocialIcons
+                type="primary"
+                className="mrg-top-15 justify-start"
+              />
+            </div>
+
+            <div className="mrg-top-15 pad-sides-10">
+              <iframe
+                id="fb-iframe"
+                width="500"
+                height="555"
+                scrolling="no"
+                frameBorder="0"
+                allow="encrypted-media"
+                allowTransparency="true"
+                title="Armenian National Music's found project on behalf of Armenian Composers"
+                src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FArmeniannationalmusic%2Fposts%2F1486891618101131&width=500"
+              />
+            </div>
+
             {!!tags.length && (
               <div className="pad-sides-10">
                 {tags.map(tag => (
@@ -110,7 +135,6 @@ function NewsDetails(props) {
 
             <div className="mrg-top-15 pad-sides-10">
               <Divider/>
-
               <Typography
                 color="primary"
                 className="share-on-social-text"

@@ -15,7 +15,7 @@ export default {
   'email': 'E-mail',
   'email.duplicateEmailError': 'The email that you entered already registered. Try to Sign in or use another email',
   'email.wrongEmail': 'Email field is wrong',
-  'followUs': 'Follow us',
+  'followUs': 'Follow us on:',
   'form.email': 'Email',
   'form.forgotPass': 'Forgot Password?',
   'form.firstName': 'First Name',

@@ -7,6 +7,7 @@ export const scoreMain = gql`
     path
     title
     prices
+    poster
     nodeId
     createdAt
     updatedAt
@@ -15,10 +16,12 @@ export const scoreMain = gql`
     publishedAt
     description
     composition {
+      id
       nodeId
       title
       description
       musiciansList {
+        id
         nodeId
         lastName
         firstName
