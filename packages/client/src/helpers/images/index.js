@@ -9,7 +9,7 @@ export const addImageProportions = (url = '', width, height, fitImage, alt) => {
   const urlParams = `${widthParam}${heightParam ? `&${heightParam}`:''}`;
   const isUrlWithParams = url.indexOf('?')!== -1;
 
-  const urlWithParamsAdded = `${urlParams}&${alt}`;
+  const urlWithParamsAdded = `${urlParams}&filename=${alt}`;
   newUrl += isUrlWithParams ? `&${urlWithParamsAdded}`:`?${urlWithParamsAdded}`;
 
   if (fitImage) {
