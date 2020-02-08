@@ -37,6 +37,7 @@ export async function getImage (req, res, next) {
     }
 
     res.contentType(mime.lookup(ext))
+    res.setHeader('Content-Disposition', req.header('Content-Disposition'))
 
     Storage.getObject(key)
       .createReadStream()
