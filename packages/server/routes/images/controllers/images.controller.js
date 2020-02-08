@@ -16,6 +16,9 @@ export async function getImage (req, res, next) {
     const key = `${Storage.IMAGE_PREFIX}${req.path}`
     const width = parseInt(req.query.width) || undefined
     const height = parseInt(req.query.height) || undefined
+    const fileName = req.query.filename
+      ? `attachment; filename="${req.query.filename}"`
+      : ''
     const fit = req.query.fit || undefined
 
     const ext = path.extname(key) || '.png'
@@ -37,11 +40,14 @@ export async function getImage (req, res, next) {
     }
 
     res.contentType(mime.lookup(ext))
-    res.setHeader('Content-Disposition', req.header('Content-Disposition'))
+    res.setHeader(
+      'Content-Disposition',
+      fileName || req.header('Content-Disposition')
+    )
 
     Storage.getObject(key)
       .createReadStream()
-      .on('error', (err) => {
+      .on('error', err => {
         if (err.code === 'NoSuchKey') {
           next(new ExpressError(err.message, 404))
         } else {
@@ -49,11 +55,11 @@ export async function getImage (req, res, next) {
         }
       })
       .pipe(trans)
-      .on('error', (err) => {
+      .on('error', err => {
         next(err)
       })
       .pipe(res)
-      .on('error', (err) => {
+      .on('error', err => {
         next(err)
       })
   } catch (err) {
