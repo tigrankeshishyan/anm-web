@@ -83,6 +83,9 @@ export async function getPoster (req, res, next) {
     const key = Storage.getScorePosterKey(req.params.scoreId)
     const width = parseInt(req.query.width) || undefined
     const height = parseInt(req.query.height) || undefined
+    const disposition = req.query.filename
+      ? `filename="${req.query.filename}";`
+      : req.header('Content-Disposition')
     const fit = req.query.fit || undefined
 
     const ext = path.extname(key) || '.png'
@@ -104,10 +107,13 @@ export async function getPoster (req, res, next) {
     }
 
     res.contentType(mime.lookup(ext))
+    if (disposition) {
+      res.setHeader('Content-Disposition', disposition)
+    }
 
     Storage.getObject(key)
       .createReadStream()
-      .on('error', (err) => {
+      .on('error', err => {
         if (err.code === 'NoSuchKey') {
           next(new ExpressError(err.message, 404))
         } else {
@@ -115,11 +121,11 @@ export async function getPoster (req, res, next) {
         }
       })
       .pipe(trans)
-      .on('error', (err) => {
+      .on('error', err => {
         next(err)
       })
       .pipe(res)
-      .on('error', (err) => {
+      .on('error', err => {
         next(err)
       })
   } catch (err) {
