@@ -16,9 +16,9 @@ export async function getImage (req, res, next) {
     const key = `${Storage.IMAGE_PREFIX}${req.path}`
     const width = parseInt(req.query.width) || undefined
     const height = parseInt(req.query.height) || undefined
-    const fileName = req.query.filename
+    const disposition = req.query.filename
       ? `attachment; filename="${req.query.filename}"`
-      : ''
+      : req.header('Content-Disposition')
     const fit = req.query.fit || undefined
 
     const ext = path.extname(key) || '.png'
@@ -40,10 +40,9 @@ export async function getImage (req, res, next) {
     }
 
     res.contentType(mime.lookup(ext))
-    res.setHeader(
-      'Content-Disposition',
-      fileName || req.header('Content-Disposition')
-    )
+    if (disposition) {
+      res.setHeader('Content-Disposition', disposition)
+    }
 
     Storage.getObject(key)
       .createReadStream()
