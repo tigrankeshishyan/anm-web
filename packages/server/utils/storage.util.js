@@ -1,6 +1,6 @@
 import aws from 'aws-sdk'
 import sharp from 'sharp'
-import uuid from 'uuid'
+import uuid from 'uuid/v4'
 
 import { isUploadPDF } from './validate.util'
 import {

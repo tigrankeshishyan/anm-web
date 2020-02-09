@@ -1,7 +1,7 @@
 import assert from 'assert'
 
 import GraphileUtils from 'graphile-utils'
-import uuid from 'uuid'
+import uuid from 'uuid/v4'
 
 import {
   database,
