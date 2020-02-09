@@ -68,7 +68,7 @@ export const s3 = {
 
 export const s3Bucket = process.env.BUCKET
 
-export const maxImageSize = 1024
+export const maxImageSize = 2048
 
 export const sendinblue = {
   url: 'https://api.sendinblue.com/v3',
