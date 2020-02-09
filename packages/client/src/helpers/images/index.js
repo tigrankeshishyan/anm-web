@@ -1,4 +1,4 @@
-export const addImageProportions = (url = '', width, height, fitImage) => {
+export const addImageProportions = (url = '', width, height, fitImage, alt) => {
   if (typeof url!=='string' || !url || (!width && !height)) {
     return url;
   }
@@ -9,7 +9,9 @@ export const addImageProportions = (url = '', width, height, fitImage) => {
   const urlParams = `${widthParam}${heightParam ? `&${heightParam}`:''}`;
   const isUrlWithParams = url.indexOf('?')!== -1;
 
-  newUrl += isUrlWithParams ? `&${urlParams}`:`?${urlParams}`;
+  // const urlWithParamsAdded = `${urlParams}&filename=${alt}`;
+  const urlWithParamsAdded = `${urlParams}`;
+  newUrl += isUrlWithParams ? `&${urlWithParamsAdded}`:`?${urlWithParamsAdded}`;
 
   if (fitImage) {
     newUrl += '&fit=contain';
