@@ -22,7 +22,8 @@ export const getSingleScoreData = async (id, locale, url) => {
   return {
     url,
     locale,
+    title: score.title,
+    imageUrl: score.poster,
     description: score.description,
-    title: score.title
   }
 }
