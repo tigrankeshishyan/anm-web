@@ -241,7 +241,7 @@ const schema = makeExtendSchemaPlugin(build => {
       }
 
       extend type Score {
-        poster: String
+        poster: String @requires(columns: ["id"])
       }
 
       extend input ScoreInput {
@@ -256,19 +256,14 @@ const schema = makeExtendSchemaPlugin(build => {
     `,
     resolvers: {
       Score: {
-        poster: {
-          requires: {
-            siblingColumns: [{ alias: '$id', column: 'id' }]
-          },
-          async resolve (source) {
-            const s3Key = getScorePosterKey(source.id)
+        async poster (source) {
+          const s3Key = getScorePosterKey(source.id)
 
-            const poster = await headObject(s3Key).catch(() => null)
-            if (poster) {
-              return `${anmHost}/${s3Key}`
-            } else {
-              return null
-            }
+          const poster = await headObject(s3Key).catch(() => null)
+          if (poster) {
+            return `${anmHost}/${s3Key}`
+          } else {
+            return null
           }
         }
       }

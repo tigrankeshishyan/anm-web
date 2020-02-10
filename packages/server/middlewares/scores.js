@@ -5,7 +5,6 @@ import { ExpressError } from '../utils/error.util'
 const query = id => `
   query {
     score (id: ${id}) {
-      id
       title
       poster
       description
