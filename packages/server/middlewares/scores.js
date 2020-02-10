@@ -6,7 +6,14 @@ const query = id => `
   query {
     score (id: ${id}) {
       title
+      poster
       description
+      composition {
+        musiciansList {
+         firstName
+         lastName
+        }
+      }
     }
   }
 `
@@ -19,11 +26,15 @@ export const getSingleScoreData = async (id, locale, url) => {
     throw new ExpressError('not found', 404)
   }
 
+  const musicians = (score.composition || {}).musiciansList || [];
+  
+  const musiciansNames = musicians.map(m => `${m.firstName} ${m.lastName}`).join(',')
+  
   return {
     url,
     locale,
-    title: score.title,
     imageUrl: score.poster,
     description: score.description,
+    title: `${musiciansNames} - ${score.title}`,
   }
 }

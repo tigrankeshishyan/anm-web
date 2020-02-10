@@ -20,7 +20,7 @@ export const fetchData = async req => {
   if (id) {
     if (url.includes('/news/')) return getSingleNewsData(id, locale, url)
     if (url.includes('/musician/')) return getSingleMusicianData(id, locale, url)
-    if (url.includes('/score/')) return getSingleScoreData(id, locale, url)
+    if (url.includes('/music-sheet-score/')) return getSingleScoreData(id, locale, url)
   }
 
   return { url }
