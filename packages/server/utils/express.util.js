@@ -2,7 +2,7 @@ import assert from 'assert'
 
 import ConnectPg from 'connect-pg-simple'
 import session from 'express-session'
-import uuid from 'uuid'
+import uuid from 'uuid/v4'
 
 import { ExpressError } from './error.util'
 import * as config from '../../config'
