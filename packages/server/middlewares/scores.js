@@ -5,6 +5,7 @@ import { ExpressError } from '../utils/error.util'
 const query = id => `
   query {
     score (id: ${id}) {
+      id
       title
       poster
       description
@@ -26,15 +27,15 @@ export const getSingleScoreData = async (id, locale, url) => {
     throw new ExpressError('not found', 404)
   }
 
-  const musicians = (score.composition || {}).musiciansList || [];
-  
+  const musicians = (score.composition || {}).musiciansList || []
+
   const musiciansNames = musicians.map(m => `${m.firstName} ${m.lastName}`).join(',')
-  
+
   return {
     url,
     locale,
     imageUrl: score.poster,
     description: score.description,
-    title: `${musiciansNames} - ${score.title}`,
+    title: `${musiciansNames} - ${score.title}`
   }
 }
