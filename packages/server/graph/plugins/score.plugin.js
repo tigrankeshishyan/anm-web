@@ -258,7 +258,7 @@ const schema = makeExtendSchemaPlugin(build => {
       Score: {
         poster: {
           requires: {
-            childColumns: [{ alias: 'id', column: 'id' }]
+            siblingColumns: [{ alias: '$id', column: 'id' }]
           },
           async resolve (source) {
             const s3Key = getScorePosterKey(source.id)
