@@ -3,14 +3,12 @@ import get from 'lodash.get';
 import { useQuery } from '@apollo/react-hooks';
 
 import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
 
 import { withI18n } from 'localization/helpers';
 
 import PosterWithSectionBlock from 'sections/PosterWithSectionBlock';
 
-import SocialShareIcons from 'components/SocialShareIcons';
+import ShareOnSocial from 'components/ShareOnSocial';
 import PublishedText from 'components/PublishedText';
 import SocialIcons from 'components/SocialIcons';
 import NewsGallery from 'components/NewsGallery';
@@ -132,20 +130,7 @@ function NewsDetails(props) {
                 ))}
               </div>
             )}
-
-            <div className="mrg-top-15 pad-sides-10">
-              <Divider/>
-              <Typography
-                color="primary"
-                className="share-on-social-text"
-              >
-                {i18n('shareOnSocial')}
-              </Typography>
-
-              <div className="mrg-top-15">
-                <SocialShareIcons/>
-              </div>
-            </div>
+            <ShareOnSocial />
           </Grid>
 
           <Grid
