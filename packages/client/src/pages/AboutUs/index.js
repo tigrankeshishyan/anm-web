@@ -92,7 +92,7 @@ function AboutUs(props) {
 
         <Grid
           container
-          className="pad-top-30 pad-bottom-30 goal-section"
+          className="pad-top-30 pad-bottom-30"
         >
           <Grid
             item
@@ -100,6 +100,7 @@ function AboutUs(props) {
             xs={12}
           >
             <Img
+              fitImage
               src={motivationImgUrl}
             />
           </Grid>
