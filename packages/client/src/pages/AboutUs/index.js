@@ -98,6 +98,7 @@ function AboutUs(props) {
             item
             md={4}
             xs={12}
+            className="why-we-do-img"
           >
             <Img
               fitImage
