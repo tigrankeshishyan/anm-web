@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import SEO from 'components/SEO';
 import Loading from 'components/Loading';
 import PDFViewer from 'components/PDFViewer';
+import ShareOnSocial from 'components/ShareOnSocial';
 
 import { withI18n } from 'localization/helpers';
 
@@ -88,6 +89,7 @@ function ScoreDetails (props) {
               </>
             ) : i18n('somethingWrong')
             }
+            <ShareOnSocial />
           </Grid>
 
           <Grid
