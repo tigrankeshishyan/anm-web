@@ -160,7 +160,7 @@ async function findOrCreatePurchase (
   promoCode,
   price
 ) {
-  const token = uuid.v4()
+  const token = uuid()
 
   const {
     rows: [already]
