@@ -89,7 +89,6 @@ function ScoreDetails (props) {
               </>
             ) : i18n('somethingWrong')
             }
-            <ShareOnSocial />
           </Grid>
 
           <Grid
@@ -100,7 +99,7 @@ function ScoreDetails (props) {
           >
             <div className="flex-column justify-center grow mrg-top-15">
               <Typography
-                variant="h4"
+                variant="h5"
                 className="font-bold"
               >
                 {score.title}
@@ -127,6 +126,9 @@ function ScoreDetails (props) {
             </div>
           </Grid>
         </Grid>
+        <div>
+          <ShareOnSocial />
+        </div>
       </ContentSection>
     </Loading>
   );
