@@ -11,7 +11,7 @@ import {
 } from '_graphql/actions/news';
 import { defaultFilter } from '_graphql/constants';
 
-import 'sections/SimilarNews/styles.sass';
+import './styles.sass';
 
 function SimilarNews(props) {
   const { data: { articles = {} } = {}, loading } = useQuery(FETCH_NEWS, {
@@ -53,6 +53,7 @@ function SimilarNews(props) {
                 <NewsCard
                   {...news}
                   key={news.id}
+                  className="similar-news-card"
                   src={news.poster && news.poster.url}
                 />
               ))}

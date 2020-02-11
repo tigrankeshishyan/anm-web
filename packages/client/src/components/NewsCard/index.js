@@ -14,6 +14,7 @@ const imageSizes = {
 function NewsCard(props) {
   const {
     publishedAt,
+    className,
     title,
     path,
     src,
@@ -23,7 +24,7 @@ function NewsCard(props) {
   return (
     <Link
       to={`/news/${path}/${id}`}
-      className="news-card flex-column"
+      className={`news-card flex-column ${className}`}
     >
       <div className="news-card-poster-image-wrapper">
         <Img
@@ -44,14 +45,16 @@ function NewsCard(props) {
 }
 
 NewsCard.defaultProps = {
-  poster: {},
   title: '',
+  poster: {},
+  className: '',
   publishedAt: null,
 };
 
 NewsCard.propTypes = {
   id: PropTypes.number,
   title: PropTypes.string,
+  className: PropTypes.string,
   publishedAt: PropTypes.string,
   poster: PropTypes.shape({
     url: PropTypes.string,

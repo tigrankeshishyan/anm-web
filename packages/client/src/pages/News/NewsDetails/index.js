@@ -105,14 +105,12 @@ function NewsDetails(props) {
             <div className="mrg-top-15 pad-sides-10">
               <iframe
                 id="fb-iframe"
-                width="500"
-                height="555"
                 scrolling="no"
                 frameBorder="0"
                 allow="encrypted-media"
                 allowTransparency="true"
                 title="Armenian National Music's found project on behalf of Armenian Composers"
-                src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FArmeniannationalmusic%2Fposts%2F1486891618101131&width=500"
+                src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FArmeniannationalmusic%2Fposts%2F1495517180571908&width=500"
               />
             </div>
 
