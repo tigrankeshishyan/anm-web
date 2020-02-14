@@ -3830,7 +3830,7 @@ commander@^2.11.0, commander@^2.19.0, commander@^2.20.0, commander@~2.20.3:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
   integrity sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
 
-commander@^3.0.0:
+commander@^3.0.0, commander@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/commander/-/commander-3.0.2.tgz#6837c3fb677ad9933d1cfba42dd14d5117d6b39e"
   integrity sha512-Gar0ASD4BDyKC4hl4DwHqDrmvjoxWKZigVnAbn5H1owvm4CxCPdb0HQDehwNYMJpla5+M2tPmPARzhtYuwpHow==
@@ -6379,6 +6379,14 @@ gzip-size@5.1.1:
   dependencies:
     duplexer "^0.1.1"
     pify "^4.0.1"
+
+gzipper@^3.5.0:
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/gzipper/-/gzipper-3.5.0.tgz#7f02467cfa0c158d82a47d6c86e6e7782a31aac0"
+  integrity sha512-/61X7Phm7E7WwZpHNF+0vIkQHKdnPhtoX1PIZOF774qHeeSXQO3rMnKzCfq8lYwoQCz4sDi/+8MvqMWYPfrdWw==
+  dependencies:
+    commander "^3.0.2"
+    uuid "^3.4.0"
 
 handle-thing@^2.0.0:
   version "2.0.0"
@@ -10951,11 +10959,6 @@ progress@^2.0.0:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
   integrity sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==
-
-progressive-image-element@^1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/progressive-image-element/-/progressive-image-element-1.1.2.tgz#6b36d255e4d8613382d0c0e46d30778cb204b514"
-  integrity sha512-myTRWskIlsyZb3ydGaA4URmVvgjiNTVF0HbOA1rodfR3e1qnru0CvbIYOc+zZKi92imVZDEua2ObAJoVn0HqGw==
 
 promise-inflight@^1.0.1:
   version "1.0.1"
