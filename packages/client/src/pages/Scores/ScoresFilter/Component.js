@@ -13,6 +13,7 @@ import { Select, TextField } from 'components/Form';
 
 import {
   FETCH_MUSICIANS,
+  FETCH_INSTRUMENTS,
 } from '_graphql/actions';
 
 import {
@@ -34,9 +35,10 @@ const transformOrigin = {
 const defaultFilterData = {
   searchText: '',
   composerId: '',
+  instrumentId: '',
 };
 
-function ScoresFilter (props) {
+function ScoresFilter(props) {
   const { data: { musicians } = {} } = useQuery(FETCH_MUSICIANS, {
     variables: {
       filter: {
@@ -46,6 +48,8 @@ function ScoresFilter (props) {
       }
     }
   });
+  
+  const { data: { instrumentsList = [] } = {} } = useQuery(FETCH_INSTRUMENTS);
   
   const [isPopoverOpen, setPopoverOpenStatus] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -72,30 +76,28 @@ function ScoresFilter (props) {
     }));
   }, [setState]);
   
-  const handleComposerChange = useCallback(value => {
+  const handleSelectFieldChange = useCallback(valueKey => value => {
     setState(state => ({
       ...state,
-      composerId: value.composerId,
+      [valueKey]: value[valueKey],
     }));
   }, [setState]);
   
   const handleFilterSubmit = useCallback(() => {
     const filterData = {
       filter: {
-        or: {
-          scoreLocalesBySourceId: {
-            some: {
-              title: {
-                includesInsensitive: state.searchText,
-              }
-            },
-          }
+        scoreLocalesBySourceId: {
+          some: {
+            title: {
+              includesInsensitive: state.searchText,
+            }
+          },
         }
       }
     };
     
     if (state.composerId) {
-      filterData.filter.or.or = {
+      filterData.filter.or = {
         composition: {
           musicianCompositions: {
             some: {
@@ -110,6 +112,23 @@ function ScoresFilter (props) {
       };
     }
     
+    
+    if (state.instrumentId) {
+      let filterBlockRef = filterData.filter.or
+        ? filterData.filter.or
+        : filterData.filter;
+      
+      filterBlockRef.or = {
+        scoreInstruments: {
+          some: {
+            instrumentId: {
+              equalTo: state.instrumentId,
+            },
+          },
+        }
+      };
+    }
+    
     closePopover();
     onFilter(filterData.filter);
   }, [onFilter, closePopover, state]);
@@ -117,6 +136,11 @@ function ScoresFilter (props) {
   const composersOptions = lodashGet(musicians, 'nodes', []).map(m => ({
     label: `${m.firstName} ${m.lastName}`,
     value: m.id,
+  }));
+  
+  const musiciansOptions = instrumentsList.map(ins => ({
+    label: ins.name,
+    value: ins.id,
   }));
   
   return (
@@ -136,6 +160,7 @@ function ScoresFilter (props) {
       <Popover
         anchorEl={anchorEl}
         open={isPopoverOpen}
+        transitionDuration={0}
         onClose={closePopover}
         anchorOrigin={anchorOrigin}
         transformOrigin={transformOrigin}
@@ -147,8 +172,18 @@ function ScoresFilter (props) {
             className="form-field"
             value={state.composerId}
             options={composersOptions}
-            onChange={handleComposerChange}
-            label={i18n(`${SCORES}.chooseComposer`)}
+            placeholder={i18n(`${SCORES}.chooseComposer`)}
+            onChange={handleSelectFieldChange('composerId')}
+          />
+          
+          <Select
+            isClearable
+            name="instrumentId"
+            className="form-field"
+            options={musiciansOptions}
+            value={state.instrumentId}
+            placeholder={i18n(`${SCORES}.chooseInstrument`)}
+            onChange={handleSelectFieldChange('instrumentId')}
           />
           
           <TextField

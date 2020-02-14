@@ -120,7 +120,7 @@ function MusiciansFilter(props) {
         anchorOrigin={anchorOrigin}
         transformOrigin={transformOrigin}
       >
-        <div className="flex-row wrap pad-20 anm-musicians-filter-wrapper">
+        <div className="flex-row wrap anm-musicians-filter-wrapper">
           <TextField
             name="firstName"
             className="form-field"
@@ -148,8 +148,8 @@ function MusiciansFilter(props) {
             noOptionsMessage={() => i18n('noOtherProfessions')}
           />
         </div>
-
-        <div className="pad-bottom-20 pad-sides-20">
+  
+        <div className="flex-row justify-end mrg-bottom-15 pad-sides-15">
           <Button
             type="submit"
             variant="gradient"

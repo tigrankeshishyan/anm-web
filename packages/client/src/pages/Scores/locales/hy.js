@@ -1,5 +1,6 @@
 export default {
   title: 'Նոտաներ',
+  chooseInstrument: 'Ընտրել Գործիքը',
   chooseComposer: 'Ընտրել Կոմոզիտորին',
   scoreName: 'Ստեղծագործության անվանումը',
   orderFormTitle: 'Չե՞ք գտնում այն ինչ փնտրում եք',
