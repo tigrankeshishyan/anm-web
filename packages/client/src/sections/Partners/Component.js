@@ -5,16 +5,16 @@ import Img from 'components/Img';
 
 import { withI18n } from 'localization/helpers';
 
-import AgbuLogo from 'images/partners/agbu.png';
-import AvetisAssociationLogo from 'images/partners/avetisAssociation.png';
-import KomitasInstituteLogo from 'images/partners/komitasInstitute.png';
-import ConservatoryLogo from 'images/partners/conservatory.png';
-import AnpoLogo from 'images/partners/anpo.png';
-import HoverChoirLogo from 'images/partners/hoverChoir.png';
-import QuartertoneLogo from 'images/partners/quartertone.png';
-import AssonanceLogo from 'images/partners/assonance.jpg';
-import YerevanStringQuartetLogo from 'images/partners/yerevanStringQuartet.png';
-import KhachatryanHomeMuseumLogo from 'images/partners/khachatryanHomeMuseum.png';
+import { ReactComponent as AnpoLogo } from 'images/partners/anpo.svg';
+import { ReactComponent as AgbuLogo } from 'images/partners/agbu.svg';
+import { ReactComponent as HoverChoirLogo } from 'images/partners/hover.svg';
+import { ReactComponent as AssonanceLogo } from 'images/partners/assonance.svg';
+import { ReactComponent as QuartertoneLogo } from 'images/partners/quartertone.svg';
+import { ReactComponent as AvetisAssociationLogo } from 'images/partners/avetis.svg';
+import { ReactComponent as ConservatoryLogo } from 'images/partners/conservatory.svg';
+import { ReactComponent as KomitasInstituteLogo } from 'images/partners/komitas-museum.svg';
+import { ReactComponent as YerevanStringQuartetLogo } from 'images/partners/yerevan-quertet.svg';
+import { ReactComponent as KhachatryanHomeMuseumLogo } from 'images/partners/khachatryan-museum.svg';
 
 import './styles.sass';
 
@@ -94,10 +94,7 @@ function HomePartnersSection(props) {
             rel="noopener noreferrer"
             className="partner-logo"
           >
-            <Img
-              alt={logo.title}
-              src={logo.logo}
-            />
+            <logo.logo />
           </a>
         ))}
       </div>
