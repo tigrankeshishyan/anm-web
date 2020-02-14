@@ -5,7 +5,7 @@ import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import LanguageSwitcher from 'localization/LanguageSwitcher';
 import { withI18n } from 'localization/helpers';
 
-import LogoOriginal from 'images/ANM-logo-small-original.png';
+import { ReactComponent as LogoOriginal } from 'images/ANM-logo-small-original.svg';
 
 import Link from 'components/Link';
 
@@ -20,18 +20,18 @@ class Header extends React.PureComponent {
     isScrolled: false,
     isHeaderOpen: false,
   };
-
-  componentDidMount () {
+  
+  componentDidMount() {
     document.addEventListener('scroll', this.handleScrollChange);
   }
-
-  componentWillUnmount () {
+  
+  componentWillUnmount() {
     document.removeEventListener('scroll', this.handleScrollChange);
   }
-
+  
   handleScrollChange = () => {
     const isScrolled = window.scrollY > 0;
-
+    
     if (this.state.isScrolled !== isScrolled) {
       window.requestAnimationFrame(() => {
         this.setState({
@@ -40,19 +40,19 @@ class Header extends React.PureComponent {
       });
     }
   };
-
+  
   setMenuOpenStatus = status => {
     this.setState({
       isHeaderOpen: status,
     });
   };
-
-  render () {
+  
+  render() {
     const {
       isScrolled,
       isHeaderOpen,
     } = this.state;
-
+    
     return (
       <ClickAwayListener
         touchEvent={isHeaderOpen ? 'onTouchEnd' : false}
@@ -73,20 +73,17 @@ class Header extends React.PureComponent {
                 className="app-logo"
                 onClick={() => this.setMenuOpenStatus(false)}
               >
-                <img
-                  src={LogoOriginal}
-                  alt="Armenian National Music's logo"
-                />
+                <LogoOriginal />
               </Link>
             </div>
-
+            
             <NavigationMenu
               iseMenuOpen={isHeaderOpen}
               setMenuOpenStatus={this.setMenuOpenStatus}
             />
-
+            
             <LanguageSwitcher/>
-
+            
             <Auth/>
           </div>
         </header>

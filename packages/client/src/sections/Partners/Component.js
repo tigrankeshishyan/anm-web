@@ -1,7 +1,6 @@
 import React from 'react';
 
 import SectionTitle from 'components/SectionTitle';
-import Img from 'components/Img';
 
 import { withI18n } from 'localization/helpers';
 
