@@ -1,6 +1,7 @@
 import React from 'react';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
+import { withI18n } from 'localization/helpers';
 
 import SocialIcon from 'components/SocialIcon';
 import {
@@ -74,4 +75,4 @@ function ShareOnSocial(props) {
   );
 }
 
-export default ShareOnSocial;
+export default withI18n(ShareOnSocial);

@@ -1,5 +1,4 @@
-import { memo } from 'react';
+import { lazy, memo } from 'react';
+import AsyncComponentLoader from 'components/AsyncComponentLoader';
 
-import Comp from './Component';
-
-export default memo(Comp);
+export default memo(AsyncComponentLoader(lazy(() => import('./Component'))));

@@ -1,4 +1,4 @@
-import { withI18n } from 'localization/helpers';
-import Component from './Component';
+import { lazy, memo } from 'react';
+import AsyncComponentLoader from 'components/AsyncComponentLoader';
 
-export default withI18n(Component);
+export default memo(AsyncComponentLoader(lazy(() => import('./Component'))));
