@@ -61,16 +61,8 @@ const SEO = props => {
           content: 'width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0',
         },
         {
-          'http-equiv': 'cache-control',
-          content: 'no-cache',
-        },
-        {
           'http-equiv': 'expires',
           content: '0',
-        },
-        {
-          'http-equiv': 'pragma',
-          content: 'no-cache',
         },
         {
           name: 'charSet',
