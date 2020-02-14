@@ -1,7 +1,6 @@
 import React from 'react';
 
 import SectionTitle from 'components/SectionTitle';
-import Img from 'components/Img';
 
 import { withI18n } from 'localization/helpers';
 
@@ -94,9 +93,11 @@ function HomePartnersSection(props) {
             rel="noopener noreferrer"
             className="partner-logo"
           >
-            <Img
-              alt={logo.title}
+            <img
+              width="150"
+              height="150"
               src={logo.logo}
+              alt={logo.title}
             />
           </a>
         ))}
