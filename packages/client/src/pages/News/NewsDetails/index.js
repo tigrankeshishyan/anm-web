@@ -77,8 +77,8 @@ function NewsDetails(props) {
             />
 
             <PublishedText
-              date={article.publishedAt}
               className="pad-sides-10"
+              date={article.publishedAt}
             />
 
             <span className="pad-sides-10 secondary-text-color">
