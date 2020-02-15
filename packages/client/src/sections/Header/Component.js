@@ -22,7 +22,7 @@ class Header extends React.PureComponent {
   };
   
   componentDidMount() {
-    document.addEventListener('scroll', this.handleScrollChange);
+    document.addEventListener('scroll', this.handleScrollChange, { passive: true });
   }
   
   componentWillUnmount() {
