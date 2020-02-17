@@ -3,8 +3,13 @@ import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import { withI18n } from 'localization/helpers';
 
-import SocialIcon from 'components/SocialIcon';
 import {
+  FacebookIcon,
+  TelegramIcon,
+  WhatsappIcon,
+  TwitterIcon,
+  VKIcon,
+  OKIcon,
   FacebookShareButton,
   TelegramShareButton,
   WhatsappShareButton,
@@ -18,27 +23,27 @@ import './styles.sass';
 const icons = [
   {
     buttonContainer: FacebookShareButton,
-    icon: () => <SocialIcon iconName="Facebook" />,
+    icon: FacebookIcon,
   },
   {
     buttonContainer: TwitterShareButton,
-    icon: () => <SocialIcon iconName="Twitter" />,
+    icon: TelegramIcon,
   },
   {
     buttonContainer: TelegramShareButton,
-    icon: () => <SocialIcon iconName="Telegram" />,
+    icon: WhatsappIcon,
   },
   {
     buttonContainer: WhatsappShareButton,
-    icon: () => <SocialIcon iconName="WhatsApp" />,
+    icon: TwitterIcon,
   },
   {
     buttonContainer: VKShareButton,
-    icon: () => <SocialIcon iconName="Vk" />,
+    icon: VKIcon,
   },
   {
     buttonContainer: OKShareButton,
-    icon: () => <SocialIcon iconName="Ok" />,
+    icon: OKIcon,
   },
 ];
 
