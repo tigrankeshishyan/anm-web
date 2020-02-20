@@ -2,7 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "dependencies": {
-    "@graphile-contrib/pg-many-to-many": "^1.0.0-beta.13",
+    "@graphile-contrib/pg-many-to-many": "github:hsanoyan/pg-many-to-many#master",
     "@graphile-contrib/pg-simplify-inflector": "^5.0.0-beta.1",
     "@sentry/node": "^5.12.4",
     "aws-sdk": "^2.622.0",
