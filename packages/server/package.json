@@ -35,7 +35,6 @@
     "sharp": "^0.24.0",
     "uuid": "^3.4.0"
   },
-  "devDependencies": {},
   "scripts": {
     "esnode": "node --experimental-modules --es-module-specifier-resolution=node -r ../config/env.cjs",
     "debug": "yarn esnode --inspect=$DEBUGGER_PORT app.js",
