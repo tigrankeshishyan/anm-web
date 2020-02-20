@@ -21,6 +21,7 @@ import './styles.sass';
 
 const dateFormat = 'MMM DD YYYY';
 
+const formatDate = date => date ? moment(date).format(dateFormat) : '';
 function MusicianDetails(props) {
   const { data: { musician = {} } = {} } = useQuery(FETCH_SINGLE_MUSICIAN, {
     variables: {
@@ -66,7 +67,7 @@ function MusicianDetails(props) {
             color="textSecondary"
             className="pad-sides-10"
           >
-            {`${moment(musician.birthday).format(dateFormat)} ${musician.deathday ? moment(musician.deathday).format(dateFormat) : ''}`}
+            {`${formatDate(musician.birthday)} ${formatDate(musician.deathday)}`}
           </Typography>
 
           <div
