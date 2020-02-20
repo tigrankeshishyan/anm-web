@@ -6,6 +6,7 @@ on:
     paths: 
       - packages/client/**
       - package.json
+      - .github/workflows/deploy-client.yml
 
 jobs:
   build:
