@@ -27,3 +27,9 @@ yarn-error.log
 .pnp.js
 # Yarn Integrity file
 .yarn-integrity
+
+.yarn/cache
+.yarn/unplugged
+.yarn/plugins
+.yarn/build-state.yml
+.pnp.*
