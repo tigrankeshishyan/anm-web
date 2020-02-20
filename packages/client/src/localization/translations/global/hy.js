@@ -46,6 +46,7 @@ export default {
   'seeAllNews': 'Բոլոր նորությունները',
   'activity': 'Գործունեությունը',
   'sendButtonText': 'Ուղարկել',
+  'select': 'Ընտրել',
   'signIn': 'Մուտք',
   'signUp': 'Գրանցվել',
   'similarNews': 'Նմանատիպ նորություններ',

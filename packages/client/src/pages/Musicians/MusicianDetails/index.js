@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 
 import SEO from 'components/SEO';
 import PageTitle from 'components/PageTitle';
-import SocialShareIcons from 'components/SocialShareIcons';
+import ShareOnSocial from 'components/ShareOnSocial';
 
 import PosterWithSectionBlock from 'sections/PosterWithSectionBlock';
 
@@ -33,7 +33,7 @@ function MusicianDetails(props) {
   const lastName = get(musician, 'lastName', '');
   const biography = musician.biography || '';
   const musicianFullName = `${firstName || ''} ${lastName || ''}`;
-
+  
   return (
     <>
       <SEO
@@ -74,9 +74,8 @@ function MusicianDetails(props) {
             dangerouslySetInnerHTML={{ __html: biography }}
           />
 
-          <div className="mrg-top-15">
-            <SocialShareIcons/>
-          </div>
+          <ShareOnSocial />
+
         </Grid>
       </Grid>
     </>

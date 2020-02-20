@@ -1,7 +1,6 @@
 import React from 'react';
 
 import SectionTitle from 'components/SectionTitle';
-import Img from 'components/Img';
 
 import { withI18n } from 'localization/helpers';
 
@@ -74,7 +73,7 @@ const logos = [
 
 function HomePartnersSection(props) {
   const { i18n } = props;
-
+  
   return (
     <div className="partners-section-wrapper">
       <SectionTitle
@@ -83,7 +82,7 @@ function HomePartnersSection(props) {
         blockWidth="70%"
         title={i18n('ourPartners')}
       />
-
+      
       <div className="flex-row wrap justify-center pad-20 partners-logo-wrapper">
         {logos.map(logo => (
           <a
@@ -94,9 +93,11 @@ function HomePartnersSection(props) {
             rel="noopener noreferrer"
             className="partner-logo"
           >
-            <Img
-              alt={logo.title}
+            <img
+              width="150"
+              height="150"
               src={logo.logo}
+              alt={logo.title}
             />
           </a>
         ))}

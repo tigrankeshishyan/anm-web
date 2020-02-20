@@ -5,5 +5,6 @@ export * from './scores';
 export * from './musicians';
 export * from './contactUs';
 export * from './documents';
-export * from './subscribtions';
+export * from './instruments';
 export * from './pageSections';
+export * from './subscribtions';

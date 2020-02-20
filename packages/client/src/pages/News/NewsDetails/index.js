@@ -3,16 +3,13 @@ import get from 'lodash.get';
 import { useQuery } from '@apollo/react-hooks';
 
 import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
 
 import { withI18n } from 'localization/helpers';
 
 import PosterWithSectionBlock from 'sections/PosterWithSectionBlock';
 
-import SocialShareIcons from 'components/SocialShareIcons';
+import ShareOnSocial from 'components/ShareOnSocial';
 import PublishedText from 'components/PublishedText';
-import SocialIcons from 'components/SocialIcons';
 import NewsGallery from 'components/NewsGallery';
 import SimilarNews from 'sections/SimilarNews';
 import PageTitle from 'components/PageTitle';
@@ -79,8 +76,8 @@ function NewsDetails(props) {
             />
 
             <PublishedText
-              date={article.publishedAt}
               className="pad-sides-10"
+              date={article.publishedAt}
             />
 
             <span className="pad-sides-10 secondary-text-color">
@@ -95,26 +92,15 @@ function NewsDetails(props) {
             />
 
             <div className="mrg-top-15 pad-sides-10">
-              <b className="font-bold">
-                {i18n('followUs')}
-              </b>
-              <SocialIcons
-                type="primary"
-                className="mrg-top-15 justify-start"
-              />
-            </div>
-
-            <div className="mrg-top-15 pad-sides-10">
               <iframe
-                id="fb-iframe"
-                width="500"
-                height="555"
+                width="137"
+                height="46"
                 scrolling="no"
                 frameBorder="0"
-                allow="encrypted-media"
-                allowTransparency="true"
-                title="Armenian National Music's found project on behalf of Armenian Composers"
-                src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FArmeniannationalmusic%2Fposts%2F1486891618101131&width=500"
+                title="Armenian National Music"
+                style={{ border: 'none', display: 'hidden' }}
+                allowTransparency="true" allow="encrypted-media"
+                src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2FArmeniannationalmusic%2F&width=137&layout=button_count&action=like&size=small&share=true&height=46&appId=2508230399262608"
               />
             </div>
 
@@ -132,20 +118,7 @@ function NewsDetails(props) {
                 ))}
               </div>
             )}
-
-            <div className="mrg-top-15 pad-sides-10">
-              <Divider/>
-              <Typography
-                color="primary"
-                className="share-on-social-text"
-              >
-                {i18n('shareOnSocial')}
-              </Typography>
-
-              <div className="mrg-top-15">
-                <SocialShareIcons/>
-              </div>
-            </div>
+            <ShareOnSocial />
           </Grid>
 
           <Grid

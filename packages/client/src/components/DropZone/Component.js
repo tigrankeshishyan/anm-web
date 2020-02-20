@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useDropzone } from 'react-dropzone';
 
 import RootRef from '@material-ui/core/RootRef';
@@ -43,6 +44,11 @@ function DropZone(props) {
     </RootRef>
   );
 }
+
+DropZone.defaultProps = {
+  onFileUpload: PropTypes.func,
+  multiple: PropTypes.bool,
+};
 
 DropZone.defaultProps = {
   onFileUpload: noop,

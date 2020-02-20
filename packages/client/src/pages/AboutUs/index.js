@@ -92,14 +92,16 @@ function AboutUs(props) {
 
         <Grid
           container
-          className="pad-top-30 pad-bottom-30 goal-section"
+          className="pad-top-30 pad-bottom-30"
         >
           <Grid
             item
             md={4}
             xs={12}
+            className="why-we-do-img"
           >
             <Img
+              fitImage
               src={motivationImgUrl}
             />
           </Grid>

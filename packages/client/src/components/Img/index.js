@@ -6,11 +6,9 @@ import {
   addImageProportions,
 } from 'helpers/images';
 
-import DefaultImage from 'images/defaultImage.jpg';
+import DefaultImage from 'images/defaultImage.svg';
 
 import './styles.sass';
-
-createEmptyImg(DefaultImage, 200);
 
 // Load placeholder
 const loadedImages = new Set();

@@ -5,13 +5,11 @@
   &.with-cursor
     cursor: pointer
 
-.anm-loaded-image
-  filter: unset
-  animation: none
+  &.anm-loaded-image
+    filter: unset
+    animation: none
 
-.anm-default-image
-  filter: blur(4px)
-
-.fit-parent
-  width: 100%
-  height: 100%
+  &.fit-parent
+    object-fit: cover
+    width: 100%
+    height: 100%

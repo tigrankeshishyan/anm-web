@@ -46,6 +46,7 @@ export default {
   'seeAllNews': 'All News',
   'activity': 'Activity',
   'sendButtonText': 'Send',
+  'select': 'Select',
   'signIn': 'Sign in',
   'signUp': 'Sign up',
   'similarNews': 'Similar News',

@@ -1,12 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withI18n } from 'localization/helpers';
+
 import Typography from '@material-ui/core/Typography';
+
+import { withI18n } from 'localization/helpers';
 import moment from 'helpers/date';
 
 import './styles.sass';
 
-const format = 'MMM DD YYYY';
+const format = 'MMM DD YYYY, HH:mm';
 
 function PublishedText(props) {
   const {

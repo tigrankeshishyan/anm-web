@@ -10,6 +10,7 @@ const newsMain = gql`
     title
     nodeId
     content
+    createdAt
     description
     publishedAt
   }
