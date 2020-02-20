@@ -1,5 +1,8 @@
 {
   "name": "config",
   "version": "1.0.0",
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "es-dirname": "^0.1.0"
+  }
 }
