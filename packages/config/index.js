@@ -1,5 +1,6 @@
 import os from 'os'
 import path from 'path'
+import dirname from 'es-dirname'
 
 const requiredEnvVariables = [
   'APP_SECRET',
@@ -30,8 +31,7 @@ export const host = 'anmmedia.am'
 
 export const anmHost = process.env.HOST || `https://${host}`
 
-export const adminHost =
-  process.env.ADMIN_HOST || `https://admin.${host}`
+export const adminHost = process.env.ADMIN_HOST || `https://admin.${host}`
 
 export const PDFService = process.env.PDF_SERVICE || `https://${host}`
 
@@ -97,6 +97,9 @@ export const uploadDir = path.join(os.tmpdir(), 'anm-server/upload')
 export const scoreDocumentName = 'document.pdf'
 export const scorePreviewName = 'preview.pdf'
 export const scoreComingSoon = 'coming-soon.pdf'
+
+export const buildDir =
+  process.env.BUILD_PATH || path.join(dirname(), '/../client/build/')
 
 export const slack = {
   webhook: process.env.SLACK_WEBHOOK || process.env.SLACK_WEBHOOK_URL,

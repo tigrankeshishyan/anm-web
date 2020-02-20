@@ -1,14 +1,15 @@
 import path from 'path'
 import isBot from 'isbot'
-import dirname from 'es-dirname'
 
 import { appDefaultData, appAboutUsData, appContactUsData } from '../constants'
 import { getSingleNewsData } from './news'
 import { getSingleMusicianData } from './musicians'
 import { getSingleScoreData } from './scores'
+import { buildDir } from '../../config'
 
 const getUrl = req => process.env.HOST + req.originalUrl
 const defaultLocale = 'hy'
+const indexHtml = path.join(buildDir, 'index.html')
 
 export const fetchData = async req => {
   const { id, locale = defaultLocale } = req.params
@@ -30,7 +31,7 @@ export default async (req, res, next) => {
   try {
     // Detect if the request comes from browser or from crawler, spider, etc.
     if (!isBot(req.headers['user-agent'])) {
-      res.sendFile(path.resolve(dirname(), '../../client/build/index.html'))
+      res.sendFile(indexHtml)
       return
     }
 

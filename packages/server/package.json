@@ -35,15 +35,7 @@
     "sharp": "^0.24.0",
     "uuid": "^3.4.0"
   },
-  "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-standard": "^14.1.0",
-    "eslint-plugin-import": "^2.20.0",
-    "eslint-plugin-node": "^11.0.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
-    "prettier-eslint": "^9.0.1"
-  },
+  "devDependencies": {},
   "scripts": {
     "esnode": "node --experimental-modules --es-module-specifier-resolution=node -r ../config/env.cjs",
     "debug": "yarn esnode --inspect=$DEBUGGER_PORT app.js",
