@@ -45,6 +45,9 @@
     "react-select": "^3.0.8",
     "react-share": "^4.0.1"
   },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
   "scripts": {
     "build": "react-scripts build",
     "eject": "react-scripts eject",
