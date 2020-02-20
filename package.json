@@ -13,13 +13,10 @@
       "last 1 safari version"
     ]
   },
-  "dependencies": {
-    "dotenv": "^8.2.0"
-  },
   "devDependencies": {
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.0",
-    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-node": "^11.0.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
@@ -27,6 +24,7 @@
   },
   "private": true,
   "scripts": {
+    "preinstall": "mkdir -p node_modules;touch node_modules/.metadata_never_index;",
     "client": "yarn workspace client",
     "conf": "yarn workspace config",
     "db": "yarn workspace db",
