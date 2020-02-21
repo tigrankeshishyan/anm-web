@@ -94,8 +94,6 @@ function HomePartnersSection(props) {
             className="partner-logo"
           >
             <img
-              width="150"
-              height="150"
               src={logo.logo}
               alt={logo.title}
             />

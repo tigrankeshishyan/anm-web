@@ -34,11 +34,11 @@ function Layout(props) {
                   <Header
                     location={props.location}
                   />
-                  <Switch>
-                    <main className="main-app">
+                  <main className="main-app">
+                    <Switch>
                       {renderRoutes(routes)}
-                    </main>
-                  </Switch>
+                    </Switch>
+                  </main>
                 </div>
                 <Footer/>
                 <CookieBanner/>
