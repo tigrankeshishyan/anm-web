@@ -158,10 +158,8 @@ function AuthFormWrapper(props) {
               </p>
 
               <a
-                onClick={() => {
-                  setPageLoading(true);
-                  window.href = `${REACT_APP_HOST}/auth/facebook`;
-                }}
+                href={`${REACT_APP_HOST}/auth/facebook`}
+                onClick={() => setPageLoading(true)}
               >
                 <SocialIcon
                   iconName="Facebook"
