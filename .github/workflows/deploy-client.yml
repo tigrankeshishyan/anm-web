@@ -2,7 +2,7 @@ name: deploy client
 
 on:
   push:
-    branches: ['stage', 'prod']
+    branches: ['dev', 'prod']
     paths: 
       - packages/client/**
       - package.json
