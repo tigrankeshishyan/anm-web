@@ -97,9 +97,9 @@ function NewsDetails(props) {
                 height="46"
                 scrolling="no"
                 frameBorder="0"
+                allow="encrypted-media"
                 title="Armenian National Music"
                 style={{ border: 'none', display: 'hidden' }}
-                allowTransparency="true" allow="encrypted-media"
                 src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fwww.facebook.com%2FArmeniannationalmusic%2F&width=137&layout=button_count&action=like&size=small&share=true&height=46&appId=2508230399262608"
               />
             </div>

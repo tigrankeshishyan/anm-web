@@ -2,10 +2,11 @@ name: deploy client
 
 on:
   push:
-    branches: ['stage', 'prod']
+    branches: ['dev', 'prod']
     paths: 
       - packages/client/**
       - package.json
+      - .github/workflows/deploy-client.yml
 
 jobs:
   build:
@@ -33,7 +34,7 @@ jobs:
         
     - name: Get yarn cache
       id: yarn-cache
-      run: echo "::set-output name=dir::$(yarn cache dir)"
+      run: echo "::set-output name=dir::$(yarn config --json | jq -r '. | select(.key == "cacheFolder") | .effective')"
     - uses: actions/cache@v1
       with:
         path: ${{ steps.yarn-cache.outputs.dir }}
@@ -48,7 +49,7 @@ jobs:
 
     - run: ssh-keyscan ${{ secrets.HOST }} >> ~/.ssh/known_hosts
 
-    - run: yarn client install
+    - run: yarn install
     - name: Build with 
       run: yarn client build-${{ steps.extract_branch.outputs.branch }}
       

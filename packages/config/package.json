@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "es-dirname": "^0.1.0"
   }
 }

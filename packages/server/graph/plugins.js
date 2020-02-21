@@ -2,7 +2,7 @@ import GraphileUtils from 'graphile-utils'
 import ConnectionFilterPlugin from 'postgraphile-plugin-connection-filter'
 import PgSimplifyInflectorPlugin from '@graphile-contrib/pg-simplify-inflector'
 import PostGraphileUploadFieldPlugin from 'postgraphile-plugin-upload-field'
-import PgManyToManyPlugin from '@graphile-contrib/pg-many-to-many'
+import PgManyToManyPlugin from 'pg-many-to-many'
 
 import ArticleSchema from './plugins/article.plugin'
 import AuthPlugin from './plugins/auth.plugin'

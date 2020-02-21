@@ -163,7 +163,7 @@ function BuyScoreDialog (props) {
             </Icon>
           </div>
           <DialogContent
-            dividers="true"
+            dividers
           >
             <Loading
               isLoading={isLoading}

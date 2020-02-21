@@ -2,11 +2,12 @@ name: deploy server
 
 on:
   push:
-    branches: ['stage', 'prod']
+    branches: ['dev', 'prod']
     paths:
       - packages/server/**
       - packages/db/**
       - package.json
+      - .github/workflows/deploy-server.yml
 
 jobs:
   build:
