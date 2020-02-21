@@ -30,6 +30,5 @@ yarn-error.log
 
 .yarn/cache
 .yarn/unplugged
-.yarn/plugins
 .yarn/build-state.yml
 .pnp.*
