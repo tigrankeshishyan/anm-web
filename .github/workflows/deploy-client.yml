@@ -33,6 +33,11 @@ jobs:
       run: >-
         ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER }}
         'cd ~/${{steps.extract_branch.outputs.branch}}/;
+        git reset --hard origin/$BRANCH;
+        git pull;
+        yarn install;
+        yarn db migrate;
+        pm2 restart $BRANCH;
         ANM_ENV=${{steps.extract_branch.outputs.branch}} yarn client build'
         
       
