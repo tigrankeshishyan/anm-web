@@ -1,4 +1,6 @@
+import fs from 'fs'
 import path from 'path'
+
 import isBot from 'isbot'
 
 import { appDefaultData, appAboutUsData, appContactUsData } from '../constants'
@@ -20,31 +22,43 @@ export const fetchData = async req => {
 
   if (id) {
     if (url.includes('/news/')) return getSingleNewsData(id, locale, url)
-    if (url.includes('/musician/')) return getSingleMusicianData(id, locale, url)
-    if (url.includes('/music-sheet-score/')) return getSingleScoreData(id, locale, url)
+    if (url.includes('/musician/')) {
+      return getSingleMusicianData(id, locale, url)
+    }
+    if (url.includes('/music-sheet-score/')) {
+      return getSingleScoreData(id, locale, url)
+    }
   }
 
   return { url }
 }
 
-export default async (req, res, next) => {
-  try {
-    // Detect if the request comes from browser or from crawler, spider, etc.
-    if (!isBot(req.headers['user-agent'])) {
-      res.sendFile(indexHtml)
-      return
-    }
+/**
+ *
+ * @param {import('express').Express} app
+ */
+export default async function installStatic (app, routes) {
+  await fs.promises.access(indexHtml, fs.constants.R_OK)
 
-    const { locale = defaultLocale } = req.params
-    const data = await fetchData(req)
-    const params = {
-      ...appDefaultData[locale],
-      ...data,
-      content: data.content || data.description
-    }
+  app.use(routes, async (req, res, next) => {
+    try {
+      // Detect if the request comes from browser or from crawler, spider, etc.
+      if (!isBot(req.headers['user-agent'])) {
+        res.sendFile(indexHtml)
+        return
+      }
 
-    res.render('main', params)
-  } catch (err) {
-    next(err)
-  }
+      const { locale = defaultLocale } = req.params
+      const data = await fetchData(req)
+      const params = {
+        ...appDefaultData[locale],
+        ...data,
+        content: data.content || data.description
+      }
+
+      res.render('main', params)
+    } catch (err) {
+      next(err)
+    }
+  })
 }

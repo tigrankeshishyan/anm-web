@@ -58,7 +58,7 @@ const run = async () => {
   app.use(bodyParser.urlencoded({ extended: true }))
   app.use(sessionMiddleware)
   app.use(useRespond)
-  app.use(dynamicRoutes, reqMiddleware)
+  await reqMiddleware(app, dynamicRoutes)
 
   configurePassport(passport)
 
@@ -71,7 +71,7 @@ const run = async () => {
   app.use(GraphQL())
 
   app.use(routes)
-  app.use('*', reqMiddleware)
+  await reqMiddleware(app, '*')
 
   app.use(errorHandler)
 
