@@ -6,7 +6,7 @@
       "extensions": {
         "endpoints": {
           "Default GraphQL Endpoint": {
-            "url": "https://stage.anmmedia.am/graphql",
+            "url": "https://dev.anmmedia.am/graphql",
             "headers": {
               "user-agent": "JS GraphQL"
             },

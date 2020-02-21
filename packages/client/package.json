@@ -54,6 +54,6 @@
     "test": "react-scripts test",
     "start": "react-scripts start",
     "build-prod": "env-cmd -f .env.prod yarn build",
-    "build-stage": "env-cmd -f .env.stage yarn build"
+    "build-dev": "env-cmd -f .env.dev yarn build"
   }
 }
