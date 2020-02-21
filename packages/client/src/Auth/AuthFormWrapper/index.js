@@ -144,11 +144,20 @@ function AuthFormWrapper(props) {
 
   return (
     <>
-      <SEO title={i18n(isSignInMode ? 'signIn' : 'signUp')}/>
+      <SEO
+        title={i18n(isSignInMode ? 'signIn' : 'signUp')}
+      />
 
       <ContentSection>
-        <Grid container justify="center">
-          <Grid item sm={6} xs={12}>
+        <Grid
+          container
+          justify="center"
+        >
+          <Grid
+            item
+            sm={6}
+            xs={12}
+          >
             <Loading
               className="mrg-top-15"
               isLoading={isPageLoading || isCreateUserLoading || isLoginLoading}
@@ -156,14 +165,14 @@ function AuthFormWrapper(props) {
               <p className="secondary-text-color mrg-vertical-half">
                 {i18n('useSocialAccount')}
               </p>
-
               <a
-                onClick={() => setPageLoading(true)}
                 href={`${REACT_APP_HOST}/auth/facebook`}
+                onClick={() => setPageLoading(true)}
               >
-                <SocialIcon iconName="Facebook"/>
+                <SocialIcon
+                  iconName="Facebook"
+                />
               </a>
-
               <AuthForm
                 key={formKey}
                 formData={formData}
