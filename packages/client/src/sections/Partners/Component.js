@@ -4,14 +4,14 @@ import SectionTitle from 'components/SectionTitle';
 
 import { withI18n } from 'localization/helpers';
 
-import AgbuLogo from 'images/partners/agbu.png';
-import AvetisAssociationLogo from 'images/partners/avetisAssociation.png';
-import KomitasInstituteLogo from 'images/partners/komitasInstitute.png';
-import ConservatoryLogo from 'images/partners/conservatory.png';
 import AnpoLogo from 'images/partners/anpo.png';
+import AgbuLogo from 'images/partners/agbu.png';
+import AssonanceLogo from 'images/partners/assonance.jpg';
 import HoverChoirLogo from 'images/partners/hoverChoir.png';
 import QuartertoneLogo from 'images/partners/quartertone.png';
-import AssonanceLogo from 'images/partners/assonance.jpg';
+import ConservatoryLogo from 'images/partners/conservatory.png';
+import KomitasInstituteLogo from 'images/partners/komitasInstitute.png';
+import AvetisAssociationLogo from 'images/partners/avetisAssociation.png';
 import YerevanStringQuartetLogo from 'images/partners/yerevanStringQuartet.png';
 import KhachatryanHomeMuseumLogo from 'images/partners/khachatryanHomeMuseum.png';
 
@@ -88,8 +88,8 @@ function HomePartnersSection(props) {
           <a
             target="_blank"
             key={logo.website}
-            href={logo.website}
             title={logo.title}
+            href={logo.website}
             rel="noopener noreferrer"
             className="partner-logo"
           >
