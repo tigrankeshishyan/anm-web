@@ -25,11 +25,10 @@ node_modules/
 yarn-error.log
 .pnp/
 .pnp.js
+
 # Yarn Integrity file
 .yarn-integrity
-
 .yarn/cache
 .yarn/unplugged
-.yarn/plugins
 .yarn/build-state.yml
 .pnp.*

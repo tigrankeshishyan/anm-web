@@ -49,7 +49,7 @@ jobs:
 
     - run: ssh-keyscan ${{ secrets.HOST }} >> ~/.ssh/known_hosts
 
-    - run: yarn client install
+    - run: yarn install
     - name: Build with 
       run: yarn client build-${{ steps.extract_branch.outputs.branch }}
       
