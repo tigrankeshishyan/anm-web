@@ -24,7 +24,7 @@
   },
   "private": true,
   "scripts": {
-    "preinstall": "mkdir -p node_modules && touch node_modules/.metadata_never_index",
+    "preinstall": "touch .metadata_never_index",
     "client": "yarn workspace client",
     "conf": "yarn workspace config",
     "db": "yarn workspace db",
