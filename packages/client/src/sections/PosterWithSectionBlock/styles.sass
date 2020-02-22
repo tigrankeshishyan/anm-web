@@ -4,6 +4,11 @@
 .page-title-with-poster
   margin-top: 0.9375rem
 
+  .poster-image-wrapper
+    box-shadow: -6px 4px 13px rgba(0, 0, 0, 0.3)
+    border-top-left-radius: 0.375rem
+    border-bottom-left-radius: 0.375rem
+
   .decoration-block
     width: 100%
     background-color: rgba($section-bg-color, .15)
@@ -12,3 +17,6 @@
   @media (max-width: $xs-starts)
     justify-content: initial
 
+    .poster-image-wrapper
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3)
+      border-radius: 0

@@ -30,7 +30,9 @@ function PosterWithSectionBlock (props) {
           xs={12}
           className="flex-column justify-end decoration-block-wrapper"
         >
-          <div className="decoration-block"/>
+          <div
+            className="decoration-block"
+          />
         </Grid>
       </Hidden>
       
