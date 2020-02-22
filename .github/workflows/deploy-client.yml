@@ -6,7 +6,6 @@ on:
     paths: 
       - packages/client/**
       - package.json
-      - yarn.lock
       - .github/workflows/deploy-client.yml
 
 jobs:

@@ -7,7 +7,6 @@ on:
       - packages/server/**
       - packages/db/**
       - package.json
-      - yarn.lock
       - .github/workflows/deploy-server.yml
 
 jobs:
