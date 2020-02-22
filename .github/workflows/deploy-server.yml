@@ -33,6 +33,6 @@ jobs:
     - name: deploy server
       run: >-
         ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER }}
-        'cd ~/${{steps.extract_branch.outputs.branch}}/ && yarn server update'
+        'cd ~/${{steps.extract_branch.outputs.branch}}/ && yarn update'
         
       

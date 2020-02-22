@@ -41,8 +41,7 @@
     "gw": "yarn esnode node_modules/.bin/graphile-worker --schema-only",
     "nmon": "npx nodemon --experimental-modules --es-module-specifier-resolution=node --exec 'node -r dotenv/config'",
     "nodemon": "yarn nmon app.js",
-    "start": "yarn esnode app.js",
-    "update": ".scripts/update"
+    "start": "yarn esnode app.js"
   },
   "type": "module"
 }
