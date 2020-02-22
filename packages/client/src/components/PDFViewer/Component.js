@@ -1,10 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { pdfjs, Document, Page } from 'react-pdf';
 import {
   isMobile
 } from 'react-device-detect';
 import clsx from 'clsx';
+import { usePdf } from '@mikecousins/react-pdf';
 
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -19,17 +20,23 @@ import {
 
 import './styles.sass';
 
-// FIX: temp but official fix of worker issue
-// https://github.com/wojtekmaj/react-pdf/issues/321#issuecomment-451291757
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+// // FIX: temp but official fix of worker issue
+// // https://github.com/wojtekmaj/react-pdf/issues/321#issuecomment-451291757
+// pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const firstPage = 1;
 
 const PDFViewer = (props) => {
-  const [isLoading, setLoadingStatus] = useState(true);
-  const [numPages, setNumPages] = useState(1);
+  // const [isLoading, setLoadingStatus] = useState(true);
   const [pageNumber, setPageNumber] = useState(firstPage);
   const [hasError, setHasErrorStatus] = useState(false);
+  const canvasRef = useRef(null);
+  
+  const { pdfDocument, pdfPage } = usePdf({
+    file: props.pdfUrl,
+    page: pageNumber,
+    canvasRef,
+  });
   
   const {
     i18n,
@@ -37,18 +44,18 @@ const PDFViewer = (props) => {
     className,
   } = props;
   
-  const onDocumentLoadSuccess = useCallback(({ numPages }) => {
-    setLoadingStatus(false);
-    setNumPages(numPages);
-  }, []);
-  
-  const onLoadError = useCallback(error => {
-    console.error('PDF VIEWER ERROR :::', error);
-    setHasErrorStatus(true);
-    setLoadingStatus(false);
-    setPageNumber(firstPage);
-  }, []);
-  
+  // const onDocumentLoadSuccess = useCallback(({ numPages }) => {
+  //   setLoadingStatus(false);
+  //   setNumPages(numPages);
+  // }, []);
+  //
+  // const onLoadError = useCallback(error => {
+  //   console.error('PDF VIEWER ERROR :::', error);
+  //   setHasErrorStatus(true);
+  //   setLoadingStatus(false);
+  //   setPageNumber(firstPage);
+  // }, []);
+  //
   const handleToPrevPage = useCallback(() => {
     setPageNumber(pageNumber => --pageNumber);
   }, []);
@@ -57,34 +64,36 @@ const PDFViewer = (props) => {
     setPageNumber(pageNumber => ++pageNumber);
   }, []);
   
+  const { numPages } = (pdfDocument || {});
   return (
     <Loading
       minHeight={300}
-      isLoading={isLoading}
+      isLoading={!pdfDocument}
       className={clsx('anm-pdf-viewer-wrapper', className)}
     >
-      <Document
-        file={pdfUrl}
-        onLoadError={onLoadError}
-        onSourceError={onLoadError}
-        width={isMobile ? 300 : 400}
-        error={i18n('somethingWrong')}
-        noData={i18n(`${PDF_VIEWER}.noFile`)}
-        onLoadSuccess={onDocumentLoadSuccess}
-        loading={i18n(`${PDF_VIEWER}.loadingFile`)}
-      >
-        <Page
-          pageNumber={pageNumber}
-          onLoadError={onLoadError}
-          onSourceError={onLoadError}
-          height={isMobile ? 400 : 600}
-          error={i18n('somethingWrong')}
-          noData={i18n(`${PDF_VIEWER}.noPage`)}
-          loading={i18n(`${PDF_VIEWER}.loadingPage`)}
-        />
-      </Document>
+      <canvas ref={canvasRef} />
+      {/*<Document*/}
+      {/*  file={pdfUrl}*/}
+      {/*  onLoadError={onLoadError}*/}
+      {/*  onSourceError={onLoadError}*/}
+      {/*  width={isMobile ? 300 : 400}*/}
+      {/*  error={i18n('somethingWrong')}*/}
+      {/*  noData={i18n(`${PDF_VIEWER}.noFile`)}*/}
+      {/*  onLoadSuccess={onDocumentLoadSuccess}*/}
+      {/*  loading={i18n(`${PDF_VIEWER}.loadingFile`)}*/}
+      {/*>*/}
+      {/*  <Page*/}
+      {/*    pageNumber={pageNumber}*/}
+      {/*    onLoadError={onLoadError}*/}
+      {/*    onSourceError={onLoadError}*/}
+      {/*    height={isMobile ? 400 : 600}*/}
+      {/*    error={i18n('somethingWrong')}*/}
+      {/*    noData={i18n(`${PDF_VIEWER}.noPage`)}*/}
+      {/*    loading={i18n(`${PDF_VIEWER}.loadingPage`)}*/}
+      {/*  />*/}
+      {/*</Document>*/}
       
-      {!isLoading && !hasError && pdfUrl && (
+      {pdfUrl && pdfDocument && !hasError && (
         <div className="flex-row justify-between wrap align-center">
           <p>
             {i18n(`${PDF_VIEWER}.page`)}
