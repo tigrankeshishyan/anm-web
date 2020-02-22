@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 import { userAll } from '_graphql/fragments';
 
 export const AUTHENTICATE_USER = gql`

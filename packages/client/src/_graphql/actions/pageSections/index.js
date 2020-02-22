@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 import { pageSectionsAll } from '_graphql/fragments';
 
 export const FETCH_SINGLE_PAGE_SECTION = gql`

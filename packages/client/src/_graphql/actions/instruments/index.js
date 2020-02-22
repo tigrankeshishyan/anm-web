@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 
 import { instrumentAll } from '_graphql/fragments/instruments';
 

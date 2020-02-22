@@ -1,9 +1,5 @@
 import React, { useState, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
-// import { pdfjs, Document, Page } from 'react-pdf';
-// import {
-//   isMobile
-// } from 'react-device-detect';
 import clsx from 'clsx';
 import { usePdf } from '@mikecousins/react-pdf';
 
@@ -20,10 +16,6 @@ import {
 
 import './styles.sass';
 
-// // FIX: temp but official fix of worker issue
-// // https://github.com/wojtekmaj/react-pdf/issues/321#issuecomment-451291757
-// pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
-
 const firstPage = 1;
 
 const PDFViewer = (props) => {
@@ -32,7 +24,7 @@ const PDFViewer = (props) => {
   const [hasError, setHasErrorStatus] = useState(false);
   const canvasRef = useRef(null);
   
-  const onDocumentLoadSuccess = useCallback(({ numPages }) => {
+  const onDocumentLoadSuccess = useCallback(() => {
     setLoadingStatus(false);
   }, []);
   
@@ -65,33 +57,17 @@ const PDFViewer = (props) => {
   }, []);
   
   const { numPages } = (pdfDocument || {});
+  
   return (
     <Loading
       minHeight={300}
       isLoading={isLoading}
       className={clsx('anm-pdf-viewer-wrapper', className)}
     >
-      <canvas ref={canvasRef} />
-      {/*<Document*/}
-      {/*  file={pdfUrl}*/}
-      {/*  onLoadError={onLoadError}*/}
-      {/*  onSourceError={onLoadError}*/}
-      {/*  width={isMobile ? 300 : 400}*/}
-      {/*  error={i18n('somethingWrong')}*/}
-      {/*  noData={i18n(`${PDF_VIEWER}.noFile`)}*/}
-      {/*  onLoadSuccess={onDocumentLoadSuccess}*/}
-      {/*  loading={i18n(`${PDF_VIEWER}.loadingFile`)}*/}
-      {/*>*/}
-      {/*  <Page*/}
-      {/*    pageNumber={pageNumber}*/}
-      {/*    onLoadError={onLoadError}*/}
-      {/*    onSourceError={onLoadError}*/}
-      {/*    height={isMobile ? 400 : 600}*/}
-      {/*    error={i18n('somethingWrong')}*/}
-      {/*    noData={i18n(`${PDF_VIEWER}.noPage`)}*/}
-      {/*    loading={i18n(`${PDF_VIEWER}.loadingPage`)}*/}
-      {/*  />*/}
-      {/*</Document>*/}
+      <canvas
+        ref={canvasRef}
+        className="anm-pdf-viewer-canvas"
+      />
       
       {!isLoading && pdfDocument && !hasError && (
         <div className="flex-row justify-between wrap align-center">

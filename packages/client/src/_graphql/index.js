@@ -1,6 +1,6 @@
 import { createUploadLink } from 'apollo-upload-client';
 import { InMemoryCache } from 'apollo-cache-inmemory';
-import { ApolloClient } from 'apollo-boost';
+import { ApolloClient } from 'apollo-client';
 import { onError } from 'apollo-link-error';
 import { ApolloLink } from 'apollo-link';
 import { getCurrentLang } from 'localization/helpers';
