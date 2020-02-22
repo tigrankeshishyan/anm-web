@@ -4,22 +4,27 @@ import { useMutation } from '@apollo/react-hooks';
 
 import Grid from '@material-ui/core/Grid';
 
-import { withToastActions } from 'containers/ToastMessages';
-
 import ContentSection from 'sections/ContentSection';
 
 import SEO from 'components/SEO';
+import Loading from 'components/Loading';
 import SocialIcon from 'components/SocialIcon';
 
-import { validateForm } from 'Auth/helpers';
-import { withI18n } from 'localization/helpers';
+import { withToastActions } from 'containers/ToastMessages';
 
-import { getCurrentLang } from 'localization/helpers';
+import {
+  withI18n,
+  getCurrentLang,
+} from 'localization/helpers';
 
-import { LOG_IN, CREATE_USER, AUTHENTICATE_USER } from '_graphql/actions/user';
+import {
+  LOG_IN,
+  CREATE_USER,
+  AUTHENTICATE_USER,
+} from '_graphql/actions/user';
 
-import Loading from 'components/Loading';
 import AuthForm from 'Auth/AuthForm';
+import { validateForm } from 'Auth/helpers';
 
 import './styles.sass';
 
@@ -39,9 +44,7 @@ const emptySignUpForm = {
 };
 
 const DUPLICATE_EMAIL_ERROR = 'duplicate key value';
-
 const loginRequiredFields = ['password', 'email'];
-
 const requiredFields = ['firstName', 'lastName'];
 
 const getResponseStatusKey = code => {
