@@ -33,9 +33,9 @@ jobs:
     - name: deploy server
       run: >-
         ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER }}
-        'cd ~/${{steps.extract_branch.outputs.branch}}/;
-        ANM_ENV=${{steps.extract_branch.outputs.branch}} yarn server pull;
-        yarn db migrate;
-        pm2 restart ${{steps.extract_branch.outputs.branch}}'
+        '
+        cd ~/${{steps.extract_branch.outputs.branch}}/;
+        yarn server update;
+        '
         
       

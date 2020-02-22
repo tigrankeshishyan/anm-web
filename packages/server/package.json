@@ -42,7 +42,7 @@
     "nmon": "npx nodemon --experimental-modules --es-module-specifier-resolution=node --exec 'node -r dotenv/config'",
     "nodemon": "yarn nmon app.js",
     "start": "yarn esnode app.js",
-    "pull": "git fetch;git reset --hard origin/${ANM_ENV:?};git checkout ${ANM_ENV:?};git pull;yarn install;"
+    "update": ".scripts/update"
   },
   "type": "module"
 }
