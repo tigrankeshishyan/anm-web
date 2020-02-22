@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 
 export const FETCH_DOCUMENT = gql`
   query FetchDocument($name: String!) {

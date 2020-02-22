@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 import { scoreMain } from '_graphql/fragments/scores';
 
 export const userAll = gql`

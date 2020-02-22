@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 import { newsAll } from '_graphql/fragments/news';
 
 export const FETCH_NEWS = gql`

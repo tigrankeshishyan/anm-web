@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 import { musicianAll } from '_graphql/fragments/musicians';
 
 export const FETCH_MUSICIANS = gql`

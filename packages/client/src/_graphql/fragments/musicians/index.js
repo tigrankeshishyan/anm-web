@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 import { imageAll } from '../images';
 
 const musicianMain = gql`

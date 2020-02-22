@@ -1,4 +1,4 @@
-import { gql } from 'apollo-boost';
+import gql from 'graphql-tag';
 import { imageAll } from '../images';
 import { genreAll } from '../genres';
 import { tagAll } from '../tags';
