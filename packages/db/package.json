@@ -6,7 +6,7 @@
   },
   "private": true,
   "scripts": {
-    "esnode": "node --experimental-modules --es-module-specifier-resolution=node -r ../config/env.cjs",
+    "esnode": "node -r ../config/env.cjs",
     "gm": "yarn esnode ../../node_modules/graphile-migrate/dist/cli.js",
     "watch": "yarn gm watch",
     "reset": "yarn gm reset",
