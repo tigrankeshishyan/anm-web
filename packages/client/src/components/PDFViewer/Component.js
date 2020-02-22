@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { pdfjs, Document, Page } from 'react-pdf';
-import {
-  isMobile
-} from 'react-device-detect';
+// import { pdfjs, Document, Page } from 'react-pdf';
+// import {
+//   isMobile
+// } from 'react-device-detect';
 import clsx from 'clsx';
 import { usePdf } from '@mikecousins/react-pdf';
 
@@ -27,35 +27,35 @@ import './styles.sass';
 const firstPage = 1;
 
 const PDFViewer = (props) => {
-  // const [isLoading, setLoadingStatus] = useState(true);
+  const [isLoading, setLoadingStatus] = useState(true);
   const [pageNumber, setPageNumber] = useState(firstPage);
   const [hasError, setHasErrorStatus] = useState(false);
   const canvasRef = useRef(null);
   
-  const { pdfDocument, pdfPage } = usePdf({
-    file: props.pdfUrl,
-    page: pageNumber,
+  const onDocumentLoadSuccess = useCallback(({ numPages }) => {
+    setLoadingStatus(false);
+  }, []);
+  
+  const onLoadError = useCallback(error => {
+    console.error('PDF VIEWER ERROR :::', error);
+    setHasErrorStatus(true);
+    setLoadingStatus(false);
+    setPageNumber(firstPage);
+  }, []);
+  
+  const { pdfDocument } = usePdf({
     canvasRef,
+    page: pageNumber,
+    file: props.pdfUrl,
+    onDocumentLoadFail: onLoadError,
+    onDocumentLoadSuccess: onDocumentLoadSuccess,
   });
   
   const {
     i18n,
-    pdfUrl,
     className,
   } = props;
-  
-  // const onDocumentLoadSuccess = useCallback(({ numPages }) => {
-  //   setLoadingStatus(false);
-  //   setNumPages(numPages);
-  // }, []);
-  //
-  // const onLoadError = useCallback(error => {
-  //   console.error('PDF VIEWER ERROR :::', error);
-  //   setHasErrorStatus(true);
-  //   setLoadingStatus(false);
-  //   setPageNumber(firstPage);
-  // }, []);
-  //
+
   const handleToPrevPage = useCallback(() => {
     setPageNumber(pageNumber => --pageNumber);
   }, []);
@@ -68,7 +68,7 @@ const PDFViewer = (props) => {
   return (
     <Loading
       minHeight={300}
-      isLoading={!pdfDocument}
+      isLoading={isLoading}
       className={clsx('anm-pdf-viewer-wrapper', className)}
     >
       <canvas ref={canvasRef} />
@@ -93,7 +93,7 @@ const PDFViewer = (props) => {
       {/*  />*/}
       {/*</Document>*/}
       
-      {pdfUrl && pdfDocument && !hasError && (
+      {!isLoading && pdfDocument && !hasError && (
         <div className="flex-row justify-between wrap align-center">
           <p>
             {i18n(`${PDF_VIEWER}.page`)}
