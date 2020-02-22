@@ -12,12 +12,12 @@ function ContentSection(props) {
   } = props;
 
   return (
-    <main
+    <div
       style={style}
       className={clsx('content-section', className)}
     >
       {children}
-    </main>
+    </div>
   );
 }
 
