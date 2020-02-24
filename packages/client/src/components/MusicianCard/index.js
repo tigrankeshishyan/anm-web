@@ -39,16 +39,10 @@ function MusicianCard(props) {
           className="musician-card-poster-image"
         />
       </div>
-  
-      <Typography
-        color="textSecondary"
-        className="pad-sides-10"
-      >
-        {musicianProfessions}
-      </Typography>
       <CardFooter
         title={musicianFullName}
         titleClassName="font-bold"
+        description={musicianProfessions}
       />
     </Link>
   );
