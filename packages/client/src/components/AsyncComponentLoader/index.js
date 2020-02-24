@@ -37,23 +37,11 @@ const Loader = (props) => {
  *
  * @param Component
  * @param {Object} loaderProps -
- * @param {boolean} isClass - should return function or class component
- * @returns {Element}
+ * @returns {ReactElement}
  * @constructor
  */
-const AsyncComponentLoader = (Component, loaderProps = {}, isClass = false) => {
-  if (isClass) {
-    return class extends React.Component {
-      render() {
-        return (
-          <Suspense fallback={<Loader {...loaderProps} />}>
-            <Component {...this.props} />
-          </Suspense>
-        );
-      }
-    };
-  }
-  return (props) => (
+const AsyncComponentLoader = (Component, loaderProps = {}) => {
+  return props => (
     <Suspense fallback={<Loader {...loaderProps} />}>
       <Component {...props} />
     </Suspense>
