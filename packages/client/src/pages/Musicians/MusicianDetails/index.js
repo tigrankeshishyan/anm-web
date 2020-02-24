@@ -32,6 +32,8 @@ function MusicianDetails(props) {
   const musicianPhoto = get(musician, 'photo.url', '');
   const firstName = get(musician, 'firstName', '');
   const lastName = get(musician, 'lastName', '');
+  const professions = get(musician, 'professions', []);
+  const musicianProfessions = professions.map(p => p.profession.name).join(', ');
   const biography = musician.biography || '';
   const musicianFullName = `${firstName || ''} ${lastName || ''}`;
   
@@ -50,19 +52,23 @@ function MusicianDetails(props) {
         imgAlt={musicianFullName}
       />
 
-      <Grid
-        container
-      >
+      <Grid container>
         <Grid
           item
           xs={12}
           className="content-wrapper"
         >
           <PageTitle
-            title={musicianFullName}
             className="pad-sides-10"
+            title={musicianFullName}
           />
 
+          <Typography
+            color="textSecondary"
+            className="pad-sides-10"
+          >
+            {musicianProfessions}
+          </Typography>
           <Typography
             color="textSecondary"
             className="pad-sides-10"

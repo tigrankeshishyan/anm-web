@@ -3,18 +3,24 @@ import { imageAll } from '../images';
 
 const musicianMain = gql`
     fragment musicianMain on Musician {
-        biography
+        id
+        type
+        path
+        nodeId
+        photoId
         birthday
         deathday
-        firstName
-        id
         lastName
-        nodeId
-        path
-        photoId
+        biography
+        firstName
         published
         publishedAt
-        type
+        professions: musicianProfessionsList {
+            profession {
+                id
+                name
+            }
+        }
     }
 `;
 

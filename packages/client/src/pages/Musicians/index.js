@@ -61,7 +61,7 @@ function Musicians(props) {
   const musicians = lodashGet(data, 'musicians.nodes', []);
   const pageInfo = lodashGet(data, 'musicians.pageInfo', {});
   const isDataLoading = isLoading || loading;
-
+  
   return (
     <div className="anm-musicians-section">
       <SEO

@@ -9,21 +9,7 @@ export const FETCH_MUSICIANS = gql`
       filter: $filter
     ) {
       nodes {
-        id
-        type
-        path
-        nodeId
-        photoId
-        birthday
-        lastName
-        firstName
-        biography
-        published
-        publishedAt
-        photo {
-          id
-          url
-        }
+       ...musicianAll
       }
       pageInfo {
         endCursor
@@ -33,6 +19,7 @@ export const FETCH_MUSICIANS = gql`
       }
     }
   }
+  ${musicianAll}
 `;
 
 export const FETCH_SINGLE_MUSICIAN = gql`

@@ -1,8 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Link from 'components/Link';
+import Typography from '@material-ui/core/Typography';
+
 import Img from 'components/Img';
+import Link from 'components/Link';
 import CardFooter from 'components/CardFooter';
 
 import './styles.sass';
@@ -13,15 +15,17 @@ const imageSizes = {
 
 function MusicianCard(props) {
   const {
+    professions,
     firstName,
     lastName,
-    src,
     path,
+    src,
     id,
   } = props;
 
+  const musicianProfessions = (professions || []).map(p => p.profession.name).join(', ');
   const musicianFullName = `${firstName || ''} ${lastName || ''}`;
-
+  
   return (
     <Link
       to={`/musician/${path}/${id}`}
@@ -35,7 +39,13 @@ function MusicianCard(props) {
           className="musician-card-poster-image"
         />
       </div>
-
+  
+      <Typography
+        color="textSecondary"
+        className="pad-sides-10"
+      >
+        {musicianProfessions}
+      </Typography>
       <CardFooter
         title={musicianFullName}
         titleClassName="font-bold"
