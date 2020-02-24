@@ -4,10 +4,8 @@ import { ApolloClient } from 'apollo-client';
 import { onError } from 'apollo-link-error';
 import { ApolloLink } from 'apollo-link';
 import { getCurrentLang } from 'localization/helpers';
-import fetch from 'isomorphic-fetch';
 
 export default new ApolloClient({
-  fetch,
   connectToDevTools: true,
   link: ApolloLink.from([
     onError(({ graphQLErrors, networkError }) => {

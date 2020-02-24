@@ -4758,7 +4758,6 @@ __metadata:
     env-cmd: ^10.1.0
     graphql: ^14.6.0
     graphql-tag: ^2.10.3
-    isomorphic-fetch: ^2.2.1
     lodash.clonedeep: ^4.5.0
     lodash.get: ^4.4.2
     lodash.uniqby: ^4.7.0
