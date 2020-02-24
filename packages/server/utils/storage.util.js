@@ -249,17 +249,16 @@ export async function uploadScorePreview (scoreId, opts) {
  * @param {Upload} upload Multer file object.
  */
 export async function uploadOpenMessageAttachment (upload) {
-  const { file } = upload
   const s3Key = `${CONTACT_ATTACHMENT_PREFIX}/${uuid()}`
 
   const { Location } = await s3
     .upload({
       Key: s3Key,
-      Body: file.createReadStream(),
+      Body: upload.createReadStream(),
       Bucket: s3Bucket,
       ACL: 'public-read',
       ContentDisposition: 'inline',
-      ContentType: file.mimetype
+      ContentType: upload.mimetype
     })
     .promise()
 
