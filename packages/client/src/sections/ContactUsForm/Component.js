@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 
 import { useMutation } from '@apollo/react-hooks';
 
+import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 
 import {
   TextField,
 } from 'components/Form';
+import Icon from 'components/Icon';
 import Button from 'components/Button';
 import Loading from 'components/Loading';
 import DropZone from 'components/DropZone';
@@ -55,24 +57,24 @@ function ContactForm(props) {
     submitButtonText,
     transformDataBeforeSend,
   } = props;
-
+  
   const handleFormChange = useCallback(data => {
       setFormData({ ...formData, ...data });
     },
     [setFormData, formData],
   );
-
+  
   const showError = useCallback(() => {
     addToastMessage.error(i18n('somethingWrong'));
   }, [addToastMessage, i18n]);
-
+  
   const handleFormSubmit = useCallback(async () => {
     if (canSubmitForm(formData)) {
       try {
         const res = await requestMessage({
           variables: transformDataBeforeSend(formData),
         });
-
+        
         if (res && res.data) {
           setFormData({ ...emptyForm });
           setFormKey(generateDateKeyString());
@@ -95,7 +97,7 @@ function ContactForm(props) {
     addToastMessage,
     transformDataBeforeSend,
   ]);
-
+  
   return (
     <Loading
       key={formKey}
@@ -111,7 +113,7 @@ function ContactForm(props) {
               {subTitle}
             </Typography>
           )}
-
+          
           {fields.map(field => (
             <FormRow
               {...field}
@@ -121,21 +123,35 @@ function ContactForm(props) {
               value={formData[field.name]}
             />
           ))}
-
+          
           <DropZone
             className="remove-outline"
             onFileUpload={file => handleFormChange({ file })}
           >
-            <div className="flex-row align-center pad-top-15 pad-bottom-15 pointer attach-file-row">
+            <div className="flex-row no-grow align-center pad-top-15 pad-bottom-15 pointer attach-file-row">
               <AttachFileIcon
                 className="attach-file-icon"
               />
-
+              
               <b>
                 {
                   formData.file
-                    ? formData.file.name
-                    :(
+                    ? (
+                      <div className="flex-row no-grow align-center">
+                        {formData.file.name}
+                        <Icon
+                          hoverColor="red"
+                          onClick={event => {
+                            event.stopPropagation();
+                            handleFormChange({ file: null });
+                          }}
+                          className="mrg-sides-10"
+                        >
+                          <CloseIcon/>
+                        </Icon>
+                      </div>
+                    )
+                    : (
                       <span className="mrg-sides-15">
                         {i18n('attachFile')}
                       </span>
@@ -145,7 +161,7 @@ function ContactForm(props) {
             </div>
           </DropZone>
         </div>
-
+        
         <div className="flex-row justify-end align-center wrap">
           <Button
             variant="ghost-blue"
