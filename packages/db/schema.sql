@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 11.6
--- Dumped by pg_dump version 11.6
+-- Dumped from database version 12.1
+-- Dumped by pg_dump version 12.1
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -35,20 +35,6 @@ CREATE SCHEMA app_private;
 --
 
 CREATE SCHEMA app_public;
-
-
---
--- Name: graphile_worker; Type: SCHEMA; Schema: -; Owner: -
---
-
-CREATE SCHEMA graphile_worker;
-
-
---
--- Name: postgraphile_watch; Type: SCHEMA; Schema: -; Owner: -
---
-
-CREATE SCHEMA postgraphile_watch;
 
 
 --
@@ -296,7 +282,7 @@ $$;
 
 SET default_tablespace = '';
 
-SET default_with_oids = false;
+SET default_table_access_method = heap;
 
 --
 -- Name: users; Type: TABLE; Schema: app_public; Owner: -
@@ -799,344 +785,6 @@ begin
   return ('invalid verification code', false)::email_verify_result;
 end;
 $_$;
-
-
---
--- Name: jobs; Type: TABLE; Schema: graphile_worker; Owner: -
---
-
-CREATE TABLE graphile_worker.jobs (
-    id bigint NOT NULL,
-    queue_name text DEFAULT (public.gen_random_uuid())::text,
-    task_identifier text NOT NULL,
-    payload json DEFAULT '{}'::json NOT NULL,
-    priority integer DEFAULT 0 NOT NULL,
-    run_at timestamp with time zone DEFAULT now() NOT NULL,
-    attempts integer DEFAULT 0 NOT NULL,
-    max_attempts integer DEFAULT 25 NOT NULL,
-    last_error text,
-    created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone DEFAULT now() NOT NULL,
-    key text,
-    locked_at timestamp with time zone,
-    locked_by text,
-    CONSTRAINT jobs_key_check CHECK ((length(key) > 0))
-);
-
-
---
--- Name: add_job(text, json, text, timestamp with time zone, integer, text); Type: FUNCTION; Schema: graphile_worker; Owner: -
---
-
-CREATE FUNCTION graphile_worker.add_job(identifier text, payload json DEFAULT '{}'::json, queue_name text DEFAULT NULL::text, run_at timestamp with time zone DEFAULT now(), max_attempts integer DEFAULT 25, job_key text DEFAULT NULL::text) RETURNS graphile_worker.jobs
-    LANGUAGE plpgsql
-    AS $$
-declare
-  v_job graphile_worker.jobs;
-begin
-  if job_key is not null then
-    -- Upsert job
-    insert into graphile_worker.jobs (task_identifier, payload, queue_name, run_at, max_attempts, key)
-      values(
-        identifier,
-        payload,
-        queue_name,
-        run_at,
-        max_attempts,
-        job_key
-      )
-      on conflict (key) do update set
-        task_identifier=excluded.task_identifier,
-        payload=excluded.payload,
-        queue_name=excluded.queue_name,
-        max_attempts=excluded.max_attempts,
-        run_at=excluded.run_at,
-
-        -- always reset error/retry state
-        attempts=0,
-        last_error=null
-      where jobs.locked_at is null
-      returning *
-      into v_job;
-
-    -- If upsert succeeded (insert or update), return early
-    if not (v_job is null) then
-      return v_job;
-    end if;
-
-    -- Upsert failed -> there must be an existing job that is locked. Remove
-    -- existing key to allow a new one to be inserted, and prevent any
-    -- subsequent retries by bumping attempts to the max allowed.
-    update graphile_worker.jobs
-      set
-        key = null,
-        attempts = jobs.max_attempts
-      where key = job_key;
-  end if;
-
-  -- insert the new job. Assume no conflicts due to the update above
-  insert into graphile_worker.jobs(task_identifier, payload, queue_name, run_at, max_attempts, key)
-    values(
-      identifier,
-      payload,
-      queue_name,
-      run_at,
-      max_attempts,
-      job_key
-    )
-    returning *
-    into v_job;
-
-  return v_job;
-end;
-$$;
-
-
---
--- Name: complete_job(text, bigint); Type: FUNCTION; Schema: graphile_worker; Owner: -
---
-
-CREATE FUNCTION graphile_worker.complete_job(worker_id text, job_id bigint) RETURNS graphile_worker.jobs
-    LANGUAGE plpgsql
-    AS $$
-declare
-  v_row graphile_worker.jobs;
-begin
-  delete from graphile_worker.jobs
-    where id = job_id
-    returning * into v_row;
-
-  if v_row.queue_name is not null then
-    update graphile_worker.job_queues
-      set locked_by = null, locked_at = null
-      where queue_name = v_row.queue_name and locked_by = worker_id;
-  end if;
-
-  return v_row;
-end;
-$$;
-
-
---
--- Name: fail_job(text, bigint, text); Type: FUNCTION; Schema: graphile_worker; Owner: -
---
-
-CREATE FUNCTION graphile_worker.fail_job(worker_id text, job_id bigint, error_message text) RETURNS graphile_worker.jobs
-    LANGUAGE plpgsql STRICT
-    AS $$
-declare
-  v_row graphile_worker.jobs;
-begin
-  update graphile_worker.jobs
-    set
-      last_error = error_message,
-      run_at = greatest(now(), run_at) + (exp(least(attempts, 10))::text || ' seconds')::interval,
-      locked_by = null,
-      locked_at = null
-    where id = job_id and locked_by = worker_id
-    returning * into v_row;
-
-  if v_row.queue_name is not null then
-    update graphile_worker.job_queues
-      set locked_by = null, locked_at = null
-      where queue_name = v_row.queue_name and locked_by = worker_id;
-  end if;
-
-  return v_row;
-end;
-$$;
-
-
---
--- Name: get_job(text, text[], interval); Type: FUNCTION; Schema: graphile_worker; Owner: -
---
-
-CREATE FUNCTION graphile_worker.get_job(worker_id text, task_identifiers text[] DEFAULT NULL::text[], job_expiry interval DEFAULT '04:00:00'::interval) RETURNS graphile_worker.jobs
-    LANGUAGE plpgsql
-    AS $$
-declare
-  v_job_id bigint;
-  v_queue_name text;
-  v_row graphile_worker.jobs;
-  v_now timestamptz = now();
-begin
-  if worker_id is null or length(worker_id) < 10 then
-    raise exception 'invalid worker id';
-  end if;
-
-  select jobs.queue_name, jobs.id into v_queue_name, v_job_id
-    from graphile_worker.jobs
-    where (jobs.locked_at is null or jobs.locked_at < (v_now - job_expiry))
-    and (
-      jobs.queue_name is null
-    or
-      exists (
-        select 1
-        from graphile_worker.job_queues
-        where job_queues.queue_name = jobs.queue_name
-        and (job_queues.locked_at is null or job_queues.locked_at < (v_now - job_expiry))
-        for update
-        skip locked
-      )
-    )
-    and run_at <= v_now
-    and attempts < max_attempts
-    and (task_identifiers is null or task_identifier = any(task_identifiers))
-    order by priority asc, run_at asc, id asc
-    limit 1
-    for update
-    skip locked;
-
-  if v_job_id is null then
-    return null;
-  end if;
-
-  if v_queue_name is not null then
-    update graphile_worker.job_queues
-      set
-        locked_by = worker_id,
-        locked_at = v_now
-      where job_queues.queue_name = v_queue_name;
-  end if;
-
-  update graphile_worker.jobs
-    set
-      attempts = attempts + 1,
-      locked_by = worker_id,
-      locked_at = v_now
-    where id = v_job_id
-    returning * into v_row;
-
-  return v_row;
-end;
-$$;
-
-
---
--- Name: jobs__decrease_job_queue_count(); Type: FUNCTION; Schema: graphile_worker; Owner: -
---
-
-CREATE FUNCTION graphile_worker.jobs__decrease_job_queue_count() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-declare
-  v_new_job_count int;
-begin
-  update graphile_worker.job_queues
-    set job_count = job_queues.job_count - 1
-    where queue_name = old.queue_name
-    returning job_count into v_new_job_count;
-
-  if v_new_job_count <= 0 then
-    delete from graphile_worker.job_queues where queue_name = old.queue_name and job_count <= 0;
-  end if;
-
-  return old;
-end;
-$$;
-
-
---
--- Name: jobs__increase_job_queue_count(); Type: FUNCTION; Schema: graphile_worker; Owner: -
---
-
-CREATE FUNCTION graphile_worker.jobs__increase_job_queue_count() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-begin
-  insert into graphile_worker.job_queues(queue_name, job_count)
-    values(new.queue_name, 1)
-    on conflict (queue_name)
-    do update
-    set job_count = job_queues.job_count + 1;
-
-  return new;
-end;
-$$;
-
-
---
--- Name: remove_job(text); Type: FUNCTION; Schema: graphile_worker; Owner: -
---
-
-CREATE FUNCTION graphile_worker.remove_job(job_key text) RETURNS graphile_worker.jobs
-    LANGUAGE sql STRICT
-    AS $$
-  delete from graphile_worker.jobs
-    where key = job_key
-    and locked_at is null
-  returning *;
-$$;
-
-
---
--- Name: tg__update_timestamp(); Type: FUNCTION; Schema: graphile_worker; Owner: -
---
-
-CREATE FUNCTION graphile_worker.tg__update_timestamp() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-begin
-  new.updated_at = greatest(now(), old.updated_at + interval '1 millisecond');
-  return new;
-end;
-$$;
-
-
---
--- Name: tg_jobs__notify_new_jobs(); Type: FUNCTION; Schema: graphile_worker; Owner: -
---
-
-CREATE FUNCTION graphile_worker.tg_jobs__notify_new_jobs() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-begin
-  perform pg_notify('jobs:insert', '');
-  return new;
-end;
-$$;
-
-
---
--- Name: notify_watchers_ddl(); Type: FUNCTION; Schema: postgraphile_watch; Owner: -
---
-
-CREATE FUNCTION postgraphile_watch.notify_watchers_ddl() RETURNS event_trigger
-    LANGUAGE plpgsql
-    AS $$
-begin
-  perform pg_notify(
-    'postgraphile_watch',
-    json_build_object(
-      'type',
-      'ddl',
-      'payload',
-      (select json_agg(json_build_object('schema', schema_name, 'command', command_tag)) from pg_event_trigger_ddl_commands() as x)
-    )::text
-  );
-end;
-$$;
-
-
---
--- Name: notify_watchers_drop(); Type: FUNCTION; Schema: postgraphile_watch; Owner: -
---
-
-CREATE FUNCTION postgraphile_watch.notify_watchers_drop() RETURNS event_trigger
-    LANGUAGE plpgsql
-    AS $$
-begin
-  perform pg_notify(
-    'postgraphile_watch',
-    json_build_object(
-      'type',
-      'drop',
-      'payload',
-      (select json_agg(distinct x.schema_name) from pg_event_trigger_dropped_objects() as x)
-    )::text
-  );
-end;
-$$;
 
 
 --
@@ -2998,54 +2646,6 @@ ALTER TABLE app_public.users ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTIT
 
 
 --
--- Name: job_queues; Type: TABLE; Schema: graphile_worker; Owner: -
---
-
-CREATE TABLE graphile_worker.job_queues (
-    queue_name text NOT NULL,
-    job_count integer NOT NULL,
-    locked_at timestamp with time zone,
-    locked_by text
-);
-
-
---
--- Name: jobs_id_seq; Type: SEQUENCE; Schema: graphile_worker; Owner: -
---
-
-CREATE SEQUENCE graphile_worker.jobs_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: jobs_id_seq; Type: SEQUENCE OWNED BY; Schema: graphile_worker; Owner: -
---
-
-ALTER SEQUENCE graphile_worker.jobs_id_seq OWNED BY graphile_worker.jobs.id;
-
-
---
--- Name: migrations; Type: TABLE; Schema: graphile_worker; Owner: -
---
-
-CREATE TABLE graphile_worker.migrations (
-    id integer NOT NULL,
-    ts timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
---
--- Name: jobs id; Type: DEFAULT; Schema: graphile_worker; Owner: -
---
-
-ALTER TABLE ONLY graphile_worker.jobs ALTER COLUMN id SET DEFAULT nextval('graphile_worker.jobs_id_seq'::regclass);
-
-
---
 -- Name: email_verifications email_verifications_pkey; Type: CONSTRAINT; Schema: app_private; Owner: -
 --
 
@@ -3558,441 +3158,360 @@ ALTER TABLE ONLY app_public.users
 
 
 --
--- Name: job_queues job_queues_pkey; Type: CONSTRAINT; Schema: graphile_worker; Owner: -
---
-
-ALTER TABLE ONLY graphile_worker.job_queues
-    ADD CONSTRAINT job_queues_pkey PRIMARY KEY (queue_name);
-
-
---
--- Name: jobs jobs_key_key; Type: CONSTRAINT; Schema: graphile_worker; Owner: -
---
-
-ALTER TABLE ONLY graphile_worker.jobs
-    ADD CONSTRAINT jobs_key_key UNIQUE (key);
-
-
---
--- Name: jobs jobs_pkey; Type: CONSTRAINT; Schema: graphile_worker; Owner: -
---
-
-ALTER TABLE ONLY graphile_worker.jobs
-    ADD CONSTRAINT jobs_pkey PRIMARY KEY (id);
-
-
---
--- Name: migrations migrations_pkey; Type: CONSTRAINT; Schema: graphile_worker; Owner: -
---
-
-ALTER TABLE ONLY graphile_worker.migrations
-    ADD CONSTRAINT migrations_pkey PRIMARY KEY (id);
-
-
---
--- Name: jobs_priority_run_at_id_idx; Type: INDEX; Schema: graphile_worker; Owner: -
---
-
-CREATE INDEX jobs_priority_run_at_id_idx ON graphile_worker.jobs USING btree (priority, run_at, id);
-
-
---
 -- Name: article_galleries _100_ts_app_public_article_galleries; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_article_galleries BEFORE INSERT OR UPDATE ON app_public.article_galleries FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_article_galleries BEFORE INSERT OR UPDATE ON app_public.article_galleries FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: article_gallery_images _100_ts_app_public_article_gallery_images; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_article_gallery_images BEFORE INSERT OR UPDATE ON app_public.article_gallery_images FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_article_gallery_images BEFORE INSERT OR UPDATE ON app_public.article_gallery_images FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: article_genres _100_ts_app_public_article_genres; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_article_genres BEFORE INSERT OR UPDATE ON app_public.article_genres FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_article_genres BEFORE INSERT OR UPDATE ON app_public.article_genres FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: article_images _100_ts_app_public_article_images; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_article_images BEFORE INSERT OR UPDATE ON app_public.article_images FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_article_images BEFORE INSERT OR UPDATE ON app_public.article_images FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: article_locales _100_ts_app_public_article_locales; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_article_locales BEFORE INSERT OR UPDATE ON app_public.article_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_article_locales BEFORE INSERT OR UPDATE ON app_public.article_locales FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: article_tags _100_ts_app_public_article_tags; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_article_tags BEFORE INSERT OR UPDATE ON app_public.article_tags FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_article_tags BEFORE INSERT OR UPDATE ON app_public.article_tags FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: articles _100_ts_app_public_articles; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_articles BEFORE INSERT OR UPDATE ON app_public.articles FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_articles BEFORE INSERT OR UPDATE ON app_public.articles FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: composition_locales _100_ts_app_public_composition_locales; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_composition_locales BEFORE INSERT OR UPDATE ON app_public.composition_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_composition_locales BEFORE INSERT OR UPDATE ON app_public.composition_locales FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: compositions _100_ts_app_public_compositions; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_compositions BEFORE INSERT OR UPDATE ON app_public.compositions FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_compositions BEFORE INSERT OR UPDATE ON app_public.compositions FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: document_locales _100_ts_app_public_document_locales; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_document_locales BEFORE INSERT OR UPDATE ON app_public.document_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_document_locales BEFORE INSERT OR UPDATE ON app_public.document_locales FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: documents _100_ts_app_public_documents; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_documents BEFORE INSERT OR UPDATE ON app_public.documents FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_documents BEFORE INSERT OR UPDATE ON app_public.documents FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: genre_locales _100_ts_app_public_genre_locales; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_genre_locales BEFORE INSERT OR UPDATE ON app_public.genre_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_genre_locales BEFORE INSERT OR UPDATE ON app_public.genre_locales FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: genres _100_ts_app_public_genres; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_genres BEFORE INSERT OR UPDATE ON app_public.genres FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_genres BEFORE INSERT OR UPDATE ON app_public.genres FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: group_images _100_ts_app_public_group_images; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_group_images BEFORE INSERT OR UPDATE ON app_public.group_images FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_group_images BEFORE INSERT OR UPDATE ON app_public.group_images FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: group_locales _100_ts_app_public_group_locales; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_group_locales BEFORE INSERT OR UPDATE ON app_public.group_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_group_locales BEFORE INSERT OR UPDATE ON app_public.group_locales FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: group_musicians _100_ts_app_public_group_musicians; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_group_musicians BEFORE INSERT OR UPDATE ON app_public.group_musicians FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_group_musicians BEFORE INSERT OR UPDATE ON app_public.group_musicians FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: group_playlists _100_ts_app_public_group_playlists; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_group_playlists BEFORE INSERT OR UPDATE ON app_public.group_playlists FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_group_playlists BEFORE INSERT OR UPDATE ON app_public.group_playlists FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: groups _100_ts_app_public_groups; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_groups BEFORE INSERT OR UPDATE ON app_public.groups FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_groups BEFORE INSERT OR UPDATE ON app_public.groups FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: image_locales _100_ts_app_public_image_locales; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_image_locales BEFORE INSERT OR UPDATE ON app_public.image_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_image_locales BEFORE INSERT OR UPDATE ON app_public.image_locales FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: images _100_ts_app_public_images; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_images BEFORE INSERT OR UPDATE ON app_public.images FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_images BEFORE INSERT OR UPDATE ON app_public.images FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: instrument_locales _100_ts_app_public_instrument_locales; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_instrument_locales BEFORE INSERT OR UPDATE ON app_public.instrument_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_instrument_locales BEFORE INSERT OR UPDATE ON app_public.instrument_locales FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: instruments _100_ts_app_public_instruments; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_instruments BEFORE INSERT OR UPDATE ON app_public.instruments FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_instruments BEFORE INSERT OR UPDATE ON app_public.instruments FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: media _100_ts_app_public_media; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_media BEFORE INSERT OR UPDATE ON app_public.media FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_media BEFORE INSERT OR UPDATE ON app_public.media FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: media_locales _100_ts_app_public_media_locales; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_media_locales BEFORE INSERT OR UPDATE ON app_public.media_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_media_locales BEFORE INSERT OR UPDATE ON app_public.media_locales FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: musician_compositions _100_ts_app_public_musician_compositions; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_musician_compositions BEFORE INSERT OR UPDATE ON app_public.musician_compositions FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_musician_compositions BEFORE INSERT OR UPDATE ON app_public.musician_compositions FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: musician_genres _100_ts_app_public_musician_genres; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_musician_genres BEFORE INSERT OR UPDATE ON app_public.musician_genres FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_musician_genres BEFORE INSERT OR UPDATE ON app_public.musician_genres FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: musician_images _100_ts_app_public_musician_images; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_musician_images BEFORE INSERT OR UPDATE ON app_public.musician_images FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_musician_images BEFORE INSERT OR UPDATE ON app_public.musician_images FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: musician_locales _100_ts_app_public_musician_locales; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_musician_locales BEFORE INSERT OR UPDATE ON app_public.musician_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_musician_locales BEFORE INSERT OR UPDATE ON app_public.musician_locales FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: musician_playlists _100_ts_app_public_musician_playlists; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_musician_playlists BEFORE INSERT OR UPDATE ON app_public.musician_playlists FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_musician_playlists BEFORE INSERT OR UPDATE ON app_public.musician_playlists FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: musician_professions _100_ts_app_public_musician_professions; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_musician_professions BEFORE INSERT OR UPDATE ON app_public.musician_professions FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_musician_professions BEFORE INSERT OR UPDATE ON app_public.musician_professions FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: musician_tags _100_ts_app_public_musician_tags; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_musician_tags BEFORE INSERT OR UPDATE ON app_public.musician_tags FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_musician_tags BEFORE INSERT OR UPDATE ON app_public.musician_tags FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: musicians _100_ts_app_public_musicians; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_musicians BEFORE INSERT OR UPDATE ON app_public.musicians FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_musicians BEFORE INSERT OR UPDATE ON app_public.musicians FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: open_messages _100_ts_app_public_open_messages; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_open_messages BEFORE INSERT OR UPDATE ON app_public.open_messages FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_open_messages BEFORE INSERT OR UPDATE ON app_public.open_messages FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: page_sections _100_ts_app_public_page_sections; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_page_sections BEFORE INSERT OR UPDATE ON app_public.page_sections FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_page_sections BEFORE INSERT OR UPDATE ON app_public.page_sections FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: playlist_locales _100_ts_app_public_playlist_locales; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_playlist_locales BEFORE INSERT OR UPDATE ON app_public.playlist_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_playlist_locales BEFORE INSERT OR UPDATE ON app_public.playlist_locales FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: playlist_media _100_ts_app_public_playlist_media; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_playlist_media BEFORE INSERT OR UPDATE ON app_public.playlist_media FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_playlist_media BEFORE INSERT OR UPDATE ON app_public.playlist_media FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: playlists _100_ts_app_public_playlists; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_playlists BEFORE INSERT OR UPDATE ON app_public.playlists FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_playlists BEFORE INSERT OR UPDATE ON app_public.playlists FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: profession_locales _100_ts_app_public_profession_locales; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_profession_locales BEFORE INSERT OR UPDATE ON app_public.profession_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_profession_locales BEFORE INSERT OR UPDATE ON app_public.profession_locales FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: professions _100_ts_app_public_professions; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_professions BEFORE INSERT OR UPDATE ON app_public.professions FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_professions BEFORE INSERT OR UPDATE ON app_public.professions FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: promo_codes _100_ts_app_public_promo_codes; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_promo_codes BEFORE INSERT OR UPDATE ON app_public.promo_codes FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_promo_codes BEFORE INSERT OR UPDATE ON app_public.promo_codes FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: purchases _100_ts_app_public_purchases; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_purchases BEFORE INSERT OR UPDATE ON app_public.purchases FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_purchases BEFORE INSERT OR UPDATE ON app_public.purchases FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: score_instruments _100_ts_app_public_score_instruments; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_score_instruments BEFORE INSERT OR UPDATE ON app_public.score_instruments FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_score_instruments BEFORE INSERT OR UPDATE ON app_public.score_instruments FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: score_locales _100_ts_app_public_score_locales; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_score_locales BEFORE INSERT OR UPDATE ON app_public.score_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_score_locales BEFORE INSERT OR UPDATE ON app_public.score_locales FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: scores _100_ts_app_public_scores; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_scores BEFORE INSERT OR UPDATE ON app_public.scores FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_scores BEFORE INSERT OR UPDATE ON app_public.scores FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: tag_locales _100_ts_app_public_tag_locales; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_tag_locales BEFORE INSERT OR UPDATE ON app_public.tag_locales FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_tag_locales BEFORE INSERT OR UPDATE ON app_public.tag_locales FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: tags _100_ts_app_public_tags; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_tags BEFORE INSERT OR UPDATE ON app_public.tags FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_tags BEFORE INSERT OR UPDATE ON app_public.tags FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: users _100_ts_app_public_users; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER _100_ts_app_public_users BEFORE INSERT OR UPDATE ON app_public.users FOR EACH ROW EXECUTE PROCEDURE app_public.set_timestamps();
+CREATE TRIGGER _100_ts_app_public_users BEFORE INSERT OR UPDATE ON app_public.users FOR EACH ROW EXECUTE FUNCTION app_public.set_timestamps();
 
 
 --
 -- Name: musicians generate_musicians_sitemap; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER generate_musicians_sitemap AFTER INSERT OR DELETE ON app_public.musicians FOR EACH ROW EXECUTE PROCEDURE app_private.generate_sitemap('musicians');
+CREATE TRIGGER generate_musicians_sitemap AFTER INSERT OR DELETE ON app_public.musicians FOR EACH ROW EXECUTE FUNCTION app_private.generate_sitemap('musicians');
 
 
 --
 -- Name: articles generate_news_sitemap; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER generate_news_sitemap AFTER INSERT OR DELETE ON app_public.articles FOR EACH ROW EXECUTE PROCEDURE app_private.generate_sitemap('news');
+CREATE TRIGGER generate_news_sitemap AFTER INSERT OR DELETE ON app_public.articles FOR EACH ROW EXECUTE FUNCTION app_private.generate_sitemap('news');
 
 
 --
 -- Name: scores generate_scores_sitemap; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER generate_scores_sitemap AFTER INSERT OR DELETE ON app_public.scores FOR EACH ROW EXECUTE PROCEDURE app_private.generate_sitemap('scores');
+CREATE TRIGGER generate_scores_sitemap AFTER INSERT OR DELETE ON app_public.scores FOR EACH ROW EXECUTE FUNCTION app_private.generate_sitemap('scores');
 
 
 --
 -- Name: open_messages send_slack_message; Type: TRIGGER; Schema: app_public; Owner: -
 --
 
-CREATE TRIGGER send_slack_message AFTER INSERT ON app_public.open_messages FOR EACH ROW EXECUTE PROCEDURE app_private.new_open_message();
-
-
---
--- Name: jobs _100_timestamps; Type: TRIGGER; Schema: graphile_worker; Owner: -
---
-
-CREATE TRIGGER _100_timestamps BEFORE UPDATE ON graphile_worker.jobs FOR EACH ROW EXECUTE PROCEDURE graphile_worker.tg__update_timestamp();
-
-
---
--- Name: jobs _500_decrease_job_queue_count; Type: TRIGGER; Schema: graphile_worker; Owner: -
---
-
-CREATE TRIGGER _500_decrease_job_queue_count AFTER DELETE ON graphile_worker.jobs FOR EACH ROW WHEN ((old.queue_name IS NOT NULL)) EXECUTE PROCEDURE graphile_worker.jobs__decrease_job_queue_count();
-
-
---
--- Name: jobs _500_decrease_job_queue_count_update; Type: TRIGGER; Schema: graphile_worker; Owner: -
---
-
-CREATE TRIGGER _500_decrease_job_queue_count_update AFTER UPDATE OF queue_name ON graphile_worker.jobs FOR EACH ROW WHEN (((new.queue_name IS DISTINCT FROM old.queue_name) AND (old.queue_name IS NOT NULL))) EXECUTE PROCEDURE graphile_worker.jobs__decrease_job_queue_count();
-
-
---
--- Name: jobs _500_increase_job_queue_count; Type: TRIGGER; Schema: graphile_worker; Owner: -
---
-
-CREATE TRIGGER _500_increase_job_queue_count AFTER INSERT ON graphile_worker.jobs FOR EACH ROW WHEN ((new.queue_name IS NOT NULL)) EXECUTE PROCEDURE graphile_worker.jobs__increase_job_queue_count();
-
-
---
--- Name: jobs _500_increase_job_queue_count_update; Type: TRIGGER; Schema: graphile_worker; Owner: -
---
-
-CREATE TRIGGER _500_increase_job_queue_count_update AFTER UPDATE OF queue_name ON graphile_worker.jobs FOR EACH ROW WHEN (((new.queue_name IS DISTINCT FROM old.queue_name) AND (new.queue_name IS NOT NULL))) EXECUTE PROCEDURE graphile_worker.jobs__increase_job_queue_count();
-
-
---
--- Name: jobs _900_notify_worker; Type: TRIGGER; Schema: graphile_worker; Owner: -
---
-
-CREATE TRIGGER _900_notify_worker AFTER INSERT ON graphile_worker.jobs FOR EACH STATEMENT EXECUTE PROCEDURE graphile_worker.tg_jobs__notify_new_jobs();
+CREATE TRIGGER send_slack_message AFTER INSERT ON app_public.open_messages FOR EACH ROW EXECUTE FUNCTION app_private.new_open_message();
 
 
 --
@@ -4532,23 +4051,6 @@ ALTER TABLE ONLY app_public.tag_locales
 
 
 --
--- Name: postgraphile_watch_ddl; Type: EVENT TRIGGER; Schema: -; Owner: -
---
-
-CREATE EVENT TRIGGER postgraphile_watch_ddl ON ddl_command_end
-         WHEN TAG IN ('ALTER AGGREGATE', 'ALTER DOMAIN', 'ALTER EXTENSION', 'ALTER FOREIGN TABLE', 'ALTER FUNCTION', 'ALTER POLICY', 'ALTER SCHEMA', 'ALTER TABLE', 'ALTER TYPE', 'ALTER VIEW', 'COMMENT', 'CREATE AGGREGATE', 'CREATE DOMAIN', 'CREATE EXTENSION', 'CREATE FOREIGN TABLE', 'CREATE FUNCTION', 'CREATE INDEX', 'CREATE POLICY', 'CREATE RULE', 'CREATE SCHEMA', 'CREATE TABLE', 'CREATE TABLE AS', 'CREATE VIEW', 'DROP AGGREGATE', 'DROP DOMAIN', 'DROP EXTENSION', 'DROP FOREIGN TABLE', 'DROP FUNCTION', 'DROP INDEX', 'DROP OWNED', 'DROP POLICY', 'DROP RULE', 'DROP SCHEMA', 'DROP TABLE', 'DROP TYPE', 'DROP VIEW', 'GRANT', 'REVOKE', 'SELECT INTO')
-   EXECUTE PROCEDURE postgraphile_watch.notify_watchers_ddl();
-
-
---
--- Name: postgraphile_watch_drop; Type: EVENT TRIGGER; Schema: -; Owner: -
---
-
-CREATE EVENT TRIGGER postgraphile_watch_drop ON sql_drop
-   EXECUTE PROCEDURE postgraphile_watch.notify_watchers_drop();
-
-
---
 -- Name: promo_codes delete_admin; Type: POLICY; Schema: app_public; Owner: -
 --
 
@@ -4603,18 +4105,6 @@ CREATE POLICY update_admin ON app_public.promo_codes FOR UPDATE USING ((app_publ
 
 
 --
--- Name: job_queues; Type: ROW SECURITY; Schema: graphile_worker; Owner: -
---
-
-ALTER TABLE graphile_worker.job_queues ENABLE ROW LEVEL SECURITY;
-
---
--- Name: jobs; Type: ROW SECURITY; Schema: graphile_worker; Owner: -
---
-
-ALTER TABLE graphile_worker.jobs ENABLE ROW LEVEL SECURITY;
-
---
 -- Name: SCHEMA app_hidden; Type: ACL; Schema: -; Owner: -
 --
 
@@ -4626,15 +4116,6 @@ GRANT USAGE ON SCHEMA app_hidden TO anm_visitor;
 --
 
 GRANT USAGE ON SCHEMA app_public TO anm_visitor;
-
-
---
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: -
---
-
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
-GRANT ALL ON SCHEMA public TO anm;
-GRANT USAGE ON SCHEMA public TO anm_visitor;
 
 
 --
@@ -4789,34 +4270,6 @@ GRANT ALL ON FUNCTION app_public.users_email_verification_status(i_user app_publ
 
 REVOKE ALL ON FUNCTION app_public.verify_email(code text) FROM PUBLIC;
 GRANT ALL ON FUNCTION app_public.verify_email(code text) TO anm_visitor;
-
-
---
--- Name: FUNCTION add_job(identifier text, payload json, queue_name text, run_at timestamp with time zone, max_attempts integer, job_key text); Type: ACL; Schema: graphile_worker; Owner: -
---
-
-REVOKE ALL ON FUNCTION graphile_worker.add_job(identifier text, payload json, queue_name text, run_at timestamp with time zone, max_attempts integer, job_key text) FROM PUBLIC;
-
-
---
--- Name: FUNCTION remove_job(job_key text); Type: ACL; Schema: graphile_worker; Owner: -
---
-
-REVOKE ALL ON FUNCTION graphile_worker.remove_job(job_key text) FROM PUBLIC;
-
-
---
--- Name: FUNCTION notify_watchers_ddl(); Type: ACL; Schema: postgraphile_watch; Owner: -
---
-
-REVOKE ALL ON FUNCTION postgraphile_watch.notify_watchers_ddl() FROM PUBLIC;
-
-
---
--- Name: FUNCTION notify_watchers_drop(); Type: ACL; Schema: postgraphile_watch; Owner: -
---
-
-REVOKE ALL ON FUNCTION postgraphile_watch.notify_watchers_drop() FROM PUBLIC;
 
 
 --
