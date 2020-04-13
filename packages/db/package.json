@@ -2,7 +2,7 @@
   "name": "db",
   "version": "1.0.0",
   "dependencies": {
-    "graphile-migrate": "^0.0.18"
+    "graphile-migrate": "^0.1.0"
   },
   "private": true,
   "scripts": {
