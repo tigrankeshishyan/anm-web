@@ -6,21 +6,14 @@
     ":DATABASE_AUTHENTICATOR": "!ENV",
     ":DATABASE_VISITOR": "!ENV"
   },
-  "afterReset": [
-    "afterReset.sql",
-    {
-      "_": "command",
-      "command": "yarn workspace server gw"
-    }
-  ],
+  "afterReset": ["!afterReset.sql"],
   "afterAllMigrations": [
     "afterAll.sql",
     {
       "_": "command",
+      "shadow": true,
       "command": "pg_dump --schema-only --no-owner --exclude-schema=graphile_migrate --file=schema.sql \"$GM_DBURL\""
     }
   ],
-  "afterCurrent": [
-    "afterAll.sql"
-  ]
+  "afterCurrent": ["afterAll.sql"]
 }
