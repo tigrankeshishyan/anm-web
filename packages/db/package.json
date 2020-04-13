@@ -9,7 +9,7 @@
     "esnode": "node -r ../config/env.cjs",
     "gm": "yarn esnode ../../node_modules/graphile-migrate/dist/cli.js",
     "watch": "yarn gm watch",
-    "reset": "yarn gm reset",
+    "reset": "yarn gm reset --erase",
     "commit": "yarn gm commit",
     "uncommit": "yarn gm uncommit",
     "migrate": "yarn gm migrate",
