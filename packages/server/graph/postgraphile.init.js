@@ -1,14 +1,19 @@
+import Apollo from 'apollo-server-express'
 import GraphqlPassport from 'graphql-passport'
 import postgraphile from 'postgraphile'
+import PostgraphileApollo from 'postgraphile-apollo-server'
 import dirname from 'es-dirname'
+import pg from 'pg'
 
 import { database, isDev } from '../../config'
 import * as Storage from '../utils/storage.util'
-
 import CustomPlugins, { SameGraphQLAndGraphiQLPathnameTweak } from './plugins'
+
+const { makeSchemaAndPlugin } = PostgraphileApollo
 
 const { buildContext } = GraphqlPassport
 const { makePluginHook } = postgraphile
+const { ApolloServer } = Apollo
 
 const pluginHook = makePluginHook([SameGraphQLAndGraphiQLPathnameTweak])
 
@@ -48,27 +53,48 @@ const graphileBuildOptions = {
   ]
 }
 
-export default () =>
-  postgraphile.postgraphql(database.authUrl, [database.schema], {
-    ownerConnectionString: database.url,
-    appendPlugins: [CustomPlugins],
-    pluginHook,
-    watchPg: true,
-    graphiql: true,
-    enhanceGraphiql: true,
-    dynamicJson: true,
-    simpleCollections: 'both',
-    bodySizeLimit: '50mb',
-    sortExport: true,
-    pgSettings,
-    graphileBuildOptions,
-    exportGqlSchemaPath: isDev
-      ? `${dirname()}/../../../schema.graphql`
-      : undefined,
-    additionalGraphQLContextFromRequest (request) {
-      return buildContext({
-        // for graphql-passport use name 'req'
-        req: request
-      })
-    }
+/**
+ * @param {import('express')} app
+ */
+const install = async app => {
+  const pgPool = new pg.Pool({
+    connectionString: database.authUrl
   })
+
+  const { schema, plugin } = await makeSchemaAndPlugin(
+    pgPool,
+    [database.schema],
+    {
+      ownerConnectionString: database.url,
+      appendPlugins: [CustomPlugins],
+      pluginHook,
+      watchPg: true,
+      graphiql: true,
+      enhanceGraphiql: true,
+      dynamicJson: true,
+      simpleCollections: 'both',
+      bodySizeLimit: '50mb',
+      sortExport: true,
+      pgSettings,
+      graphileBuildOptions,
+      exportGqlSchemaPath: isDev
+        ? `${dirname()}/../../../schema.graphql`
+        : undefined,
+      additionalGraphQLContextFromRequest (request) {
+        return buildContext({
+          // for graphql-passport use name 'req'
+          req: request
+        })
+      }
+    }
+  )
+
+  const server = new ApolloServer({
+    schema,
+    plugins: [plugin]
+  })
+
+  server.applyMiddleware({ app })
+}
+
+export default install

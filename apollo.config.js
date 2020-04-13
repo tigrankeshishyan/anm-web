@@ -1,4 +1,7 @@
 module.exports = {
+  service: {
+    name: "anm"
+  },
   client: {
     service: {
       name: "Local Schema File",
