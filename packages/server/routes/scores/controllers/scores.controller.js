@@ -140,7 +140,6 @@ export async function getPoster (req, res, next) {
  */
 export async function purchaseFromPaddle (req, res, next) {
   try {
-    const { user } = req
     const { purchaseId, token } = JSON.parse(req.body.passthrough || '{}')
 
     assert.ok(
@@ -148,10 +147,13 @@ export async function purchaseFromPaddle (req, res, next) {
       new ExpressError("missing 'purchaseId' or 'token'", 400)
     )
     const {
-      rows: [purchase]
-    } = await pgClient.query('select * from app_public.purchases where id=$1', [
-      purchaseId
-    ])
+      rows: [{ purchase, user }]
+    } = await pgClient.query(
+      `select p.* as purchase, u.* as user 
+        from app_public.purchases p join users u on u.id=p.user_id 
+        where p.id=$1`,
+      [purchaseId]
+    )
     assert.ok(
       purchase,
       new ExpressError(
@@ -184,7 +186,6 @@ export async function purchaseFromPaddle (req, res, next) {
  */
 export async function purchaseFromAmeria (req, res, next) {
   try {
-    const { user } = req
     const { paymentID, opaque } = req.query
 
     const { token, purchaseId, redirect } = JSON.parse(opaque)
@@ -201,10 +202,13 @@ export async function purchaseFromAmeria (req, res, next) {
       new ExpressError("missing 'purchaseId' or 'token'", 400)
     )
     const {
-      rows: [purchase]
-    } = await pgClient.query('select * from app_public.purchases where id=$1', [
-      purchaseId
-    ])
+      rows: [{ purchase, user }]
+    } = await pgClient.query(
+      `select p.* as purchase, u.* as user 
+          from app_public.purchases p join users u on u.id=p.user_id 
+        where p.id=$1`,
+      [purchaseId]
+    )
 
     if (purchase.status === 'paid') {
       return res.redirect(redirect)
