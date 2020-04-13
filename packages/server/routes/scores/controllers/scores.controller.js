@@ -165,7 +165,7 @@ export async function purchaseFromPaddle (req, res, next) {
     }
 
     await pgClient.query(
-      'update app_public.purchases set status=$1 where id=$1',
+      'update app_public.purchases set status=$1 where id=$2',
       ['paid', purchaseId]
     )
 
