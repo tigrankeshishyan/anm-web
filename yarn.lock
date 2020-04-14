@@ -3510,18 +3510,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-link-error@npm:^1.1.12":
-  version: 1.1.12
-  resolution: "apollo-link-error@npm:1.1.12"
+"apollo-link-error@npm:^1.1.13":
+  version: 1.1.13
+  resolution: "apollo-link-error@npm:1.1.13"
   dependencies:
-    apollo-link: ^1.2.13
-    apollo-link-http-common: ^0.2.15
+    apollo-link: ^1.2.14
+    apollo-link-http-common: ^0.2.16
     tslib: ^1.9.3
-  checksum: 2/10bd19e039899b8fb70c388566cc2224cdbe2613642d51985caa7a40b0c8682c4321fa5f5a0a538a1be3419df42ca847279a99fec4aeb5be8f94e1ed0779d3b1
+  checksum: 2/351c1eb4c70b2356f549bc65dd0c3d63a173b881197f107bb4ecac3a414d3e0b4918a07f68f246d02d0319618e0ccc896ee17fa050bff9aa636bd8ed4a9381f4
   languageName: node
   linkType: hard
 
-"apollo-link-http-common@npm:^0.2.14, apollo-link-http-common@npm:^0.2.15":
+"apollo-link-http-common@npm:^0.2.14":
   version: 0.2.15
   resolution: "apollo-link-http-common@npm:0.2.15"
   dependencies:
@@ -3531,6 +3531,19 @@ __metadata:
   peerDependencies:
     graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0
   checksum: 2/3ee4d93066aa2599a5d5e305f5a69bc83c42a3c730cce056f8a4c70dd8434cb9e67258541dc113383c8e0facf5f2dcbdbb307216df0101052436ee0b422178ec
+  languageName: node
+  linkType: hard
+
+"apollo-link-http-common@npm:^0.2.16":
+  version: 0.2.16
+  resolution: "apollo-link-http-common@npm:0.2.16"
+  dependencies:
+    apollo-link: ^1.2.14
+    ts-invariant: ^0.4.0
+    tslib: ^1.9.3
+  peerDependencies:
+    graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 2/7ab319747bc9c3fbebd57b2df08be5425c0f62316e1a71e76d6041721d21e04962dd7522a0fc2280acbe5ee3aaa5acab79d6b35eee61dd91b8caa1bdbdd6d7b0
   languageName: node
   linkType: hard
 
@@ -3545,6 +3558,20 @@ __metadata:
   peerDependencies:
     graphql: ^0.11.3 || ^0.12.3 || ^0.13.0 || ^14.0.0
   checksum: 2/775fb89f2cb1d103a7d2ef6a8245d38e6b6467bcfafd49381ea058533d50fa8e0602bda32e9607fdf6a6f706217943b5b09e392e8c744950e42fc0b5a86b3a5d
+  languageName: node
+  linkType: hard
+
+"apollo-link@npm:^1.2.14":
+  version: 1.2.14
+  resolution: "apollo-link@npm:1.2.14"
+  dependencies:
+    apollo-utilities: ^1.3.0
+    ts-invariant: ^0.4.0
+    tslib: ^1.9.3
+    zen-observable-ts: ^0.8.21
+  peerDependencies:
+    graphql: ^0.11.3 || ^0.12.3 || ^0.13.0 || ^14.0.0 || ^15.0.0
+  checksum: 2/5cc96cd6df7280ad88f41532c32340972ca755b69f6a2f26f8faf04682c387a13d49dc31663674cac14e01f08828333d5deeefe54e667d1ad9ddc8375a216964
   languageName: node
   linkType: hard
 
@@ -5114,8 +5141,8 @@ __metadata:
     "@testing-library/user-event": ^7.2.1
     apollo-cache-inmemory: ^1.6.5
     apollo-client: ^2.6.8
-    apollo-link: ^1.2.13
-    apollo-link-error: ^1.1.12
+    apollo-link: ^1.2.14
+    apollo-link-error: ^1.1.13
     apollo-upload-client: ^12.1.0
     clsx: ^1.1.0
     dotenv: ^8.2.0
@@ -8528,9 +8555,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-passport@npm:^0.6.1":
-  version: 0.6.1
-  resolution: "graphql-passport@npm:0.6.1"
+"graphql-passport@npm:^0.6.3":
+  version: 0.6.3
+  resolution: "graphql-passport@npm:0.6.3"
   dependencies:
     "@types/express": ^4.17.1
     "@types/passport": ^1.0.1
@@ -8563,7 +8590,7 @@ __metadata:
       optional: true
     ws:
       optional: true
-  checksum: 2/0431ce20ccbd87449902815896791df4e706af46bddc2710dd71692224479d779e790e898afaa401c473afc96e65e57f635e5b8fd8fa7a0f0ca612992d73b9f5
+  checksum: 2/feac56a716cd554aac7a278591ed701feda7b0a71ebcbf36e6c52b373a28c7ab92e8747285b473b3d7e005e06906272617d9320d4cdd36fef549ea4d98f10aba
   languageName: node
   linkType: hard
 
@@ -16340,7 +16367,7 @@ __metadata:
     graphile-utils: ^4.6.0
     graphile-worker: ^0.5.0
     graphql: ^14.6.0
-    graphql-passport: ^0.6.1
+    graphql-passport: ^0.6.3
     graphql-upload: ^8.1.0
     isbot: ^2.5.7
     isomorphic-fetch: ^2.2.1
@@ -19033,6 +19060,16 @@ __metadata:
     tslib: ^1.9.3
     zen-observable: ^0.8.0
   checksum: 2/a5db31283b8c41ea916fb4523bb81a957b09bbfc233a6b02f98d1e2d3f160aa2733d5608f9048de7d5505632ff27c86b9dda36be1c7680a189b1943c082babb7
+  languageName: node
+  linkType: hard
+
+"zen-observable-ts@npm:^0.8.21":
+  version: 0.8.21
+  resolution: "zen-observable-ts@npm:0.8.21"
+  dependencies:
+    tslib: ^1.9.3
+    zen-observable: ^0.8.0
+  checksum: 2/031ac9c2441a9b2d388417ab402e759fcb72e74c926ecd2500708da309c54e4ecad2c3d1ce85f039d30f670fca092facd21f3e25d6dba5c055504eb08012acb0
   languageName: node
   linkType: hard
 
