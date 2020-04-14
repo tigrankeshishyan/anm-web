@@ -1,10 +1,10 @@
-const { HOST } = process.env
+const { HOST } = process.env;
 
 export const dynamicRoutes = [
   '/:locale/news/:path/:id',
   '/:locale/musician/:path/:id',
   '/:locale/music-sheet-score/:path/:id'
-]
+];
 
 export const appDefaultData = {
   en: {
@@ -23,7 +23,7 @@ export const appDefaultData = {
     keywords:
       'Armenian Music,Հայ երաժշտություն,Armenia,Հայաստան,Music,Երաժշտություն,Khachatryan,Խաչատրյան,Mirzoyan,Միրզոյան,Babajanyan,Բաբաջանյան,Armenian,Հայկական,Yerevan,Երևան,News,Լուրեր,Kim,Կիմ,Kardashyan,Քարդաշյան,Kim Kardashyan,Քիմ Քարդաշյան,Media,Մեդիա,Violin,Ջութակ,Piano,Դաշնամուր,Duduk,Դուդուկ,Shvi,Շվի,Composer,Կոմպոզիտոր,Komitas,Կոմիտաս'
   }
-}
+};
 
 export const appAboutUsData = {
   en: {
@@ -48,7 +48,7 @@ export const appAboutUsData = {
     description:
       'Armenian National Music-ը հիմնադրվել է 2013թ. մայիսի 7-ին Տիգրան Քեշիշյանի, Սերգեյ Ումրոյանի և Աստղիկ Մարտիրոսյանի կողմից։'
   }
-}
+};
 
 export const appContactUsData = {
   en: {
@@ -59,4 +59,4 @@ export const appContactUsData = {
     title: 'Կապ մեզ հետ - Armenian National music',
     description: 'Fuchik str. 27/41, Ajapnyak 0048, Yerevan, Armenia'
   }
-}
+};

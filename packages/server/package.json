@@ -4,12 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "debug": "yarn esnode --inspect=$DEBUGGER_PORT app.js",
-    "esnode": "node --experimental-modules --es-module-specifier-resolution=node -r ../config/env.cjs",
-    "gw": "yarn esnode node_modules/.bin/graphile-worker --schema-only",
-    "nmon": "npx nodemon --experimental-modules --es-module-specifier-resolution=node --exec 'node -r dotenv/config'",
-    "nodemon": "yarn nmon app.js",
-    "start": "yarn esnode app.js"
+    "debug": "yarn node --experimental-modules --es-module-specifier-resolution=node --inspect=${DEBUGGER_PORT:-9020} app.js",
+    "nodemon": "yarn nodemon --experimental-modules --es-module-specifier-resolution=node app.js",
+    "start": "yarn node --experimental-modules --es-module-specifier-resolution=node app.js"
   },
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^5.0.0-beta.1",

@@ -1,5 +1,5 @@
-import * as ameria from './ameria.util'
-import * as paddle from './paddle.util'
+import * as ameria from './ameria.util';
+import * as paddle from './paddle.util';
 
 export async function purchaseLink ({
   title,
@@ -23,7 +23,7 @@ export async function purchaseLink ({
       userId,
       opaque: JSON.stringify({ token, purchaseId, redirect }),
       lang
-    })
+    });
   } else if (service === 'paddle') {
     return paddle.buyLink({
       title,
@@ -32,12 +32,12 @@ export async function purchaseLink ({
       price,
       country,
       returnUrl: redirect
-    })
+    });
   }
 
-  throw Error(`unknown payment service "${service}"`)
+  throw Error(`unknown payment service "${service}"`);
 }
 
 export function discountPrice (price, percent) {
-  return price - (price * (percent / 100))
+  return price - (price * (percent / 100));
 }

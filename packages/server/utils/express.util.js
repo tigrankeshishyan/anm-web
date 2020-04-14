@@ -1,20 +1,20 @@
-import assert from 'assert'
+import assert from 'assert';
 
-import ConnectPg from 'connect-pg-simple'
-import session from 'express-session'
-import uuid from 'uuid/v4'
+import ConnectPg from 'connect-pg-simple';
+import session from 'express-session';
+import uuid from 'uuid/v4';
 
-import { ExpressError } from './error.util'
-import * as config from '../../config'
-import * as Storage from '../utils/storage.util'
+import { ExpressError } from './error.util';
+import * as config from '../config';
+import * as Storage from '../utils/storage.util';
 
 const sessionStore = new (ConnectPg(session))({
   conString: config.database.url,
   tableName: config.database.sessionTableName,
   schemaName: config.database.schema
-})
+});
 
-const maxAge = 30 * 24 * 60 * 60 * 1000
+const maxAge = 30 * 24 * 60 * 60 * 1000;
 
 export const sessionMiddleware = session({
   store: sessionStore,
@@ -23,15 +23,15 @@ export const sessionMiddleware = session({
   resave: false,
   saveUninitialized: true,
   genid: () => uuid()
-})
+});
 
 export function useRespond (req, res, next) {
   res.s3Object = async function (key) {
-    const head = await Storage.headObject(key).catch(() => null)
-    assert.ok(head, new ExpressError(`can't find object '${key}'`))
-    res.contentType(head.ContentType)
-    return Storage.getObject(key).createReadStream().pipe(res)
-  }
+    const head = await Storage.headObject(key).catch(() => null);
+    assert.ok(head, new ExpressError(`can't find object '${key}'`));
+    res.contentType(head.ContentType);
+    return Storage.getObject(key).createReadStream().pipe(res);
+  };
 
-  next()
+  next();
 }

@@ -1,40 +1,40 @@
-import assert from 'assert'
+import assert from 'assert';
 
-import GraphileUtils from 'graphile-utils'
-import uuid from 'uuid/v4'
+import GraphileUtils from 'graphile-utils';
+import uuid from 'uuid/v4';
 
 import {
   database,
   anmHost,
   scoreDocumentName,
   scoreComingSoon
-} from '../../../config'
+} from '../../config';
 import {
   selectById,
   userPurchasedScore,
   getPromoByCode
-} from '../../utils/query.util'
-import { allowOnly } from '../../utils/graphile.util'
+} from '../../utils/query.util';
+import { allowOnly } from '../../utils/graphile.util';
 import {
   validateRedirect,
   isValidPromoCode,
   validateCurrency
-} from '../../utils/validate.util'
-import { purchaseLink, discountPrice } from '../../utils/purchase.util'
+} from '../../utils/validate.util';
+import { purchaseLink, discountPrice } from '../../utils/purchase.util';
 
 const {
   gql,
   makeExtendSchemaPlugin,
   makePluginByCombiningPlugins,
   makeWrapResolversPlugin
-} = GraphileUtils
+} = GraphileUtils;
 
 const plugin = makeWrapResolversPlugin({
   Query: {
     purchases: allowOnly(['admin'], []),
     purchasesList: allowOnly(['admin'], [])
   }
-})
+});
 
 const schema = makeExtendSchemaPlugin(build => {
   return {
@@ -80,47 +80,47 @@ const schema = makeExtendSchemaPlugin(build => {
     resolvers: {
       Query: {
         async isScorePurchased (source, args, ctx, info) {
-          const user = ctx.getUser()
-          const { pgClient } = ctx
-          const { scoreId } = args
+          const user = ctx.getUser();
+          const { pgClient } = ctx;
+          const { scoreId } = args;
 
-          assert.ok(user, new Error('you must be logged in to use this query'))
+          assert.ok(user, new Error('you must be logged in to use this query'));
 
-          const purchased = await userPurchasedScore(pgClient, user.id, scoreId)
-          return !!purchased
+          const purchased = await userPurchasedScore(pgClient, user.id, scoreId);
+          return !!purchased;
         },
         async scorePurchaseLink (source, args, ctx, info) {
-          const { pgClient } = ctx
-          const { scoreId, promoCode, redirect, country } = args.input
-          const currency = args.input.currency || 'USD'
-          const user = ctx.getUser()
+          const { pgClient } = ctx;
+          const { scoreId, promoCode, redirect, country } = args.input;
+          const currency = args.input.currency || 'USD';
+          const user = ctx.getUser();
 
-          validateRedirect(redirect)
+          validateRedirect(redirect);
           assert.ok(
             user,
             new Error('you have to be logged in to buy a product')
-          )
-          validateCurrency(currency)
+          );
+          validateCurrency(currency);
 
           const score = await selectById(pgClient, scoreId, 'scores', {
             table: 'score_locales',
             lang: 'en'
-          })
-          assert.ok(score, new Error(`can't find code with id ${scoreId}`))
+          });
+          assert.ok(score, new Error(`can't find code with id ${scoreId}`));
           assert.ok(
             score.title,
             new Error('score must have english title to be purchased')
-          )
-          const price = priceByCurrency(score.prices, currency)
+          );
+          const price = priceByCurrency(score.prices, currency);
           assert.ok(
             price,
             new Error(`score don't have valid price for ${currency} currency`)
-          )
+          );
 
           const docKey = score.url
             ? `${score.url}/${scoreDocumentName}`
-            : `scores/${scoreComingSoon}`
-          const returnUrl = `${anmHost}/${docKey}`
+            : `scores/${scoreComingSoon}`;
+          const returnUrl = `${anmHost}/${docKey}`;
 
           const purchase = await findOrCreatePurchase(
             pgClient,
@@ -128,9 +128,9 @@ const schema = makeExtendSchemaPlugin(build => {
             score.id,
             promoCode,
             price
-          )
+          );
           if (purchase.status === 'paid') {
-            return returnUrl
+            return returnUrl;
           }
 
           const link = await purchaseLink({
@@ -144,14 +144,14 @@ const schema = makeExtendSchemaPlugin(build => {
             country,
             service: /AM/.test(country) ? 'ameria' : 'paddle',
             currency
-          })
+          });
 
-          return link
+          return link;
         }
       }
     }
-  }
-})
+  };
+});
 
 async function findOrCreatePurchase (
   pgClient,
@@ -160,7 +160,7 @@ async function findOrCreatePurchase (
   promoCode,
   price
 ) {
-  const token = uuid()
+  const token = uuid();
 
   const {
     rows: [already]
@@ -168,12 +168,12 @@ async function findOrCreatePurchase (
     `select * from ${database.schema}.purchases 
 where user_id=$1 and score_id=$2 and status=$3`,
     [userId, scoreId, 'paid']
-  )
+  );
   if (already) {
-    return already
+    return already;
   }
 
-  const discountPrice = await getPrice(pgClient, price.amount, promoCode)
+  const discountPrice = await getPrice(pgClient, price.amount, promoCode);
   const {
     rows: [purchase]
   } = await pgClient.query(
@@ -190,29 +190,29 @@ where user_id=$1 and score_id=$2 and status=$3`,
       price.currency,
       discountPrice
     ]
-  )
+  );
 
-  return purchase
+  return purchase;
 }
 
 async function getPrice (pgClient, price, promoCode) {
   if (!promoCode) {
-    return null
+    return null;
   }
 
-  const promo = await getPromoByCode(pgClient, promoCode)
+  const promo = await getPromoByCode(pgClient, promoCode);
 
-  isValidPromoCode(promo, promoCode)
+  isValidPromoCode(promo, promoCode);
 
-  return discountPrice(price, promo.percent)
+  return discountPrice(price, promo.percent);
 }
 
 function priceByCurrency (prices, currency) {
   // when getting directly from db, json column is string
-  const _prices = typeof prices === 'string' ? JSON.parse(prices) : prices
+  const _prices = typeof prices === 'string' ? JSON.parse(prices) : prices;
   return (_prices || []).find(price => {
-    return price.currency === currency
-  })
+    return price.currency === currency;
+  });
 }
 
-export default makePluginByCombiningPlugins(schema, plugin)
+export default makePluginByCombiningPlugins(schema, plugin);

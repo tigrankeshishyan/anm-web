@@ -1,10 +1,10 @@
-import axios from 'axios'
-import moment from 'moment'
+import axios from 'axios';
+import moment from 'moment';
 
-import { paddle, anmHost } from '../../config'
+import { paddle, anmHost } from '../config';
 
-const payLinkPath = '/api/2.0/product/generate_pay_link'
-const generatePayLink = `${paddle.apiHost}${payLinkPath}`
+const payLinkPath = '/api/2.0/product/generate_pay_link';
+const generatePayLink = `${paddle.apiHost}${payLinkPath}`;
 
 export async function buyLink ({
   title,
@@ -14,7 +14,7 @@ export async function buyLink ({
   country,
   returnUrl
 }) {
-  const expires = moment().format('YYYY-MM-DD') // expires on same day
+  const expires = moment().format('YYYY-MM-DD'); // expires on same day
 
   const body = makeBody({
     title,
@@ -24,16 +24,16 @@ export async function buyLink ({
     country,
     passthrough,
     returnUrl
-  })
+  });
 
-  const { data } = await axios.post(generatePayLink, body)
+  const { data } = await axios.post(generatePayLink, body);
 
   if (!data.success) {
-    const { error } = data
-    throw Error(error.message + `. error code ${error.code}`)
+    const { error } = data;
+    throw Error(error.message + `. error code ${error.code}`);
   }
 
-  return data.response.url
+  return data.response.url;
 }
 
 function makeBody ({
@@ -58,5 +58,5 @@ function makeBody ({
     return_url: returnUrl,
     passthrough,
     prices: [`USD:${price}`]
-  }
+  };
 }

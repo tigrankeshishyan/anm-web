@@ -1,5 +1,5 @@
-import { getOptions, fetchGraphData } from '../utils/graphql.util'
-import { ExpressError } from '../utils/error.util'
+import { getOptions, fetchGraphData } from '../utils/graphql.util';
+import { ExpressError } from '../utils/error.util';
 
 // Fetch query for news which are published
 const query = id => `
@@ -16,19 +16,19 @@ const query = id => `
       }
     }
   }
-`
+`;
 
 export const getSingleScoreData = async (id, locale, url) => {
-  const res = await fetchGraphData(getOptions(query(id), locale))
-  const { score } = res.data || {}
+  const res = await fetchGraphData(getOptions(query(id), locale));
+  const { score } = res.data || {};
 
   if (!score) {
-    throw new ExpressError('not found', 404)
+    throw new ExpressError('not found', 404);
   }
 
-  const musicians = (score.composition || {}).musiciansList || []
+  const musicians = (score.composition || {}).musiciansList || [];
 
-  const musiciansNames = musicians.map(m => `${m.firstName} ${m.lastName}`).join(',')
+  const musiciansNames = musicians.map(m => `${m.firstName} ${m.lastName}`).join(',');
 
   return {
     url,
@@ -36,5 +36,5 @@ export const getSingleScoreData = async (id, locale, url) => {
     imageUrl: score.poster,
     description: score.description,
     title: `${musiciansNames} - ${score.title}`
-  }
-}
+  };
+};

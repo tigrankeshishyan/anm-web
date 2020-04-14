@@ -1,4 +1,4 @@
-import { database } from '../../config'
+import { database } from '../config';
 
 /**
  * @param {Object} pgClient
@@ -12,13 +12,13 @@ export async function selectById (pgClient, id, table, locale) {
     LEFT OUTER JOIN ${database.schema}.${locale.table} AS l
         ON a.id=l.source_id AND l.lang='${locale.lang}'
   WHERE id=$1`
-    : `SELECT * FROM ${database.schema}.${table} WHERE id=$1`
+    : `SELECT * FROM ${database.schema}.${table} WHERE id=$1`;
 
   const {
     rows: [row]
-  } = await pgClient.query(query, [id])
+  } = await pgClient.query(query, [id]);
 
-  return row
+  return row;
 }
 
 /**
@@ -26,14 +26,14 @@ export async function selectById (pgClient, id, table, locale) {
  * @param {{table, column, value}} params
  */
 export async function deleteFrom (pgClient, params) {
-  const { table, column = 'id', value } = params
-  const query = `DELETE FROM ${database.schema}.${table} WHERE ${column}=$1`
+  const { table, column = 'id', value } = params;
+  const query = `DELETE FROM ${database.schema}.${table} WHERE ${column}=$1`;
 
   const {
     rows: [row]
-  } = await pgClient.query(query, [value])
+  } = await pgClient.query(query, [value]);
 
-  return row
+  return row;
 }
 
 /**
@@ -43,19 +43,19 @@ export async function deleteFrom (pgClient, params) {
  * @param {boolean} returning
  */
 export async function insertInto (pgClient, table, data, returning = true) {
-  const entries = Object.entries(data)
-  const columns = entries.map(([key]) => key).join(', ')
-  const values = entries.map((_, index) => `$${index + 1}`).join(', ')
+  const entries = Object.entries(data);
+  const columns = entries.map(([key]) => key).join(', ');
+  const values = entries.map((_, index) => `$${index + 1}`).join(', ');
 
-  const _returning = returning ? 'RETURNING *' : ''
+  const _returning = returning ? 'RETURNING *' : '';
   const query = `INSERT INTO ${database.schema}.${table}(${columns}) 
-  VALUES(${values}) ${_returning}`
+  VALUES(${values}) ${_returning}`;
 
   const {
     rows: [row]
-  } = await pgClient.query(query, Object.values(data))
+  } = await pgClient.query(query, Object.values(data));
 
-  return row
+  return row;
 }
 
 /**
@@ -65,14 +65,14 @@ export async function insertInto (pgClient, table, data, returning = true) {
  * @param {Object} data
  */
 export async function update (pgClient, table, id, data) {
-  const entries = Object.entries(data)
+  const entries = Object.entries(data);
   const updateData = entries
     .map(([key], index) => `${key}=$${index + 1}`)
-    .join(', ')
+    .join(', ');
 
-  const query = `UPDATE ${database.schema}.${table} SET ${updateData} WHERE id=${id}`
+  const query = `UPDATE ${database.schema}.${table} SET ${updateData} WHERE id=${id}`;
 
-  await pgClient.query(query, Object.values(data))
+  await pgClient.query(query, Object.values(data));
 }
 
 /**
@@ -82,13 +82,13 @@ export async function update (pgClient, table, id, data) {
  */
 export async function userPurchasedScore (pgClient, userId, scoreId) {
   const query = `SELECT id FROM ${database.schema}.purchases 
-    WHERE user_id=$1 AND score_id=$2 AND status=$3`
+    WHERE user_id=$1 AND score_id=$2 AND status=$3`;
 
   const {
     rows: [row]
-  } = await pgClient.query(query, [userId, scoreId, 'paid'])
+  } = await pgClient.query(query, [userId, scoreId, 'paid']);
 
-  return row
+  return row;
 }
 
 export async function getPromoByCode (pgClient, code) {
@@ -97,9 +97,9 @@ export async function getPromoByCode (pgClient, code) {
   } = await pgClient.query(
     `SELECT * FROM ${database.schema}.promo_codes WHERE code=$1`,
     [code]
-  )
+  );
 
-  return promo
+  return promo;
 }
 
 /**
@@ -118,13 +118,13 @@ export function paramKeys (rowCount, colCount) {
       new Array(colCount)
         .fill(index * colCount)
         .map((rowIndex, colIndex) => `$${rowIndex + colIndex + 1}`)
-        .join(', ') + ''
+        .join(', ') + '';
 
-    return `(${params})`
-  }
+    return `(${params})`;
+  };
 
   return new Array(rowCount)
     .fill(null)
     .map(nextLine)
-    .join(',\n')
+    .join(',\n');
 }

@@ -1,1 +1,1 @@
-export { default } from './postgraphile.init'
+export { default } from './postgraphile.init';

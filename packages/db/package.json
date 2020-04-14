@@ -5,9 +5,9 @@
   "scripts": {
     "commit": "yarn gm commit",
     "dump": "yarn gm dump",
-    "esnode": "node -r ../config/env.cjs",
-    "gm": "yarn esnode ../../node_modules/graphile-migrate/dist/cli.js",
+    "gm": "yarn node-conf ../../node_modules/graphile-migrate/dist/cli.js",
     "migrate": "yarn gm migrate",
+    "node-conf": "DOTENV_CONFIG_PATH=../../.env.${NODE_ENV:-dev} node -r dotenv/config",
     "reset": "yarn gm reset --erase",
     "uncommit": "yarn gm uncommit",
     "watch": "yarn gm watch"

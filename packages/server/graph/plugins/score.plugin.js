@@ -1,11 +1,11 @@
-import GraphileUtils from 'graphile-utils'
+import GraphileUtils from 'graphile-utils';
 
 import {
   anmHost,
   scoreDocumentName,
   database,
   scorePreviewName
-} from '../../../config'
+} from '../../config';
 import {
   deleteObject,
   headObject,
@@ -15,41 +15,41 @@ import {
   uploadScorePoster,
   getScorePosterKey,
   deleteScorePoster
-} from '../../utils/storage.util'
-import { deleteFrom, insertInto } from '../../utils/query.util'
-import { validatePrices } from '../../utils/validate.util'
-import { allowOnly } from '../../utils/graphile.util'
+} from '../../utils/storage.util';
+import { deleteFrom, insertInto } from '../../utils/query.util';
+import { validatePrices } from '../../utils/validate.util';
+import { allowOnly } from '../../utils/graphile.util';
 
 const {
   gql,
   makeExtendSchemaPlugin,
   makePluginByCombiningPlugins,
   makeWrapResolversPlugin
-} = GraphileUtils
+} = GraphileUtils;
 
 const plugin = makeWrapResolversPlugin({
   Score: {
     purchases: allowOnly(['admin'], []),
     purchasesList: allowOnly(['admin'], []),
     async url (resolve) {
-      const url = await resolve()
-      return url ? `${anmHost}/${url}/${scoreDocumentName}` : null
+      const url = await resolve();
+      return url ? `${anmHost}/${url}/${scoreDocumentName}` : null;
     },
     preview: {
       requires: {
         siblingColumns: [{ column: 'id', alias: '$id' }]
       },
       async resolve (resolve, parent) {
-        const key = `${SCORE_PREFIX}/${parent.$id}/${scorePreviewName}`
+        const key = `${SCORE_PREFIX}/${parent.$id}/${scorePreviewName}`;
         try {
-          const head = await headObject(key)
-          const { opts } = head.Metadata
+          const head = await headObject(key);
+          const { opts } = head.Metadata;
           return {
             url: `${anmHost}/${key}`,
             options: JSON.parse(opts)
-          }
+          };
         } catch (err) {
-          return null
+          return null;
         }
       }
     }
@@ -76,58 +76,58 @@ const plugin = makeWrapResolversPlugin({
     deleteScore: {
       requires: { childColumns: [{ column: 'url', alias: '$url' }] },
       async resolve (resolve) {
-        const resolved = await resolve()
-        const url = resolved.data.$url
+        const resolved = await resolve();
+        const url = resolved.data.$url;
         await deleteObject(
           `${url}/${scoreDocumentName}`,
           `${url}/${scorePreviewName}`
-        )
-        return resolved
+        );
+        return resolved;
       }
     }
   }
-})
+});
 
 async function createUpdateScore (resolve, parent, args, ctx, info) {
-  const resolved = await resolve()
-  const { pgClient } = ctx
-  const patch = args.input.patch || args.input.score
-  const { previewOptions: opts, instruments, prices } = args.input
+  const resolved = await resolve();
+  const { pgClient } = ctx;
+  const patch = args.input.patch || args.input.score;
+  const { previewOptions: opts, instruments, prices } = args.input;
 
-  const scoreId = resolved.data.$id
-  const docUrl = resolved.data.$url
+  const scoreId = resolved.data.$id;
+  const docUrl = resolved.data.$url;
 
-  if (prices) validatePrices(prices)
+  if (prices) validatePrices(prices);
 
   // when new document is uploaded
   if (patch.url) {
-    const upload = await patch.url
-    const url = await uploadScore(upload, scoreId)
+    const upload = await patch.url;
+    const url = await uploadScore(upload, scoreId);
     await pgClient.query(
       `UPDATE ${database.schema}.scores SET url=$1 WHERE id=$2`,
       [url, scoreId]
-    )
-    resolved.data['@score'].url = url
+    );
+    resolved.data['@score'].url = url;
   }
 
   if (patch.poster) {
-    const upload = await patch.poster
-    await uploadScorePoster(upload, scoreId)
+    const upload = await patch.poster;
+    await uploadScorePoster(upload, scoreId);
   } else if (patch.poster === null) {
-    await deleteScorePoster(scoreId)
+    await deleteScorePoster(scoreId);
   }
 
   // when preview options provided
   if (opts) {
     if (!docUrl) {
-      throw Error('there is no document uploaded for this record')
+      throw Error('there is no document uploaded for this record');
     }
     if (opts && opts.pages) {
       if (!opts.pages.length) {
-        throw Error('"previewOptions.pages" can\'t be empty')
+        throw Error('"previewOptions.pages" can\'t be empty');
       }
 
-      await uploadScorePreview(scoreId, opts)
+      await uploadScorePreview(scoreId, opts);
     }
   }
 
@@ -136,14 +136,14 @@ async function createUpdateScore (resolve, parent, args, ctx, info) {
       table: 'score_instruments',
       column: 'score_id',
       value: scoreId
-    })
+    });
     for (const id of instruments) {
-      const data = { score_id: scoreId, instrument_id: id }
-      await insertInto(pgClient, 'score_instruments', data, false)
+      const data = { score_id: scoreId, instrument_id: id };
+      await insertInto(pgClient, 'score_instruments', data, false);
     }
   }
 
-  return resolved
+  return resolved;
 }
 
 const schema = makeExtendSchemaPlugin(build => {
@@ -257,18 +257,18 @@ const schema = makeExtendSchemaPlugin(build => {
     resolvers: {
       Score: {
         async poster (source) {
-          const s3Key = getScorePosterKey(source.id)
+          const s3Key = getScorePosterKey(source.id);
 
-          const poster = await headObject(s3Key).catch(() => null)
+          const poster = await headObject(s3Key).catch(() => null);
           if (poster) {
-            return `${anmHost}/${s3Key}`
+            return `${anmHost}/${s3Key}`;
           } else {
-            return null
+            return null;
           }
         }
       }
     }
-  }
-})
+  };
+});
 
-export default makePluginByCombiningPlugins(schema, plugin)
+export default makePluginByCombiningPlugins(schema, plugin);

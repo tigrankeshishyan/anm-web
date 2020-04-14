@@ -1,24 +1,24 @@
-import GraphqlPassport from 'graphql-passport'
-import postgraphile from 'postgraphile'
-import dirname from 'es-dirname'
+import GraphqlPassport from 'graphql-passport';
+import postgraphile from 'postgraphile';
+import dirname from 'es-dirname';
 
-import { database, isDev } from '../../config'
-import * as Storage from '../utils/storage.util'
+import { database, isDev } from '../config';
+import * as Storage from '../utils/storage.util';
 
-import CustomPlugins, { SameGraphQLAndGraphiQLPathnameTweak } from './plugins'
+import CustomPlugins, { SameGraphQLAndGraphiQLPathnameTweak } from './plugins';
 
-const { buildContext } = GraphqlPassport
-const { makePluginHook } = postgraphile
+const { buildContext } = GraphqlPassport;
+const { makePluginHook } = postgraphile;
 
-const pluginHook = makePluginHook([SameGraphQLAndGraphiQLPathnameTweak])
+const pluginHook = makePluginHook([SameGraphQLAndGraphiQLPathnameTweak]);
 
 async function pgSettings (req) {
-  const { user } = req
+  const { user } = req;
 
   return {
     role: process.env.DATABASE_VISITOR,
     'user.id': user && user.id
-  }
+  };
 }
 
 const graphileBuildOptions = {
@@ -46,7 +46,7 @@ const graphileBuildOptions = {
       resolve: Storage.uploadOpenMessageAttachment
     }
   ]
-}
+};
 
 export default () =>
   postgraphile.postgraphql(database.authUrl, [database.schema], {
@@ -69,6 +69,6 @@ export default () =>
       return buildContext({
         // for graphql-passport use name 'req'
         req: request
-      })
+      });
     }
-  })
+  });

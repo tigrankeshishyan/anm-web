@@ -1,15 +1,15 @@
-import assert from 'assert'
+import assert from 'assert';
 
-import GraphileUtil from 'graphile-utils'
+import GraphileUtil from 'graphile-utils';
 
-import { isValidPromoCode } from '../../utils/validate.util'
-import { discountPrice } from '../../utils/purchase.util'
+import { isValidPromoCode } from '../../utils/validate.util';
+import { discountPrice } from '../../utils/purchase.util';
 
 const {
   gql,
   makeExtendSchemaPlugin,
   makePluginByCombiningPlugins
-} = GraphileUtil
+} = GraphileUtil;
 
 const schema = makeExtendSchemaPlugin(build => {
   return {
@@ -25,33 +25,33 @@ const schema = makeExtendSchemaPlugin(build => {
     resolvers: {
       Query: {
         async scoreDiscount (parent, args, ctx) {
-          const { pgClient } = ctx
-          const { scoreId, code } = args
+          const { pgClient } = ctx;
+          const { scoreId, code } = args;
 
           const {
             rows: [score]
           } = await pgClient.query(
             'select * from app_public.scores where id=$1',
             [scoreId]
-          )
-          assert.ok(score, new Error(`can't find score with id "${scoreId}"`))
+          );
+          assert.ok(score, new Error(`can't find score with id "${scoreId}"`));
 
           if (!score.price) {
-            return score.price
+            return score.price;
           }
 
           const { rows: [promo] } = await pgClient.query(
             'select * from app_public.promo_codes where code=1$1',
             [code]
-          )
+          );
 
-          isValidPromoCode(promo, code)
+          isValidPromoCode(promo, code);
 
-          return discountPrice(score.price, promo.percent)
+          return discountPrice(score.price, promo.percent);
         }
       }
     }
-  }
-})
+  };
+});
 
-export default makePluginByCombiningPlugins(schema)
+export default makePluginByCombiningPlugins(schema);

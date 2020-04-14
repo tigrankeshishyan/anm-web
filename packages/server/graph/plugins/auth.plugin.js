@@ -1,6 +1,6 @@
-import GraphileUtils from 'graphile-utils'
+import GraphileUtils from 'graphile-utils';
 
-const { makeWrapResolversPlugin } = GraphileUtils
+const { makeWrapResolversPlugin } = GraphileUtils;
 
 class AuthError extends Error {}
 
@@ -14,7 +14,7 @@ const publicMutations = [
   'purchaseScore',
   'forgetPassword',
   'resetPassword'
-]
+];
 
 export default makeWrapResolversPlugin(
   ({ scope }, build, field, options) => {
@@ -23,24 +23,24 @@ export default makeWrapResolversPlugin(
       isPublic:
         publicMutations.some(name => name === scope.fieldName) ||
         !scope.isRootMutation
-    }
+    };
   },
   ({ scope, isPublic }) => async (resolver, source, args, context) => {
-    const user = context.getUser()
-    const role = user && user.role
+    const user = context.getUser();
+    const role = user && user.role;
 
     if (isPublic) {
-      return resolver()
+      return resolver();
     }
 
     if (role === 'admin') {
-      return resolver()
+      return resolver();
     }
 
     if (role === 'editor' && !scope.fieldName.includes('User')) {
-      return resolver()
+      return resolver();
     }
 
-    throw new AuthError('you are not allowed to modify this data')
+    throw new AuthError('you are not allowed to modify this data');
   }
-)
+);

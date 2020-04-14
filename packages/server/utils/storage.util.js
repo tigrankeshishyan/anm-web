@@ -1,27 +1,27 @@
-import aws from 'aws-sdk'
-import sharp from 'sharp'
-import uuid from 'uuid/v4'
+import aws from 'aws-sdk';
+import sharp from 'sharp';
+import uuid from 'uuid/v4';
 
-import { isUploadPDF } from './validate.util'
+import { isUploadPDF } from './validate.util';
 import {
   s3 as s3Config,
   maxImageSize,
   s3Bucket,
   scoreDocumentName,
   scorePreviewName
-} from '../../config'
-import { makePreview, addStamp } from './score.util'
+} from '../config';
+import { makePreview, addStamp } from './score.util';
 
-const { S3 } = aws
+const { S3 } = aws;
 
-const s3 = new S3({ ...s3Config })
+const s3 = new S3({ ...s3Config });
 
-export const AUDIO_PREFIX = 'audio'
-export const CONTACT_ATTACHMENT_PREFIX = 'attachments'
-export const IMAGE_PREFIX = 'images'
-export const SCORE_PREFIX = 'scores'
-export const USER_PREFIX = 'users'
-export const PUBLIC_PREFIX = 'public'
+export const AUDIO_PREFIX = 'audio';
+export const CONTACT_ATTACHMENT_PREFIX = 'attachments';
+export const IMAGE_PREFIX = 'images';
+export const SCORE_PREFIX = 'scores';
+export const USER_PREFIX = 'users';
+export const PUBLIC_PREFIX = 'public';
 
 /**
  * @param {string} key
@@ -32,7 +32,7 @@ export async function headObject (key) {
       Bucket: s3Bucket,
       Key: key
     })
-    .promise()
+    .promise();
 }
 
 /**
@@ -42,19 +42,19 @@ export function getObject (key) {
   return s3.getObject({
     Key: key.startsWith('/') ? key.substring(1) : key,
     Bucket: s3Bucket
-  })
+  });
 }
 
 export function getScorePosterKey (scoreId) {
-  return `${SCORE_PREFIX}/${scoreId}/poster.png`
+  return `${SCORE_PREFIX}/${scoreId}/poster.png`;
 }
 
 export function getSitemapKey (suffix) {
-  return `${PUBLIC_PREFIX}/sitemap/${suffix}.xml`
+  return `${PUBLIC_PREFIX}/sitemap/${suffix}.xml`;
 }
 
 export function getSitemap (suffix) {
-  return getObject(getSitemapKey(suffix))
+  return getObject(getSitemapKey(suffix));
 }
 
 export function uploadSitemap (context, suffix) {
@@ -65,29 +65,29 @@ export function uploadSitemap (context, suffix) {
       Bucket: s3Bucket,
       ContentType: 'text/xml'
     })
-    .promise()
+    .promise();
 }
 
 export async function deleteObject (...keys) {
-  const Objects = keys.map(k => ({ Key: k }))
+  const Objects = keys.map(k => ({ Key: k }));
   return s3
     .deleteObjects({
       Bucket: s3Bucket,
       Delete: { Objects }
     })
-    .promise()
+    .promise();
 }
 
 /**
  * @param {Upload} upload Multer file object.
  */
 export async function uploadImage (upload) {
-  const name = uuid()
-  const s3Key = `${IMAGE_PREFIX}/${name}`
+  const name = uuid();
+  const s3Key = `${IMAGE_PREFIX}/${name}`;
   const stream = sharp().resize(maxImageSize, maxImageSize, {
     fit: 'inside',
     withoutEnlargement: true
-  })
+  });
 
   await s3
     .upload({
@@ -97,22 +97,22 @@ export async function uploadImage (upload) {
       ContentDisposition: 'inline',
       ContentType: upload.mimetype
     })
-    .promise()
+    .promise();
 
-  return s3Key
+  return s3Key;
 }
 
 /**
  * @param {Upload} upload Multer file object.
  */
 export async function uploadScorePoster (upload, scoreId) {
-  const s3Key = getScorePosterKey(scoreId)
+  const s3Key = getScorePosterKey(scoreId);
   const stream = sharp()
     .resize(maxImageSize, maxImageSize, {
       fit: 'inside',
       withoutEnlargement: true
     })
-    .png()
+    .png();
 
   await s3
     .upload({
@@ -122,9 +122,9 @@ export async function uploadScorePoster (upload, scoreId) {
       ContentDisposition: 'inline',
       ContentType: 'image/png'
     })
-    .promise()
+    .promise();
 
-  return s3Key
+  return s3Key;
 }
 
 /**
@@ -133,14 +133,14 @@ export async function uploadScorePoster (upload, scoreId) {
  * @param {Object} ctx resolver context.
  */
 export async function uploadAvatar (upload, args, ctx) {
-  const user = ctx.getUser()
-  const s3Key = `${USER_PREFIX}/${user.id}/avatar.jpg`
+  const user = ctx.getUser();
+  const s3Key = `${USER_PREFIX}/${user.id}/avatar.jpg`;
   const stream = sharp()
     .resize(maxImageSize, maxImageSize, {
       fit: 'inside',
       withoutEnlargement: true
     })
-    .jpeg()
+    .jpeg();
 
   const result = await s3
     .upload({
@@ -151,16 +151,16 @@ export async function uploadAvatar (upload, args, ctx) {
       ContentDisposition: 'inline',
       ContentType: upload.mimetype
     })
-    .promise()
+    .promise();
 
-  return result.Location
+  return result.Location;
 }
 
 /**
  * @param {Upload} upload Multer file object.
  */
 export async function uploadAudio (upload) {
-  const s3Key = `${AUDIO_PREFIX}/${uuid()}`
+  const s3Key = `${AUDIO_PREFIX}/${uuid()}`;
 
   await s3
     .upload({
@@ -170,9 +170,9 @@ export async function uploadAudio (upload) {
       ContentDisposition: 'inline',
       ContentType: upload.mimetype
     })
-    .promise()
+    .promise();
 
-  return s3Key
+  return s3Key;
 }
 
 /**
@@ -180,10 +180,10 @@ export async function uploadAudio (upload) {
  * @param {number} scoreId
  */
 export async function uploadScore (upload, scoreId) {
-  isUploadPDF(upload)
+  isUploadPDF(upload);
 
-  const path = `${SCORE_PREFIX}/${scoreId}`
-  const s3Key = `${path}/${scoreDocumentName}`
+  const path = `${SCORE_PREFIX}/${scoreId}`;
+  const s3Key = `${path}/${scoreDocumentName}`;
 
   await s3
     .upload({
@@ -193,16 +193,16 @@ export async function uploadScore (upload, scoreId) {
       ContentDisposition: 'inline',
       ContentType: upload.mimetype
     })
-    .promise()
+    .promise();
 
-  return path
+  return path;
 }
 
 export async function addStampOnScore (scoreId, stamp) {
-  const path = `${SCORE_PREFIX}/${scoreId}`
-  const s3Key = `${path}/${scoreDocumentName}`
+  const path = `${SCORE_PREFIX}/${scoreId}`;
+  const s3Key = `${path}/${scoreDocumentName}`;
 
-  const withStamp = await addStamp(scoreId, s3Key, stamp.right, stamp.center)
+  const withStamp = await addStamp(scoreId, s3Key, stamp.right, stamp.center);
 
   await s3
     .upload({
@@ -212,9 +212,9 @@ export async function addStampOnScore (scoreId, stamp) {
       ContentDisposition: 'inline',
       ContentType: 'application/pdf'
     })
-    .promise()
+    .promise();
 
-  return path
+  return path;
 }
 
 /**
@@ -226,9 +226,9 @@ export async function uploadScorePreview (scoreId, opts) {
     `${SCORE_PREFIX}/${scoreId}/${scoreDocumentName}`,
     'assets/watermark.png',
     opts
-  )
-  const path = `${SCORE_PREFIX}/${scoreId}`
-  const s3Key = `${path}/${scorePreviewName}`
+  );
+  const path = `${SCORE_PREFIX}/${scoreId}`;
+  const s3Key = `${path}/${scorePreviewName}`;
   await s3
     .upload({
       Key: s3Key,
@@ -240,16 +240,16 @@ export async function uploadScorePreview (scoreId, opts) {
         opts: JSON.stringify(opts)
       }
     })
-    .promise()
+    .promise();
 
-  return s3Key
+  return s3Key;
 }
 
 /**
  * @param {Upload} upload Multer file object.
  */
 export async function uploadOpenMessageAttachment (upload) {
-  const s3Key = `${CONTACT_ATTACHMENT_PREFIX}/${uuid()}`
+  const s3Key = `${CONTACT_ATTACHMENT_PREFIX}/${uuid()}`;
 
   const { Location } = await s3
     .upload({
@@ -260,9 +260,9 @@ export async function uploadOpenMessageAttachment (upload) {
       ContentDisposition: 'inline',
       ContentType: upload.mimetype
     })
-    .promise()
+    .promise();
 
-  return Location
+  return Location;
 }
 
 /**
@@ -274,7 +274,7 @@ export async function deleteImage (key) {
       Key: key,
       Bucket: s3Bucket
     })
-    .promise()
+    .promise();
 }
 
 /**
@@ -286,14 +286,14 @@ export async function deleteAudio (key) {
       Key: key,
       Bucket: s3Bucket
     })
-    .promise()
+    .promise();
 }
 
 /**
  * @param {string} key Bucket ks3Bucket,
  */
 export async function deleteScorePoster (scoreId) {
-  return deleteObject(getScorePosterKey(scoreId))
+  return deleteObject(getScorePosterKey(scoreId));
 }
 
 /**

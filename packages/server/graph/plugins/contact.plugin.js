@@ -1,12 +1,12 @@
-import GraphileUtils from 'graphile-utils'
+import GraphileUtils from 'graphile-utils';
 
-import { createContact, unsubscribeContact } from '../../utils/sendinblue.util'
+import { createContact, unsubscribeContact } from '../../utils/sendinblue.util';
 
 const {
   gql,
   makePluginByCombiningPlugins,
   makeExtendSchemaPlugin
-} = GraphileUtils
+} = GraphileUtils;
 
 const schema = makeExtendSchemaPlugin(() => {
   return {
@@ -30,25 +30,25 @@ const schema = makeExtendSchemaPlugin(() => {
     resolvers: {
       Mutation: {
         async addContact (_query, { input }, ctx) {
-          const user = ctx.getUser()
-          await createContact({ ...input, userId: user && user.id })
+          const user = ctx.getUser();
+          await createContact({ ...input, userId: user && user.id });
 
-          return true
+          return true;
         },
         async unsubscribe (root, args, ctx) {
-          const user = ctx.getUser()
+          const user = ctx.getUser();
 
           if (user && user.email) {
-            await unsubscribeContact(user.email)
+            await unsubscribeContact(user.email);
           } else {
-            return false
+            return false;
           }
 
-          return true
+          return true;
         }
       }
     }
-  }
-})
+  };
+});
 
-export default makePluginByCombiningPlugins(schema)
+export default makePluginByCombiningPlugins(schema);

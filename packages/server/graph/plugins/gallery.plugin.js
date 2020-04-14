@@ -1,12 +1,12 @@
-import GraphileUtils from 'graphile-utils'
-import { database } from '../../../config'
+import GraphileUtils from 'graphile-utils';
+import { database } from '../../config';
 
 const {
   gql,
   makeExtendSchemaPlugin,
   makePluginByCombiningPlugins,
   makeWrapResolversPlugin
-} = GraphileUtils
+} = GraphileUtils;
 
 const schema = makeExtendSchemaPlugin((build) => {
   return {
@@ -19,8 +19,8 @@ const schema = makeExtendSchemaPlugin((build) => {
         articleId: Int
       }
     `
-  }
-})
+  };
+});
 
 const plugin = makeWrapResolversPlugin({
   Mutation: {
@@ -37,20 +37,20 @@ const plugin = makeWrapResolversPlugin({
       resolve: setArticleRelation
     }
   }
-})
+});
 
-export default makePluginByCombiningPlugins(schema, plugin)
+export default makePluginByCombiningPlugins(schema, plugin);
 
 async function setArticleRelation (resolve, source, args, context, info) {
-  const { articleId } = args.input || args.patch
-  const { pgClient } = context
+  const { articleId } = args.input || args.patch;
+  const { pgClient } = context;
 
-  const resolved = await resolve()
+  const resolved = await resolve();
 
   if (articleId) {
-    const _id = resolved.data.$gallery_id
-    await pgClient.query(`UPDATE ${database.schema}.articles SET gallery_id=${_id} WHERE id=${articleId}`)
+    const _id = resolved.data.$gallery_id;
+    await pgClient.query(`UPDATE ${database.schema}.articles SET gallery_id=${_id} WHERE id=${articleId}`);
   }
 
-  return resolved
+  return resolved;
 }

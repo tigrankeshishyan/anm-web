@@ -1,6 +1,6 @@
-import GraphileUtils from 'graphile-utils'
+import GraphileUtils from 'graphile-utils';
 
-const { makeAddInflectorsPlugin } = GraphileUtils
+const { makeAddInflectorsPlugin } = GraphileUtils;
 
 function prefixForImagesOnArticle (junctionTable, rightTable, junctionLeftKeyAttributes) {
   if (
@@ -9,7 +9,7 @@ function prefixForImagesOnArticle (junctionTable, rightTable, junctionLeftKeyAtt
     junctionLeftKeyAttributes.length === 1 &&
     junctionLeftKeyAttributes[0].name === 'author_id'
   ) {
-    return 'author-'
+    return 'author-';
   }
   if (
     junctionTable.name === 'articles' &&
@@ -17,9 +17,9 @@ function prefixForImagesOnArticle (junctionTable, rightTable, junctionLeftKeyAtt
     junctionLeftKeyAttributes.length === 1 &&
     junctionLeftKeyAttributes[0].name === 'updater_id'
   ) {
-    return 'updater-'
+    return 'updater-';
   }
-  return ''
+  return '';
 }
 
 export default makeAddInflectorsPlugin(
@@ -35,14 +35,14 @@ export default makeAddInflectorsPlugin(
       junctionRightConstraint
     ) {
       if (junctionRightConstraint.tags.manyToManyFieldName) {
-        return junctionRightConstraint.tags.manyToManyFieldName
+        return junctionRightConstraint.tags.manyToManyFieldName;
       }
 
-      const prefix = prefixForImagesOnArticle(_junctionTable, rightTable, _junctionLeftKeyAttributes)
+      const prefix = prefixForImagesOnArticle(_junctionTable, rightTable, _junctionLeftKeyAttributes);
 
       return this.camelCase(
         `${prefix}${this.pluralize(this._singularizedTableName(rightTable))}`
-      )
+      );
     },
     manyToManyRelationByKeysSimple (
       _leftKeyAttributes,
@@ -55,15 +55,15 @@ export default makeAddInflectorsPlugin(
       junctionRightConstraint
     ) {
       if (junctionRightConstraint.tags.manyToManySimpleFieldName) {
-        return junctionRightConstraint.tags.manyToManySimpleFieldName
+        return junctionRightConstraint.tags.manyToManySimpleFieldName;
       }
 
-      const prefix = prefixForImagesOnArticle(_junctionTable, rightTable, _junctionLeftKeyAttributes)
+      const prefix = prefixForImagesOnArticle(_junctionTable, rightTable, _junctionLeftKeyAttributes);
 
       return this.camelCase(
         `${prefix}${this.pluralize(this._singularizedTableName(rightTable))}-list`
-      )
+      );
     }
   },
   true
-)
+);

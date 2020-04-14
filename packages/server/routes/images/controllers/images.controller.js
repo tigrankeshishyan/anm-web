@@ -1,10 +1,10 @@
-import path from 'path'
+import path from 'path';
 
-import mime from 'mime-types'
-import sharp from 'sharp'
+import mime from 'mime-types';
+import sharp from 'sharp';
 
-import * as Storage from '../../../utils/storage.util'
-import { ExpressError } from '../../../utils/error.util'
+import * as Storage from '../../../utils/storage.util';
+import { ExpressError } from '../../../utils/error.util';
 
 /**
  * @param {import('express').Request} req
@@ -13,55 +13,55 @@ import { ExpressError } from '../../../utils/error.util'
  */
 export async function getImage (req, res, next) {
   try {
-    const key = `${Storage.IMAGE_PREFIX}${req.path}`
-    const width = parseInt(req.query.width) || undefined
-    const height = parseInt(req.query.height) || undefined
+    const key = `${Storage.IMAGE_PREFIX}${req.path}`;
+    const width = parseInt(req.query.width) || undefined;
+    const height = parseInt(req.query.height) || undefined;
     const disposition = req.query.filename
       ? `filename="${req.query.filename}";`
-      : req.header('Content-Disposition')
-    const fit = req.query.fit || undefined
+      : req.header('Content-Disposition');
+    const fit = req.query.fit || undefined;
 
-    const ext = path.extname(key) || '.png'
+    const ext = path.extname(key) || '.png';
 
     const trans = sharp().resize(width, height, {
       fit,
       background: { r: 0, g: 0, b: 0, alpha: 0 }
-    })
+    });
 
     switch (ext) {
       case '.jpg':
-        trans.jpeg()
-        break
+        trans.jpeg();
+        break;
       case '.webp':
-        trans.webp()
-        break
+        trans.webp();
+        break;
       default:
-        trans.png()
+        trans.png();
     }
 
-    res.contentType(mime.lookup(ext))
+    res.contentType(mime.lookup(ext));
     if (disposition) {
-      res.setHeader('Content-Disposition', disposition)
+      res.setHeader('Content-Disposition', disposition);
     }
 
     Storage.getObject(key)
       .createReadStream()
       .on('error', err => {
         if (err.code === 'NoSuchKey') {
-          next(new ExpressError(err.message, 404))
+          next(new ExpressError(err.message, 404));
         } else {
-          next(err)
+          next(err);
         }
       })
       .pipe(trans)
       .on('error', err => {
-        next(err)
+        next(err);
       })
       .pipe(res)
       .on('error', err => {
-        next(err)
-      })
+        next(err);
+      });
   } catch (err) {
-    next(err)
+    next(err);
   }
 }
