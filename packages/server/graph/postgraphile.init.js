@@ -95,7 +95,8 @@ const install = async app => {
     engine: {
       apiKey: apolloEngineKey,
       schemaTag: env
-    }
+    },
+    context: ({ req, res }) => buildContext({ req, res })
   })
 
   server.applyMiddleware({ app })
