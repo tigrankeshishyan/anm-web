@@ -24,4 +24,4 @@ jobs:
           image_tag: latest
           registry: docker.pkg.github.com
 
-      - name: curl ${{ secrets.DEPLOY_WEBHOOK }}
+      - run: curl ${{ secrets.DEPLOY_WEBHOOK }}
