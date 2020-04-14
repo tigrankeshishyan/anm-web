@@ -1,2 +1,2 @@
 yarn db migrate
-yarn server start & # allow to get signal
+yarn server start
