@@ -1,0 +1,12 @@
+node_modules
+build
+
+.*
+!.yarn*
+.yarn/cache
+!.scripts/start
+
+apollo.config.js
+lerna.json
+schema.graphql
+.DS_Store
