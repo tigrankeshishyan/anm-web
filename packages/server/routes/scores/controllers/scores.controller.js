@@ -149,7 +149,7 @@ export async function purchaseFromPaddle (req, res, next) {
     const {
       rows: [{ purchase, user }]
     } = await pgClient.query(
-      `select row_to_json(p) as payment, row_to_json(u) as user 
+      `select row_to_json(p) as purchase, row_to_json(u) as user 
         from app_public.purchases p join users u on u.id=p.user_id 
         where p.id=$1`,
       [purchaseId]
@@ -204,7 +204,7 @@ export async function purchaseFromAmeria (req, res, next) {
     const {
       rows: [{ purchase, user }]
     } = await pgClient.query(
-      `select row_to_json(p) as payment, row_to_json(u) as user
+      `select row_to_json(p) as purchase, row_to_json(u) as user
           from app_public.purchases p join users u on u.id=p.user_id 
         where p.id=$1`,
       [purchaseId]
