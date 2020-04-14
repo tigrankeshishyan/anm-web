@@ -2,6 +2,15 @@
   "name": "server",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
+  "scripts": {
+    "debug": "yarn esnode --inspect=$DEBUGGER_PORT app.js",
+    "esnode": "node --experimental-modules --es-module-specifier-resolution=node -r ../config/env.cjs",
+    "gw": "yarn esnode node_modules/.bin/graphile-worker --schema-only",
+    "nmon": "npx nodemon --experimental-modules --es-module-specifier-resolution=node --exec 'node -r dotenv/config'",
+    "nodemon": "yarn nmon app.js",
+    "start": "yarn esnode app.js"
+  },
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^5.0.0-beta.1",
     "@sentry/node": "^5.15.4",
@@ -35,14 +44,5 @@
     "postgraphile-plugin-upload-field": "^1.0.0-alpha.9",
     "sharp": "^0.24.1",
     "uuid": "^3.4.0"
-  },
-  "scripts": {
-    "esnode": "node --experimental-modules --es-module-specifier-resolution=node -r ../config/env.cjs",
-    "debug": "yarn esnode --inspect=$DEBUGGER_PORT app.js",
-    "gw": "yarn esnode node_modules/.bin/graphile-worker --schema-only",
-    "nmon": "npx nodemon --experimental-modules --es-module-specifier-resolution=node --exec 'node -r dotenv/config'",
-    "nodemon": "yarn nmon app.js",
-    "start": "yarn esnode app.js"
-  },
-  "type": "module"
+  }
 }
