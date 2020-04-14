@@ -1,0 +1,38 @@
+version: "3.7"
+
+services:
+  pdf:
+    image: docker.pkg.github.com/hos/pdf/score:latest
+    ports:
+      - "8080:8080"
+    env_file: .env.pdf
+    environment:
+      - HOST=:8080
+    deploy:
+      update_config:
+        parallelism: 1
+        delay: 10s
+  dev:
+    image: docker.pkg.github.com/tigrankeshishyan/anm-web/server:latest
+    ports:
+      - "3100:3100"
+    env_file: .env.dev
+    environment:
+      - PORT=3100
+    deploy:
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+  prod:
+    image: docker.pkg.github.com/tigrankeshishyan/anm-web/server:latest
+    ports:
+      - "3000:3000"
+    env_file: .env.prod
+    environment:
+      - PORT=3000
+    deploy:
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
