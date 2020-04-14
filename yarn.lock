@@ -5053,15 +5053,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"config@workspace:packages/config":
-  version: 0.0.0-use.local
-  resolution: "config@workspace:packages/config"
-  dependencies:
-    dotenv: ^8.2.0
-    es-dirname: ^0.1.0
-  languageName: unknown
-  linkType: soft
-
 "configstore@npm:^3.0.0":
   version: 3.1.2
   resolution: "configstore@npm:3.1.2"
@@ -15897,6 +15888,7 @@ __metadata:
     body-parser: ^1.19.0
     connect-pg-simple: ^6.1.0
     cors: ^2.8.5
+    dotenv: ^8.2.0
     es-dirname: ^0.1.0
     express: ^4.17.1
     express-handlebars: ^3.1.0

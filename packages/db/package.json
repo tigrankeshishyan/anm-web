@@ -7,7 +7,7 @@
     "dump": "yarn gm dump",
     "gm": "yarn node-conf ../../node_modules/graphile-migrate/dist/cli.js",
     "migrate": "yarn gm migrate",
-    "node-conf": "DOTENV_CONFIG_PATH=../../.env.${NODE_ENV:-dev} node -r dotenv/config",
+    "node-conf": "DOTENV_CONFIG_PATH=../../.env.${NODE_ENV:-dev} node",
     "reset": "yarn gm reset --erase",
     "uncommit": "yarn gm uncommit",
     "watch": "yarn gm watch"
