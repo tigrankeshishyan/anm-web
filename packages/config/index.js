@@ -39,6 +39,8 @@ export const secret = process.env.APP_SECRET
 
 export const sentryDSN = process.env.SENTRY_DSN
 
+export const apolloEngineKey = process.env.ENGINE_API_KEY
+
 export const facebook = {
   appId: process.env.FB_APP_ID,
   appSecret: process.env.FB_APP_SECRET,

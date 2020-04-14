@@ -5,7 +5,7 @@ import PostgraphileApollo from 'postgraphile-apollo-server'
 import dirname from 'es-dirname'
 import pg from 'pg'
 
-import { database, isDev } from '../../config'
+import { database, isDev, apolloEngineKey, env } from '../../config'
 import * as Storage from '../utils/storage.util'
 import CustomPlugins, { SameGraphQLAndGraphiQLPathnameTweak } from './plugins'
 
@@ -91,7 +91,11 @@ const install = async app => {
 
   const server = new ApolloServer({
     schema,
-    plugins: [plugin]
+    plugins: [plugin],
+    engine: {
+      apiKey: apolloEngineKey,
+      schemaTag: env
+    }
   })
 
   server.applyMiddleware({ app })
