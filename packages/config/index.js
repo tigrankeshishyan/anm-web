@@ -101,7 +101,7 @@ export const scorePreviewName = 'preview.pdf'
 export const scoreComingSoon = 'coming-soon.pdf'
 
 export const buildDir =
-  process.env.BUILD_PATH || path.join(dirname(), '/../client/build/')
+  process.env.BUILD_DIR || path.join(dirname(), '/../client/build/')
 
 export const slack = {
   webhook: process.env.SLACK_WEBHOOK || process.env.SLACK_WEBHOOK_URL,
