@@ -14,7 +14,7 @@ import { configurePassport } from './utils/passport.util'
 import { errorHandler } from './utils/error.util'
 import { port, sentryDSN, env, host } from '../config'
 import { sessionMiddleware, useRespond } from './utils/express.util'
-import postgraphile from './graph'
+import GraphQL from './graph'
 import routes from './routes'
 import worker from './worker'
 
@@ -68,7 +68,7 @@ const run = async () => {
   app.use(locale(new locale.Locales(['en', 'hy'], 'hy')))
 
   app.use(graphqlUploadExpress())
-  await postgraphile(app)
+  app.use(GraphQL())
 
   app.use(routes)
   await reqMiddleware(app, '*')
