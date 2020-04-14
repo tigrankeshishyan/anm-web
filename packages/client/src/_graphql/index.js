@@ -17,7 +17,7 @@ export default new ApolloClient({
       if (networkError) console.error(`[Network error]: ${networkError}`);
     }),
     createUploadLink({
-      uri: `${process.env.REACT_APP_HOST}/graphql`,
+      uri: `${process.env.REACT_APP_HOST || ''}/graphql`,
       credentials: 'include',
       headers: {
         Authorization: null,
