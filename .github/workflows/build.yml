@@ -15,7 +15,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-
       - uses: whoan/docker-build-with-cache-action@v4
         with:
           username: tigrankeshishyan
@@ -23,5 +22,5 @@ jobs:
           image_name: tigrankeshishyan/anm-web/server
           image_tag: latest
           registry: docker.pkg.github.com
-
       - run: curl ${{ secrets.DEPLOY_WEBHOOK }}
+      # yes it's small
