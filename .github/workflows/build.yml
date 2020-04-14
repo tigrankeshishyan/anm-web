@@ -21,7 +21,7 @@ jobs:
           username: "${{ secrets.DOCKER_USERNAME }}"
           password: "${{ secrets.DOCKER_PASSWORD }}"
           image_name: tigrankeshishyan/anm-web/server
-          image_tag: latest
+          image_tag: latest,${GITHUB_REF##*/}
           registry: docker.pkg.github.com
 
       - name: Create ssh keys from SECRETS
@@ -36,4 +36,4 @@ jobs:
       - name: deploy server
         run: >-
           ssh -o StrictHostKeyChecking=no ${{ secrets.SERVER }}
-          'docker pull docker.pkg.github.com/tigrankeshishyan/anm-web/server:latest; docker service update ${{ secrets.DOCKER_SERVICE }} --force'
+          'docker pull docker.pkg.github.com/tigrankeshishyan/anm-web/server:${GITHUB_REF##*/}; docker service update ${{ secrets.DOCKER_SERVICE }} --force'
