@@ -11,6 +11,7 @@
     "db": "yarn workspace db",
     "preinstall": "touch .metadata_never_index",
     "server": "yarn workspace server",
+    "sort": "yarn dlx sort-package-json package.json packages/*/package.json",
     "update": ".scripts/update",
     "worker": "yarn workspace worker"
   },
