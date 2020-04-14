@@ -12,7 +12,7 @@ import hbs from 'express-handlebars';
 
 import { configurePassport } from './utils/passport.util';
 import { errorHandler } from './utils/error.util';
-import { port, sentryDSN, env, host } from './config';
+import { port, sentryDSN, env, host, buildDir } from './config';
 import { sessionMiddleware, useRespond } from './utils/express.util';
 import GraphQL from './graph';
 import routes from './routes';
@@ -53,8 +53,7 @@ const run = async () => {
   app.set('view engine', 'hbs');
   app.set('views', path.resolve(dirname(), './views'));
 
-  const clientBuild = path.resolve(`${dirname()}/../client/build`);
-  app.use(Express.static(clientBuild));
+  app.use(Express.static(buildDir));
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(sessionMiddleware);
   app.use(useRespond);
