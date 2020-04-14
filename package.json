@@ -1,6 +1,19 @@
 {
   "name": "anm",
   "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "client": "yarn workspace client",
+    "conf": "yarn workspace config",
+    "db": "yarn workspace db",
+    "preinstall": "touch .metadata_never_index",
+    "server": "yarn workspace server",
+    "update": ".scripts/update",
+    "worker": "yarn workspace worker"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -21,18 +34,5 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "prettier-eslint": "^9.0.1"
-  },
-  "private": true,
-  "scripts": {
-    "preinstall": "touch .metadata_never_index",
-    "client": "yarn workspace client",
-    "conf": "yarn workspace config",
-    "db": "yarn workspace db",
-    "server": "yarn workspace server",
-    "worker": "yarn workspace worker",
-    "update": ".scripts/update"
-  },
-  "workspaces": [
-    "packages/*"
-  ]
+  }
 }
