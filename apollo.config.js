@@ -1,8 +1,4 @@
 module.exports = {
-  service: {
-    name: "anm",
-    localSchemaFile: "./schema.graphql"
-  },
   client: {
     service: {
       name: "Local Schema File",
